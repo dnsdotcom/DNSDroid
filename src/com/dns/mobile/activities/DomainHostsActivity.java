@@ -91,114 +91,12 @@ public class DomainHostsActivity extends Activity {
 			}
 		});
 
-		StringBuffer filter = new StringBuffer("") ;
 		super.onStart() ;
 		ProgressDialog spinner = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER) ;
 		spinner.setTitle("Fetching Host List") ;
-		ArrayList<Host> hostList = new ArrayList<Host>() ;
 		((TextView)findViewById(R.id.domainHeaderLabel)).setText(this.getIntent().getStringExtra("domainName")) ;
 		spinner.show() ;
-		BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(filter, spinner, this, hostList, "WU^E1O1Q83O~^!^@*RJ06I^RVT06", "www.dns.com", true) ;
-
-		new Thread(apiInstance).start() ;
 		Log.d("DomainHostsActivity","Created View") ;
-	}
-
-	private class BackgroundRequestHandler implements Runnable {
-
-		private ArrayList<Host> hostList = null ;
-		private String authToken = null ;
-		private String host = null ;
-		private boolean useSSL = false ;
-		private boolean isClean = true ;
-		private String errorMessage = null ;
-		private Activity parent = null ;
-		private ProgressDialog spinner = null ;
-		private StringBuffer filter = null ;
-
-		public BackgroundRequestHandler(StringBuffer filter, ProgressDialog spinner, Activity parent, ArrayList<Host> hostList, String authToken, String host, boolean useSSL) {
-			this.hostList = hostList ;
-			this.authToken = authToken ;
-			this.host = host ;
-			this.useSSL = useSSL ;
-			this.parent = parent ;
-			this.spinner = spinner ;
-			this.filter = filter ;
-		}
-
-		public void run() {
-
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
-			String apiHost = null ;
-			if (settings.getBoolean("use.sandbox", true)) {
-				apiHost = "sandbox.dns.com" ;
-			} else {
-				apiHost = "www.dns.com" ;
-			}
-
-			ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
-
-			try {
-				Log.d("DomainHostActivity", "Starting API call.") ;
-				JSONObject hostsObject = api.getHostnamesForDomain(parent.getIntent().getStringExtra("domainName")) ;
-				Log.d("DomainHostActivity", "Finished API call") ;
-				
-				try {
-					if (hostsObject.get("error")!=null) {
-						isClean = false ;
-						errorMessage = hostsObject.getString("error") ;
-					}
-				} catch (JSONException jsone) {
-					// Ignore
-				}
-				
-				JSONObject meta = null ;
-				if (isClean) {
-					meta = hostsObject.getJSONObject("meta") ;
-					if (meta==null) {
-						isClean = false ;
-						errorMessage = "'meta' node of the JSON response is NULL" ;
-					}
-				}
-				
-				if (isClean) {
-					int success = 0 ;
-					try {
-						success = meta.getInt("success") ;
-					} catch (JSONException jsone) {
-						success = 0 ;
-					}
-					
-					if (success==0) {
-						isClean = false ;
-						errorMessage = "The meta node does not have a valid success value." ;
-					} else {
-						JSONArray data = hostsObject.getJSONArray("data") ;
-						if (data==null) {
-							isClean = false ;
-							errorMessage = "The data array for the active hosts list is NULL" ;
-						} else {
-							int loopIndex = data.length() ;
-							for (int x=0; x<loopIndex; x++) {
-								Host currentHost = new Host();
-								currentHost.setHostId(data.getJSONObject(x).getInt("id"));
-								currentHost.setName(data.getJSONObject(x).getString("name"));
-								currentHost.setRecordCount(data.getJSONObject(x).getInt("num_rr")) ;
-								hostList.add(currentHost);
-								Log.d("DomainHostsActivity","Adding host '"+data.getJSONObject(x).getString("name")+"'");
-							}
-						}
-					}
-				}
-			} catch (JSONException jsone) {
-				Log.e("DomainHostsActivity", "JSONException while attempting to get host list.", jsone) ;
-				errorMessage = new String("JSONException while attempting to get host list.") ;
-				isClean = false ;
-			}
-			PostRequestUiChanges uiUpdate = new PostRequestUiChanges(filter, spinner, isClean, errorMessage, parent, hostList) ;
-			findViewById(R.id.domain_hosts_activity).post(uiUpdate) ;
-		}
-		
 	}
 
 	private class PostRequestUiChanges implements Runnable {
@@ -206,22 +104,19 @@ public class DomainHostsActivity extends Activity {
 		private boolean isClean = false ;
 		private String errorMessage = null ;
 		private Activity parent = null ;
-		private ArrayList<Host> hostList = null ;
-		private ProgressDialog spinner = null ;
 		private StringBuffer filter = null ;
 
-		public PostRequestUiChanges(StringBuffer filter, ProgressDialog spinner, boolean isClean, String errorMessage, Activity parent, ArrayList<Host> hostList) {
+		public PostRequestUiChanges(boolean isClean, String errorMessage, Activity parent) {
 			this.isClean = isClean ;
 			this.errorMessage = errorMessage ;
 			this.parent = parent ;
-			this.hostList = hostList ;
-			this.spinner = spinner ;
-			this.filter = filter ;
 		}
 
 		public void run() {
 
-			spinner.dismiss() ;
+
+			findViewById(R.id.domainListView).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.domainListProgressBar).setVisibility(View.INVISIBLE) ;
 			if (isClean) {
 				ListView hostsListView = new ListView(findViewById(R.id.domain_hosts_activity).getContext()) ;
 				HostItemClickedListener hostClickListener = new HostItemClickedListener(parent.getIntent().getStringExtra("domainName")) ;
@@ -231,7 +126,7 @@ public class DomainHostsActivity extends Activity {
 				SearchInputHandler inputHandler = new SearchInputHandler(filter, hostsListView) ;
 				searchField.setOnKeyListener(inputHandler) ;
 				((LinearLayout)findViewById(R.id.domain_hosts_activity)).addView(searchField) ;
-				hostsListView.setAdapter(new HostListViewAdapter(parent, hostList, filter)) ;
+				hostsListView.setAdapter(new HostListViewAdapter(parent)) ;
 				hostsListView.setBackgroundResource(R.drawable.list_view_color_states) ;
 				((LinearLayout)findViewById(R.id.domain_hosts_activity)).addView(hostsListView) ;
 			} else {
@@ -241,13 +136,6 @@ public class DomainHostsActivity extends Activity {
 					.setCancelable(false)
 					.setPositiveButton("OK", dialogListener) ;
 			}
-			TextView helpHint = new TextView(findViewById(R.id.domain_hosts_activity).getContext()) ;
-			helpHint.setText("Long press to delete an entry.") ;
-			helpHint.setGravity(Gravity.CENTER_HORIZONTAL&Gravity.BOTTOM) ;
-			helpHint.setWidth(LayoutParams.FILL_PARENT) ;
-			helpHint.setBackgroundColor(Color.GRAY) ;
-			helpHint.setTextColor(Color.WHITE) ;
-			((LinearLayout)findViewById(R.id.domain_hosts_activity)).addView(helpHint) ;
 		}
 		
 	}
@@ -257,10 +145,100 @@ public class DomainHostsActivity extends Activity {
 		private ArrayList<Host> hosts = null ;
 		private StringBuffer filter = null ;
 
-		public HostListViewAdapter(Activity parent, ArrayList<Host> hosts, StringBuffer filter) {
+		private class BackgroundRequestHandler implements Runnable {
+
+			private ArrayList<Host> hostList = null ;
+			private boolean isClean = true ;
+			private String errorMessage = null ;
+			private Activity parent = null ;
+
+			public BackgroundRequestHandler(Activity parent) {
+				this.parent = parent ;
+				Log.d("DomainHostsActivity","Starting host list background API task.") ;
+			}
+
+			public void run() {
+
+				findViewById(R.id.domainListView).setVisibility(View.INVISIBLE) ;
+				findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
+				String apiHost = null ;
+				if (settings.getBoolean("use.sandbox", true)) {
+					apiHost = "sandbox.dns.com" ;
+				} else {
+					apiHost = "www.dns.com" ;
+				}
+
+				ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
+
+				try {
+					Log.d("DomainHostActivity", "Starting API call.") ;
+					JSONObject hostsObject = api.getHostnamesForDomain(parent.getIntent().getStringExtra("domainName")) ;
+					Log.d("DomainHostActivity", "Finished API call") ;
+					
+					try {
+						if (hostsObject.get("error")!=null) {
+							isClean = false ;
+							errorMessage = hostsObject.getString("error") ;
+						}
+					} catch (JSONException jsone) {
+						// Ignore
+					}
+					
+					JSONObject meta = null ;
+					if (isClean) {
+						meta = hostsObject.getJSONObject("meta") ;
+						if (meta==null) {
+							isClean = false ;
+							errorMessage = "'meta' node of the JSON response is NULL" ;
+						}
+					}
+					
+					if (isClean) {
+						int success = 0 ;
+						try {
+							success = meta.getInt("success") ;
+						} catch (JSONException jsone) {
+							success = 0 ;
+						}
+						
+						if (success==0) {
+							isClean = false ;
+							errorMessage = "The meta node does not have a valid success value." ;
+						} else {
+							JSONArray data = hostsObject.getJSONArray("data") ;
+							if (data==null) {
+								isClean = false ;
+								errorMessage = "The data array for the active hosts list is NULL" ;
+							} else {
+								int loopIndex = data.length() ;
+								for (int x=0; x<loopIndex; x++) {
+									Host currentHost = new Host();
+									currentHost.setHostId(data.getJSONObject(x).getInt("id"));
+									currentHost.setName(data.getJSONObject(x).getString("name"));
+									currentHost.setRecordCount(data.getJSONObject(x).getInt("num_rr")) ;
+									hostList.add(currentHost);
+									Log.d("DomainHostsActivity","Adding host '"+data.getJSONObject(x).getString("name")+"'");
+								}
+							}
+						}
+					}
+				} catch (JSONException jsone) {
+					Log.e("DomainHostsActivity", "JSONException while attempting to get host list.", jsone) ;
+					errorMessage = new String("JSONException while attempting to get host list.") ;
+					isClean = false ;
+				}
+				PostRequestUiChanges uiUpdate = new PostRequestUiChanges(isClean, errorMessage, parent) ;
+				findViewById(R.id.domain_hosts_activity).post(uiUpdate) ;
+			}
+			
+		}
+
+		public HostListViewAdapter(Activity parent) {
 			super() ;
-			this.hosts = hosts ;
-			this.filter = filter ;
+			BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(parent) ;
+
+			new Thread(apiInstance).start() ;
 		}
 
 		public int getCount() {

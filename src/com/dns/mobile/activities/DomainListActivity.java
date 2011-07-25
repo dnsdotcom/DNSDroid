@@ -101,122 +101,51 @@ public class DomainListActivity extends Activity {
 				builder.show() ;
 			}
 		});
-		Log.d("DomainListActivity","Created View") ;
-		StringBuffer filter = new StringBuffer("") ;
-		super.onStart() ;
-		ProgressDialog spinner = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER) ;
-		spinner.setTitle("Downloading") ;
-		spinner.setMessage("Retrieving the domain list from DNS.com") ;
-		ArrayList<Domain> domainList = new ArrayList<Domain>() ;
-		spinner.show() ;
 
-		BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(
-				filter, spinner, this, domainList) ;
-
-		new Thread(apiInstance).start() ;
-	}
-
-	/**
-	 * An implementation of <code>Runnable</code> which performs the HTTP(S) API call
-	 * in a seperate thread and then submits a UI update request via a call to View.post().
-	 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
-	 *
-	 */
-	private class BackgroundRequestHandler implements Runnable {
-
-		private ArrayList<Domain> domainList = null ;
-		private boolean isClean = true ;
-		private String errorMessage = null ;
-		private Activity parent = null ;
-		private ProgressDialog spinner = null ;
-		private StringBuffer filter = null ;
-
-		public BackgroundRequestHandler(StringBuffer filter, ProgressDialog spinner, Activity parent, ArrayList<Domain> domainList) {
-			this.domainList = domainList ;
-			this.parent = parent ;
-			this.spinner = spinner ;
-			this.filter = filter ;
-		}
-
-		public void run() {
-
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
-			String apiHost = null ;
-			if (settings.getBoolean("use.sandbox", true)) {
-				apiHost = "sandbox.dns.com" ;
-			} else {
-				apiHost = "www.dns.com" ;
+		ListView domainListView = (ListView) findViewById(R.id.domainListView) ;
+		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				TextView selectedItem = (TextView) arg1 ;
+				String domainName = selectedItem.getText().toString() ;
+				if (domainName.trim().contentEquals("[New Domain]")) {
+					Intent i = new Intent(getBaseContext(), CreateNewDomainActivity.class) ;
+					startActivity(i) ;
+				} else {
+					Intent i = new Intent(getBaseContext(), DomainHostsActivity.class) ;
+					i.putExtra("domainName", domainName) ;
+					startActivity(i) ;
+				}
 			}
+		}) ;
 
-			ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
+		domainListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
-			try {
-				Log.d("DomainListActivity", "Starting API call.") ;
-				JSONObject domainsObject = api.getDomains("") ;
-				Log.d("DomainListActivity", "Finished API call") ;
-				
-				try {
-					if (domainsObject.get("error")!=null) {
-						isClean = false ;
-						errorMessage = domainsObject.getString("error") ;
-					}
-				} catch (JSONException jsone) {
-					// Ignore
-				}
-				
-				JSONObject meta = null ;
-				if (isClean) {
-					meta = domainsObject.getJSONObject("meta") ;
-					if (meta==null) {
-						isClean = false ;
-						errorMessage = "'meta' node of the JSON response is NULL" ;
-					}
-				}
-				
-				if (isClean) {
-					int success = 0 ;
-					try {
-						success = meta.getInt("success") ;
-					} catch (JSONException jsone) {
-						success = 0 ;
-					}
-					
-					if (success==0) {
-						isClean = false ;
-						errorMessage = "The meta node does not have a valid success value." ;
-					} else {
-						JSONArray data = domainsObject.getJSONArray("data") ;
-						if (data==null) {
-							isClean = false ;
-							errorMessage = "The data array for the active domains list is NULL" ;
-						} else {
-							int loopIndex = data.length() ;
-							for (int x=0; x<loopIndex; x++) {
-								Domain currentDomain = new Domain();
-								if (data.getJSONObject(x).getString("mode").contentEquals("group")) {
-									currentDomain.setGroupedDomain(true) ;
-								} else {
-									currentDomain.setGroupedDomain(false) ;
-								}
-								currentDomain.setDomainId(data.getJSONObject(x).getInt("id"));
-								currentDomain.setName(data.getJSONObject(x).getString("name"));
-								domainList.add(currentDomain);
-								Log.d("DomainListActivity","Adding domain '"+data.getJSONObject(x).getString("name")+"'");
-							}
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+					TextView selected = (TextView)arg1 ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(selected.getContext()) ;
+					builder.setTitle("Confirmation?") ;
+					builder.setMessage("Are you sure you would like to delete the domain '"+selected.getText()+"'?") ;
+					OnYesButtonListener yesListener = new OnYesButtonListener() ;
+					yesListener.setDomainName(selected.getText().toString()) ;
+					yesListener.setListView(arg0) ;
+
+					builder.setPositiveButton("Yes", yesListener) ;
+					builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss() ;
 						}
-					}
-				}
-			} catch (JSONException jsone) {
-				Log.e("DomainListActivity", "JSONException while attempting to get domain list.", jsone) ;
-				errorMessage = new String("JSONException while attempting to get domain list.") ;
-				isClean = false ;
+					}) ;
+					return false;
 			}
-			PostRequestUiChanges uiUpdate = new PostRequestUiChanges(filter, spinner, isClean, errorMessage, parent, domainList) ;
-			findViewById(R.id.domains_activity_layout).post(uiUpdate) ;
-		}
-		
-	}
+			
+		}) ;
+		domainListView.setAdapter(new DomainListViewAdapter(this)) ;
 
+		Log.d("DomainListActivity","Created View") ;
+	}
 	/**
 	 * An implementation of <code>Runnable</code> which takes care of updating the UI
 	 * inside of the UI thread after <code>BackgroundRequestHandler</code> performs the API
@@ -229,37 +158,27 @@ public class DomainListActivity extends Activity {
 		private boolean isClean = false ;
 		private String errorMessage = null ;
 		private Activity parent = null ;
-		private ArrayList<Domain> domainList = null ;
-		private ProgressDialog spinner = null ;
 		private StringBuffer filter = null ;
 
-		public PostRequestUiChanges(StringBuffer filter, ProgressDialog spinner, boolean isClean, String errorMessage, Activity parent, ArrayList<Domain> domainList) {
+		public PostRequestUiChanges(boolean isClean, String errorMessage, Activity parent) {
 			this.isClean = isClean ;
 			this.errorMessage = errorMessage ;
 			this.parent = parent ;
-			this.domainList = domainList ;
-			this.spinner = spinner ;
-			this.filter = filter ;
+			this.filter = new StringBuffer() ;
 		}
 
 		/**
 		 * Runs the UI updates in the UI thread after the background thread finishes pulling data via the DNS.com API.
 		 */
 		public void run() {
-
-			spinner.dismiss() ;
+			findViewById(R.id.domainListProgressBar).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.domainListView).setVisibility(View.VISIBLE) ;
 			if (isClean) {
-				ListView domainListView = new ListView(findViewById(R.id.domains_activity_layout).getContext()) ;
-				DomainItemClickedListener domainListener = new DomainItemClickedListener() ;
-				domainListView.setOnItemClickListener(domainListener) ;
-				EditText searchField = new EditText(parent) ;
-				searchField.setHint("Filter") ;
+				ListView domainListView = (ListView) findViewById(R.id.domainListView) ;
+				EditText searchField = (EditText) findViewById(R.id.filterInput) ;
 				SearchInputHandler inputHandler = new SearchInputHandler(filter, domainListView) ;
 				searchField.setOnKeyListener(inputHandler) ;
-				((LinearLayout)findViewById(R.id.domains_activity_layout)).addView(searchField) ;
-				domainListView.setAdapter(new DomainListViewAdapter(domainList, filter)) ;
-				domainListView.setBackgroundResource(R.drawable.list_view_color_states) ;
-				((LinearLayout)findViewById(R.id.domains_activity_layout)).addView(domainListView) ;
+				domainListView.setAdapter(new DomainListViewAdapter(parent)) ;
 			} else {
 				if (errorMessage.trim().contentEquals("Auth Token Not Valid")) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -290,13 +209,6 @@ public class DomainListActivity extends Activity {
 							.setPositiveButton("OK", dialogListener);
 				}
 			}
-			TextView helpHint = new TextView(findViewById(R.id.domains_activity_layout).getContext()) ;
-			helpHint.setText("Long press to delete an entry.") ;
-			helpHint.setGravity(Gravity.CENTER_HORIZONTAL&Gravity.BOTTOM) ;
-			helpHint.setWidth(LayoutParams.FILL_PARENT) ;
-			helpHint.setBackgroundColor(Color.GRAY) ;
-			helpHint.setTextColor(Color.WHITE) ;
-			((LinearLayout)findViewById(R.id.domains_activity_layout)).addView(helpHint) ;
 		}
 		
 	}
@@ -310,17 +222,118 @@ public class DomainListActivity extends Activity {
 	 */
 	private class DomainListViewAdapter extends BaseAdapter {
 
-		private ArrayList<Domain> domains = null ;
+		private ArrayList<Domain> domainList = null ;
 		private StringBuffer filter = null ;
 
-		public DomainListViewAdapter(ArrayList<Domain> domains, StringBuffer filter) {
+		/**
+		 * An implementation of <code>Runnable</code> which performs the HTTP(S) API call
+		 * in a seperate thread and then submits a UI update request via a call to View.post().
+		 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
+		 *
+		 */
+		private class BackgroundRequestHandler implements Runnable {
+
+			private boolean isClean = true ;
+			private String errorMessage = null ;
+			private Activity parent = null ;
+			private ArrayList<Domain> domainList = null ;
+
+			public BackgroundRequestHandler(Activity parent, ArrayList<Domain> domainList) {
+				this.parent = parent ;
+				this.domainList = domainList ;
+				Log.d("DomainListActivity", "Instantiating a new instance of the background API handler.") ;
+			}
+
+			public void run() {
+
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
+				String apiHost = null ;
+				if (settings.getBoolean("use.sandbox", true)) {
+					apiHost = "sandbox.dns.com" ;
+				} else {
+					apiHost = "www.dns.com" ;
+				}
+
+				ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
+
+				try {
+					Log.d("DomainListActivity", "Starting API call.") ;
+					JSONObject domainsObject = api.getDomains("") ;
+					Log.d("DomainListActivity", "Finished API call") ;
+					
+					try {
+						if (domainsObject.get("error")!=null) {
+							isClean = false ;
+							errorMessage = domainsObject.getString("error") ;
+						}
+					} catch (JSONException jsone) {
+						// Ignore
+					}
+					
+					JSONObject meta = null ;
+					if (isClean) {
+						meta = domainsObject.getJSONObject("meta") ;
+						if (meta==null) {
+							isClean = false ;
+							errorMessage = "'meta' node of the JSON response is NULL" ;
+						}
+					}
+					
+					if (isClean) {
+						int success = 0 ;
+						try {
+							success = meta.getInt("success") ;
+						} catch (JSONException jsone) {
+							success = 0 ;
+						}
+						
+						if (success==0) {
+							isClean = false ;
+							errorMessage = "The meta node does not have a valid success value." ;
+						} else {
+							JSONArray data = domainsObject.getJSONArray("data") ;
+							if (data==null) {
+								isClean = false ;
+								errorMessage = "The data array for the active domains list is NULL" ;
+							} else {
+								int loopIndex = data.length() ;
+								for (int x=0; x<loopIndex; x++) {
+									Domain currentDomain = new Domain();
+									if (data.getJSONObject(x).getString("mode").contentEquals("group")) {
+										currentDomain.setGroupedDomain(true) ;
+									} else {
+										currentDomain.setGroupedDomain(false) ;
+									}
+									currentDomain.setDomainId(data.getJSONObject(x).getInt("id"));
+									currentDomain.setName(data.getJSONObject(x).getString("name"));
+									domainList.add(currentDomain);
+									Log.d("DomainListActivity","Adding domain '"+data.getJSONObject(x).getString("name")+"'");
+								}
+							}
+						}
+					}
+				} catch (JSONException jsone) {
+					Log.e("DomainListActivity", "JSONException while attempting to get domain list.", jsone) ;
+					errorMessage = new String("JSONException while attempting to get domain list.") ;
+					isClean = false ;
+				}
+				PostRequestUiChanges uiUpdate = new PostRequestUiChanges(isClean, errorMessage, parent) ;
+				findViewById(R.id.domains_activity_layout).post(uiUpdate) ;
+			}
+			
+		}
+
+		public DomainListViewAdapter(Activity parent) {
 			super() ;
-			this.domains = domains ;
-			this.filter = filter ;
+
+			domainList = new ArrayList<Domain>() ;
+			BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(parent, domainList) ;
+
+			new Thread(apiInstance).start() ;
 		}
 
 		public int getCount() {
-			Iterable<Domain> filteredDomains = Iterables.filter(domains, new Predicate<Domain>() {
+			Iterable<Domain> filteredDomains = Iterables.filter(domainList, new Predicate<Domain>() {
 				public boolean apply(Domain input) {
 					if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
 						return true ;
@@ -333,7 +346,7 @@ public class DomainListActivity extends Activity {
 		}
 
 		public Object getItem(int item) {
-			Iterable<Domain> filteredDomains = Iterables.filter(domains, new Predicate<Domain>() {
+			Iterable<Domain> filteredDomains = Iterables.filter(domainList, new Predicate<Domain>() {
 				public boolean apply(Domain input) {
 					if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
 						return true ;
@@ -358,7 +371,7 @@ public class DomainListActivity extends Activity {
 			if (arg0==0) {
 				item.setText("[New Domain]") ;
 			} else {
-				Iterable<Domain> filteredDomains = Iterables.filter(domains, new Predicate<Domain>() {
+				Iterable<Domain> filteredDomains = Iterables.filter(domainList, new Predicate<Domain>() {
 					public boolean apply(Domain input) {
 						if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
 							return true ;
@@ -398,177 +411,202 @@ public class DomainListActivity extends Activity {
 		}
 	}
 
-	private class DomainItemClickedListener implements AdapterView.OnItemClickListener {
+	private class OnYesButtonListener implements DialogInterface.OnClickListener {
+		private String domainName = null ;
+		private View parent = null ;
 
-		/* (non-Javadoc)
-		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		/**
+		 * An implementation of <code>Runnable</code> which performs the HTTP(S) API call
+		 * in a seperate thread and then submits a UI update request via a call to View.post().
+		 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
+		 *
 		 */
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			TextView selectedItem = (TextView) arg1 ;
-			String domainName = selectedItem.getText().toString() ;
-			if (domainName.trim().contentEquals("[New Domain]")) {
-				Intent i = new Intent(getBaseContext(), CreateNewDomainActivity.class) ;
-				startActivity(i) ;
-			} else {
-				Intent i = new Intent(getBaseContext(), DomainHostsActivity.class) ;
-				i.putExtra("domainName", domainName) ;
-				startActivity(i) ;
-			}
-		}
-	}
+		private class DeleteRequestHandler implements Runnable {
 
-	private class DomainItemLongClickedListener implements AdapterView.OnItemLongClickListener {
-
-		private class OnYesButtonListener implements DialogInterface.OnClickListener {
 			private String domainName = null ;
-			private View parent = null ;
+			private Activity parent = null ;
+			private ProgressDialog spinner = null ;
 
-			/**
-			 * An implementation of <code>Runnable</code> which performs the HTTP(S) API call
-			 * in a seperate thread and then submits a UI update request via a call to View.post().
-			 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
-			 *
-			 */
-			private class DeleteRequestHandler implements Runnable {
-
-				private String domainName = null ;
-				private Activity parent = null ;
+			private class PostDeleteUiChanges implements Runnable {
 				private ProgressDialog spinner = null ;
+				private Activity parent = null ;
 
-				private class PostDeleteUiChanges implements Runnable {
-					private ProgressDialog spinner = null ;
-					private Activity parent = null ;
-
-					/**
-					 * 
-					 */
-					public PostDeleteUiChanges(ProgressDialog spinner, Activity parent) {
-						this.spinner = spinner ;
-						this.parent = parent ;
-					}
-
-					public void run() {
-						spinner.dismiss() ;
-					}
-					
-				}
-
-				public DeleteRequestHandler(ProgressDialog spinner, Activity parent, String domainName) {
-					this.domainName = domainName ;
-					this.parent = parent ;
+				/**
+				 * 
+				 */
+				public PostDeleteUiChanges(ProgressDialog spinner, Activity parent) {
 					this.spinner = spinner ;
+					this.parent = parent ;
 				}
 
 				public void run() {
-
-					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
-					String apiHost = null ;
-					if (settings.getBoolean("use.sandbox", true)) {
-						apiHost = "sandbox.dns.com" ;
-					} else {
-						apiHost = "www.dns.com" ;
-					}
-
-					boolean isClean = true ;
-					String errorMessage = null ;
-
-					ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
-
-					try {
-						Log.d("DomainListActivity", "Starting API call.") ;
-						JSONObject domainsObject = api.deleteDomain(domainName, true) ;
-						Log.d("DomainListActivity", "Finished API call") ;
-						
-						try {
-							if (domainsObject.get("error")!=null) {
-								isClean = false ;
-								errorMessage = domainsObject.getString("error") ;
-							}
-						} catch (JSONException jsone) {
-							// Ignore
-						}
-						
-						JSONObject meta = null ;
-						if (isClean) {
-							meta = domainsObject.getJSONObject("meta") ;
-							if (meta==null) {
-								isClean = false ;
-								errorMessage = "'meta' node of the JSON response is NULL" ;
-							}
-						}
-						
-						if (isClean) {
-							int success = 0 ;
-							try {
-								success = meta.getInt("success") ;
-							} catch (JSONException jsone) {
-								success = 0 ;
-							}
-							
-							if (success==0) {
-								isClean = false ;
-								errorMessage = "The meta node does not have a valid success value." ;
-							} else {
-								JSONArray data = domainsObject.getJSONArray("data") ;
-								if (data==null) {
-									isClean = false ;
-									errorMessage = "The data array for the active domains list is NULL" ;
-								} else {
-									
-								}
-							}
-						}
-					} catch (JSONException jsone) {
-						Log.e("DomainListActivity", "JSONException while attempting to get domain list.", jsone) ;
-						errorMessage = new String("JSONException while attempting to get domain list.") ;
-						isClean = false ;
-					}
-					PostDeleteUiChanges uiUpdate = new PostDeleteUiChanges(spinner, parent) ;
-					findViewById(R.id.domains_activity_layout).post(uiUpdate) ;
+					spinner.dismiss() ;
 				}
 				
 			}
 
-			private class DomainDeleteThread implements Runnable {
-				private String domainName = null ;
-				private View parent = null ;
-				private ProgressDialog spinner = null ;
-
-				public DomainDeleteThread(String domainName, View parent, ProgressDialog spinner) {
-					this.domainName = domainName ;
-					this.parent = parent ;
-					this.spinner = spinner ;
-				}
-
-				/* (non-Javadoc)
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run() {
-					
-				}
-			}
-
-			public void setDomainName(String domainName) {
+			public DeleteRequestHandler(ProgressDialog spinner, Activity parent, String domainName) {
 				this.domainName = domainName ;
+				this.parent = parent ;
+				this.spinner = spinner ;
 			}
 
-			public void setListView(View parent) {
+			public void run() {
+
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
+				String apiHost = null ;
+				if (settings.getBoolean("use.sandbox", true)) {
+					apiHost = "sandbox.dns.com" ;
+				} else {
+					apiHost = "www.dns.com" ;
+				}
+
+				boolean isClean = true ;
+				String errorMessage = null ;
+
+				ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
+
+				try {
+					Log.d("DomainListActivity", "Starting API call.") ;
+					JSONObject domainsObject = api.deleteDomain(domainName, true) ;
+					Log.d("DomainListActivity", "Finished API call") ;
+					
+					try {
+						if (domainsObject.get("error")!=null) {
+							isClean = false ;
+							errorMessage = domainsObject.getString("error") ;
+						}
+					} catch (JSONException jsone) {
+						// Ignore
+					}
+					
+					JSONObject meta = null ;
+					if (isClean) {
+						meta = domainsObject.getJSONObject("meta") ;
+						if (meta==null) {
+							isClean = false ;
+							errorMessage = "'meta' node of the JSON response is NULL" ;
+						}
+					}
+					
+					if (isClean) {
+						int success = 0 ;
+						try {
+							success = meta.getInt("success") ;
+						} catch (JSONException jsone) {
+							success = 0 ;
+						}
+						
+						if (success==0) {
+							isClean = false ;
+							errorMessage = "The meta node does not have a valid success value." ;
+						} else {
+							JSONArray data = domainsObject.getJSONArray("data") ;
+							if (data==null) {
+								isClean = false ;
+								errorMessage = "The data array for the active domains list is NULL" ;
+							} else {
+								
+							}
+						}
+					}
+				} catch (JSONException jsone) {
+					Log.e("DomainListActivity", "JSONException while attempting to get domain list.", jsone) ;
+					errorMessage = new String("JSONException while attempting to get domain list.") ;
+					isClean = false ;
+				}
+				PostDeleteUiChanges uiUpdate = new PostDeleteUiChanges(spinner, parent) ;
+				findViewById(R.id.domains_activity_layout).post(uiUpdate) ;
+			}
+			
+		}
+
+		private class DomainDeleteThread implements Runnable {
+			private String domainName = null ;
+			private View parent = null ;
+			private ProgressDialog spinner = null ;
+
+			public DomainDeleteThread(String domainName, View parent, ProgressDialog spinner) {
+				this.domainName = domainName ;
 				this.parent = parent ;
+				this.spinner = spinner ;
 			}
 
 			/* (non-Javadoc)
-			 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+			 * @see java.lang.Runnable#run()
 			 */
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss() ;
-				ProgressDialog spinner = new ProgressDialog(parent.getContext(), ProgressDialog.STYLE_SPINNER) ;
-				spinner.setTitle("Deleting") ;
-				spinner.setMessage("Deleting the domain '"+domainName+"' from DNS.com") ;
-				spinner.show() ;
-				DomainDeleteThread thread = new DomainDeleteThread(domainName, parent, spinner) ;
+			public void run() {
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) ;
+				String apiHost = null ;
+				if (settings.getBoolean("use.sandbox", true)) {
+					apiHost = "sandbox.dns.com" ;
+				} else {
+					apiHost = "www.dns.com" ;
+				}
+
+				ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
+
+				boolean isClean = true ;
+				String errorMessage = null ;
+				try {
+					Log.d("DomainListActivity", "Starting API call.") ;
+					JSONObject hostsObject = api.disableDomain(domainName, true) ;
+					Log.d("DomainListActivity", "Finished API call") ;
+					
+					try {
+						if (hostsObject.get("error")!=null) {
+							isClean = false ;
+							errorMessage = hostsObject.getString("error") ;
+						}
+					} catch (JSONException jsone) {
+						// Ignore
+					}
+					
+					Object meta = null ;
+					if (isClean) {
+						meta = hostsObject.get("success") ;
+						if (meta==null) {
+							isClean = false ;
+							errorMessage = "'meta' node of the JSON response is NULL" ;
+						} else {
+							if (hostsObject.getInt("success")!=1) {
+								isClean = false ;
+							}
+						}
+					}
+					findViewById(R.id.domainListView).invalidate() ;
+				} catch(JSONException jsone) {
+					Log.e("DomainListActivity", "JSONException while attempting to disable domain.", jsone) ;
+					errorMessage = new String("JSONException while attempting to disable domain.") ;
+					isClean = false ;
+				}
 			}
 		}
+
+		public void setDomainName(String domainName) {
+			this.domainName = domainName ;
+		}
+
+		public void setListView(View parent) {
+			this.parent = parent ;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+		 */
+		public void onClick(DialogInterface dialog, int which) {
+			dialog.dismiss() ;
+			ProgressDialog spinner = new ProgressDialog(parent.getContext(), ProgressDialog.STYLE_SPINNER) ;
+			spinner.setTitle("Deleting") ;
+			spinner.setMessage("Deleting the domain '"+domainName+"' from DNS.com") ;
+			spinner.show() ;
+			DomainDeleteThread thread = new DomainDeleteThread(domainName, parent, spinner) ;
+		}
+	}
+
+
+	private class DomainItemLongClickedListener implements AdapterView.OnItemLongClickListener {
+
 
 		/* (non-Javadoc)
 		 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
