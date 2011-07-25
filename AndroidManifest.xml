@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dns.mobile">
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" android:maxSdkVersion="12"></uses-sdk>
+    <application android:label="@string/dns_app" android:icon="@drawable/dns_launcher_icon">
+
+        <!-- An Activity in the application - this is something the user
+             can launch and interact with.  The "name" attribute is the
+             name of the class within your package that implements this
+             activity. -->
+        <activity android:name=".DNSActivity" android:theme="@android:style/Theme.NoTitleBar">
+
+            <!-- An IntentFilter tells the system when it should use your
+                 activity.  This allows the user to get to your activity
+                 without someone having to explicitly know to launch your
+                 class "com.examplel.android.skeletonapp.SkeletonActivity". -->
+            <intent-filter>
+                <!-- The MAIN action describes a main entry point into an
+                     activity, without any associated data. -->
+                <action android:name="android.intent.action.MAIN" />
+
+                <!-- This places this activity into the main app list. -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+	<activity android:name=".activities.DomainListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.DomainHostsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.CreateNewDomainActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.CreateNewHostActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.ConfigurationActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.RRListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+    </application>
+
+</manifest>

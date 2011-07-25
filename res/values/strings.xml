@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<!-- This file contains resource definitions for displayed strings, allowing
+     them to be changed based on the locale and options. -->
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="dns_app">DNS.com Mobile</string>
+    <string name="back">Back</string>
+    <string name="clear">Clear</string>
+
+    <!-- This is a complex string containing style runs. -->
+    <string name="main_label">DNS.com Mobile</string>
+    <string name="domainViewLabel">Domain List</string>
+    <string name="domainGroupListLabel">Domain Group List</string>
+    <string name="geoGroupLabel">Geo-Group List</string>
+    <string name="domain_selection_button">Domains</string>
+    <string name="domain_groups_button_text">Domain Groups</string>
+    <string name="geo_groups_button_text">Geo-Groups</string>
+    <string name="record_type_label">Type</string>
+    <string name="name_servers_button_text">Name Servers</string>
+    <string name="tools_button_text">Tools</string>
+    <string name="dns_mobile_description">Manage your DNS.com domain settings from your mobile device.</string>
+    <string name="new_entry">[New]</string>
+    <string name="domains_list_view_label">My Domains</string>
+    <string name="open_web_confirmation_title">Confirmation...</string>
+    <string name="open_web_confirmation_msg">Visit DNS.com on the web?</string>
+	<string name="open_web_confirmation_yes">Yes</string>
+	<string name="open_web_confirmation_no">No</string>
+	<string name="dns_configuration_label">DNS.com Configuration</string>
+	<string name="auth_token_label">Auth Token</string>
+	<string name="auth_token_input_hint">Auth Token</string>
+	<string name="use_sandbox_config_label">Use Sandbox</string>
+	<string name="configuration_save_button_label">Save</string>
+	<string name="configuration_token_dialog_message">Enter Account Token</string>
+	<string name="configuration_token_dialog_title">Enter the authorization token from the Settings->API Settings page on the DNS.com web site.</string>
+	<string name="configuration_sandbox_summary">Checking this box will cause the application to use the DNS.com sandbox instead of live production data. You can use this to test access to DNS.com from the app without making real changes.</string>
+	<string name="main_menu_my_domains">My Domains</string>
+	<string name="main_menu_my_domain_groups">My Domain Groups</string>
+	<string name="main_menu_my_geo_groups">My Geo-Groups</string>
+	<string name="main_menu_my_name_servers">My Name Servers</string>
+	<string name="main_menu_dns_tools">DNS Tools</string>
+</resources>
+
