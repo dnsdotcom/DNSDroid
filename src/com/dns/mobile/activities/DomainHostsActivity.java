@@ -2,6 +2,7 @@ package com.dns.mobile.activities;
 
 import java.util.ArrayList;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,12 +20,14 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import android.widget.TextView;
 public class DomainHostsActivity extends Activity {
 
 	protected ArrayList<Host> hostList = null ;
+	protected String filter = new String("") ;
 
 	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -160,17 +164,31 @@ public class DomainHostsActivity extends Activity {
 				hostItem.setTextColor(Color.WHITE) ;
 				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
 				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
 				if (position==0) {
 					hostItem.setText("[New Host]") ;
 				} else {
 					TextView rrCount = new TextView(getBaseContext()) ;
 					rrCount.setBackgroundDrawable(getResources().getDrawable(R.drawable.count_background)) ;
 					rrCount.setTextColor(Color.WHITE) ;
-					rrCount.setText(hostList.get(position-1).getRecordCount()+"") ;
+					rrCount.setText(filteredList.get(position-1).getRecordCount()+"") ;
 					rrCount.setGravity(Gravity.CENTER) ;
 					listItemLayout.addView(rrCount) ;
 
-					Host currentHost = hostList.get(position-1);
+					Host currentHost = filteredList.get(position-1);
 					hostItem.setText(currentHost.getName());
 				}
 				listItemLayout.addView(hostItem) ;
@@ -182,15 +200,54 @@ public class DomainHostsActivity extends Activity {
 			}
 			
 			public Object getItem(int position) {
-				return hostList.get(position-1) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.get(position-1) ;
 			}
 			
 			public int getCount() {
-				return hostList.size()+1 ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.size()+1 ;
 			}
 		}) ;
 
 		new HostListApiTask().execute(domainName) ;
+
+		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
+		// order to have it update the list of displayed hosts.
+		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
+		filterInput.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				EditText filterInput = (EditText) v ;
+				filter = filterInput.getText().toString() ;
+				((ListView)findViewById(R.id.hostListView)).invalidateViews() ;
+				return false;
+			}
+		}) ;
 	}
 
 	@Override

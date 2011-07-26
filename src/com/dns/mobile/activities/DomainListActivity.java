@@ -180,7 +180,7 @@ public class DomainListActivity extends Activity {
 				}
 				return domainItem ;
 			}
-			
+
 			public long getItemId(int position) {
 				return position+100 ;
 			}
@@ -221,6 +221,8 @@ public class DomainListActivity extends Activity {
 			}
 		}) ;
 
+		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
+		// order to have it update the list of displayed domains.
 		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
 		filterInput.setOnKeyListener(new View.OnKeyListener() {
 			
