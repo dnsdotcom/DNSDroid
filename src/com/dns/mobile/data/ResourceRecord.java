@@ -13,6 +13,8 @@ import android.util.Log;
  */
 public class ResourceRecord {
 
+	private Long id = 0L ;
+
 	private String answer = new String("") ;
 
 	private Integer cityId = null ;
@@ -50,6 +52,14 @@ public class ResourceRecord {
 	private Long xfr = null ;
 
 	private Long hostId = null ;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getAnswer() {
 		return answer;

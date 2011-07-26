@@ -10,6 +10,7 @@ import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -33,7 +34,6 @@ public class HostRecordListActivity extends Activity {
 	protected ArrayList<ResourceRecord> rrList = null ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
-
 
 		/* (non-Javadoc)
 		 * @see android.os.AsyncTask#doInBackground(Params[])
@@ -95,6 +95,7 @@ public class HostRecordListActivity extends Activity {
 						Log.d("HostRecordListActivity", "Adding RR '"+currentData.getString("answer")+"' to rrList") ;
 						currentRR.setHostId(currentData.getLong("id")) ;
 						currentRR.setType(currentData.getString("type")) ;
+						currentRR.setId(currentData.getLong("id")) ;
 						if (currentData.getString("country_iso2").length()>0) {
 							currentRR.setCountryId(currentData.getString("country_iso2")) ;
 						}
@@ -123,17 +124,23 @@ public class HostRecordListActivity extends Activity {
 		super.onCreate(savedInstanceState) ;
 		setContentView(R.layout.host_rr_activity) ;
 		rrList = new ArrayList<ResourceRecord>() ;
-		String domainName = this.getIntent().getExtras().getString("domainName") ;
-		String hostName = this.getIntent().getExtras().getString("hostName") ;
+		final String domainName = this.getIntent().getExtras().getString("domainName") ;
+		final String hostName = this.getIntent().getExtras().getString("hostName") ;
+		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 
+		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
 		ListView rrListView = (ListView) findViewById(R.id.rrListView) ;
 		rrListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			/* (non-Javadoc)
 			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
 			 */
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				
+			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
+				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
+				rrDetailsActivity.putExtra("rr_id", rrList.get(position-1).getId().longValue()) ;
+				rrDetailsActivity.putExtra("rr_type", rrList.get(position-1).getType()) ;
+				rrDetailsActivity.putExtra("domainName", domainName) ;
+				rrDetailsActivity.putExtra("hostName", hostName) ;
+				startActivity(rrDetailsActivity) ;
 			}
 		}) ;
 		rrListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

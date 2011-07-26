@@ -30,7 +30,7 @@ import android.widget.TextView;
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
  *
  */
-public class DomainGroupsListActivity extends Activity {
+public class DomainGroupHostsListActivity extends Activity {
 
 	protected ArrayList<DomainGroup> domainGroupList = null ;
 

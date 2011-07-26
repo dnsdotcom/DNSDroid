@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="exampleHostList">
-        <item>&#91;NEW&#93;</item>
-        <item>(root)</item>
-        <item>*</item>
-        <item>(mail)</item>
-        <item>www</item>
-        <item>ns1</item>
-    </string-array>
     <string-array name="recordTypes">
         <item>A</item>
         <item>CNAME</item>
@@ -16,14 +8,8 @@
         <item>SOA</item>
         <item>TXT</item>
         <item>SRV</item>
-        <item>URL301</item>
-        <item>URL302</item>
-        <item>URLFRAME</item>
-    </string-array>
-    <string-array name="domainsList">
-    	<item>&#91;NEW&#93;</item>
-    	<item>zanclus.com</item>
-    	<item>lacyphillipsdesigns.com</item>
-    	<item>example.com</item>
+        <item>URL(301)</item>
+        <item>URL(302)</item>
+        <item>URL(FRAME)</item>
     </string-array>
 </resources>

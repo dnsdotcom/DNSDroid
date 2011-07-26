@@ -56,5 +56,18 @@
 	<string name="main_menu_dns_tools">DNS Tools</string>
 	<string name="screen_bottom_help_text">Long press to delete items</string>
 	<string name="api_request_failed">API request failed</string>
+	<string name="domain_groups_list_label">My Domain Groups</string>
+	<string name="rr_type_selection_label">Record Type</string>
+	<string name="rr_answer_label">Address</string>
+	<string name="rr_rname_label">Contact Address</string>
+	<string name="rr_ttl_label">TTL (in seconds)</string>
+	<string name="rr_details_header_label">Details For: </string>
+	<string name="rr_srv_weight_label">Weight</string>
+	<string name="rr_srv_port_label">Port Number (0 - 65535)</string>
+	<string name="priority_label">Priority</string>
+	<string name="rr_retry_label">Retry Interval (in seconds)</string>
+	<string name="rr_expire_label">Expire</string>
+	<string name="rr_min_label">Minimum TTL (in seconds)</string>
+	<string name="rr_details_save">Save</string>
 </resources>
 

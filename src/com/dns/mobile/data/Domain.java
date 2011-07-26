@@ -5,6 +5,7 @@ public class Domain {
 	private long domainId = 0L ;
 	private String name = null ;
 	private boolean isGroupedDomain = false ;
+	private String domainGroup = null ;
 
 	public long getDomainId() {
 		return domainId;
@@ -28,5 +29,13 @@ public class Domain {
 
 	public void setGroupedDomain(boolean isGroupedDomain) {
 		this.isGroupedDomain = isGroupedDomain;
+	}
+
+	public String getDomainGroup() {
+		return domainGroup;
+	}
+
+	public void setDomainGroup(String domainGroup) {
+		this.domainGroup = domainGroup;
 	}
 }

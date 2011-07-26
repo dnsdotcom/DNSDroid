@@ -33,6 +33,8 @@
 	<activity android:name=".activities.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.ConfigurationActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.RRListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.DomainGroupsListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.RecordDetailActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
     </application>
 
 </manifest>

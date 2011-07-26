@@ -94,6 +94,9 @@ public class DomainListActivity extends Activity {
 						Log.d("DomainListActivity", "Adding domain '"+currentData.getString("name")+"' to domainList") ;
 						currentDomain.setDomainId(currentData.getLong("id")) ;
 						currentDomain.setGroupedDomain(currentData.getString("mode").contentEquals("group")) ;
+						if (currentDomain.isGroupedDomain()) {
+							currentDomain.setDomainGroup(currentData.getString("group")) ;
+						}
 						domainList.add(currentDomain) ;
 					}
 					findViewById(R.id.domainListView).setVisibility(View.VISIBLE) ;
@@ -122,9 +125,14 @@ public class DomainListActivity extends Activity {
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				Intent hostListIntent = new Intent(getApplicationContext(), DomainHostsActivity.class) ;
-				hostListIntent.putExtra("domainName", ((TextView)selectedView).getText().toString()) ;
-				startActivity(hostListIntent) ;
+				Domain selected = domainList.get(position) ;
+				if (selected.isGroupedDomain()) {
+					// TODO: Add Intent for showing the members of the associated domain group
+				} else {
+					Intent hostListIntent = new Intent(getApplicationContext(), DomainHostsActivity.class) ;
+					hostListIntent.putExtra("domainName", ((TextView)selectedView).getText().toString()) ;
+					startActivity(hostListIntent) ;
+				}
 			}
 			
 		}) ;

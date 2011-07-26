@@ -19,6 +19,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -186,5 +188,27 @@ public class DomainHostsActivity extends Activity {
 		}) ;
 
 		new HostListApiTask().execute(domainName) ;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem addToGroup = menu.add(Menu.NONE, 0, 0, "Add To Group");
+		addToGroup.setIcon(android.R.drawable.ic_menu_add) ;
+		MenuItem disableDomain = menu.add(Menu.NONE, 1, 1, "Delete Domain");
+		disableDomain.setIcon(android.R.drawable.ic_input_delete) ;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case 0:
+				// TODO: Move to domain group logic
+				return true ;
+			case 1:
+				// TODO: Domain delete logic.
+				return true ;
+		}
+		return false;
 	}
 }
