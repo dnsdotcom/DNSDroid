@@ -1,6 +1,7 @@
 package com.dns.mobile.activities;
 
 import java.util.ArrayList;
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,11 +18,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +36,7 @@ import android.widget.TextView;
 public class DomainListActivity extends Activity {
 
 	protected ArrayList<Domain> domainList = null ;
+	protected String filter = new String("") ;
 
 	private class DomainListApiTask extends AsyncTask<Void, Void, JSONObject> {
 		/* (non-Javadoc)
@@ -154,10 +158,24 @@ public class DomainListActivity extends Activity {
 				domainItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
 				domainItem.setBackgroundColor(Color.TRANSPARENT) ;
 				domainItem.setWidth(LayoutParams.FILL_PARENT) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Domain current = (Domain) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
 				if (position==0) {
 					domainItem.setText("[New Domain]") ;
 				} else {
-					Domain currentDomain = domainList.get(position-1);
+					Domain currentDomain = filteredList.get(position-1);
 					domainItem.setText(currentDomain.getName());
 				}
 				return domainItem ;
@@ -168,11 +186,49 @@ public class DomainListActivity extends Activity {
 			}
 			
 			public Object getItem(int position) {
-				return domainList.get(position-1) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Domain current = (Domain) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.get(position-1) ;
 			}
 			
 			public int getCount() {
-				return domainList.size()+1 ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Domain current = (Domain) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
+				return filteredList.size()+1 ;
+			}
+		}) ;
+
+		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
+		filterInput.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				EditText filterInput = (EditText) v ;
+				filter = filterInput.getText().toString() ;
+				((ListView)findViewById(R.id.domainListView)).invalidateViews() ;
+				return false;
 			}
 		}) ;
 
