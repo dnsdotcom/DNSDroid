@@ -65,38 +65,74 @@ public class ResourceRecord implements Serializable {
 
 	private Long hostId = null ;
 
+	/**
+	 * Returns the RR ID
+	 * @return
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * Set the RR ID
+	 * @param id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the currently set answer/alias/Responsible Party value for the RR
+	 * @return
+	 */
 	public String getAnswer() {
 		return answer;
 	}
 
+	/**
+	 * Sets the answer/alias/Responsible Party value for the RR
+	 * @return
+	 */
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
 
+	/**
+	 * Returns the City ID for this RR is it is set or NULL if not.
+	 * @return
+	 */
 	public Integer getCityId() {
 		return cityId;
 	}
 
+	/**
+	 * Sets the city ID for this RR
+	 * @param cityId
+	 */
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
 
+	/**
+	 * Returns the current Type value (One of 1,2,5,6,15,16,28,33,80000,80001,80002) or NULL if not set.
+	 * @return
+	 */
 	public Integer getType() {
 		return type;
 	}
 
+	/**
+	 * Set the RR type value (One of 1,2,5,6,15,16,28,33,80000,80001,80002)
+	 * @param type
+	 */
 	public void setType(Integer type) {
 		this.type = type;
 	}
 
+	/**
+	 * Set the RR type value based on a string representation of the type.
+	 * @param type
+	 */
 	public void setType(String type) {
 		if (type.contentEquals("SOA")) {
 			this.type = 6 ;

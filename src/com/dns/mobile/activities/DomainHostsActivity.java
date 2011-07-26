@@ -130,9 +130,10 @@ public class DomainHostsActivity extends Activity {
 			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
 			 */
 			public void onItemClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
+				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
 				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
 				rrListActivity.putExtra("domainName", domainName) ;
-				rrListActivity.putExtra("hostName", hostList.get(position-1).getName()) ;
+				rrListActivity.putExtra("hostName", selectedHost.getName()) ;
 				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}

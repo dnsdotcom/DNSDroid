@@ -177,7 +177,7 @@ public class HostRecordListActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
 				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
-				ResourceRecord clickedRR = rrList.get(position-1) ;
+				ResourceRecord clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
 				clickedRR.setHostName(hostName) ;
 				clickedRR.setDomainName(domainName) ;
 				rrDetailsActivity.putExtra("rrData", clickedRR) ;

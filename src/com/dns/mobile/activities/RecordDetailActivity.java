@@ -28,6 +28,7 @@ public class RecordDetailActivity extends Activity {
 
 	ResourceRecord currentRR = null ;
 
+	@SuppressWarnings("unused")
 	private class RRSaveViaAPI extends AsyncTask<ResourceRecord, Void, JSONObject> {
 
 		private long rrId = 0L ;

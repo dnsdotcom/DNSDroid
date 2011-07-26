@@ -122,7 +122,7 @@ public class DomainGroupsListActivity extends Activity {
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				DomainGroup selected = domainGroupList.get(position) ;
+				DomainGroup selected = domainGroupList.get(position-1) ;
 				Intent hostListIntent = new Intent(getApplicationContext(), DomainHostsActivity.class) ;
 				hostListIntent.putExtra("domainName", selected.getName()) ;
 				startActivity(hostListIntent) ;

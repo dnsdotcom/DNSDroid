@@ -125,7 +125,7 @@ public class DomainListActivity extends Activity {
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				Domain selected = domainList.get(position) ;
+				Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
 				if (selected.isGroupedDomain()) {
 					// TODO: Add Intent for showing the members of the associated domain group
 				} else {
