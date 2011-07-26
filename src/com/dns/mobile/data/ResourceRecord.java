@@ -25,7 +25,7 @@ public class ResourceRecord {
 
 	private Date dateLastModified = new Date() ;
     
-	private Integer geoGroup_id = 0 ;
+	private String geoGroup = null ;
 
 	private boolean isActive = false ;
 
@@ -127,12 +127,12 @@ public class ResourceRecord {
 		this.dateLastModified = dateLastModified;
 	}
 
-	public Integer getGeoGroup_id() {
-		return geoGroup_id;
+	public String getGeoGroup() {
+		return geoGroup;
 	}
 
-	public void setGeoGroup_id(Integer geoGroup_id) {
-		this.geoGroup_id = geoGroup_id;
+	public void setGeoGroup(String geoGroup) {
+		this.geoGroup = geoGroup;
 	}
 
 	public boolean isActive() {
