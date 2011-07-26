@@ -28,6 +28,11 @@ public class RecordDetailActivity extends Activity {
 
 	ResourceRecord currentRR = null ;
 
+	/**
+	 * A class which extends the AsyncTask AbstractClass to perform network operations in the background.
+	 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
+	 *
+	 */
 	@SuppressWarnings("unused")
 	private class RRSaveViaAPI extends AsyncTask<ResourceRecord, Void, JSONObject> {
 
