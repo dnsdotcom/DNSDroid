@@ -55,5 +55,6 @@
 	<string name="main_menu_my_name_servers">My Name Servers</string>
 	<string name="main_menu_dns_tools">DNS Tools</string>
 	<string name="screen_bottom_help_text">Long press to delete items</string>
+	<string name="api_request_failed">API request failed</string>
 </resources>
 

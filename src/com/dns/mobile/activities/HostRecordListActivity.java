@@ -74,7 +74,7 @@ public class HostRecordListActivity extends Activity {
 		ArrayList<ResourceRecord> rrList = new ArrayList<ResourceRecord>() ;
 		String domainName = this.getIntent().getStringExtra("domainName") ;
 		String hostName = this.getIntent().getStringExtra("hostName").contentEquals("")?"":this.getIntent().getStringExtra("hostName")+"." ;
-		((TextView)findViewById(R.id.domainHeaderLabel)).setText(hostName+domainName) ;
+		((TextView)findViewById(R.id.hostHeaderLabel)).setText(hostName+domainName) ;
 		spinner.show() ;
 		BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(filter, spinner, this, rrList) ;
 

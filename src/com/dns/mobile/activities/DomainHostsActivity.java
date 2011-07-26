@@ -1,370 +1,175 @@
 package com.dns.mobile.activities;
 
 import java.util.ArrayList;
-import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
-import com.dns.mobile.data.Host;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.dns.mobile.R;
+import com.dns.mobile.api.compiletime.ManagementAPI;
+import com.dns.mobile.data.Host ;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class DomainHostsActivity extends Activity {
 
-	/**
-	 * Constructor for the Domain List Activity.
-	 */
-	public DomainHostsActivity() {
-	}
+	protected ArrayList<Host> hostList = null ;
 
-	private class SearchInputHandler implements View.OnKeyListener {
-
-		private ListView hostList = null ;
-		private StringBuffer filter = null ;
-
-		public SearchInputHandler(StringBuffer filter, ListView hostList) {
-			this.filter = filter ;
-			this.hostList = hostList ;
-		}
-
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			EditText box = (EditText) v;
-			filter.delete(0, filter.length());
-			filter.append(box.getText().toString());
-			Log.d("SearchInputHandler","Keypress: "+box.getText().toString()) ;
-			hostList.invalidateViews() ;
-			return false;
-		}
-		
-	}
-
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState) ;
-		Log.d("DomainHostsActivity","Creating") ;
-		setContentView(R.layout.domain_hosts_activity) ;
-		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
-				builder.setTitle(R.string.open_web_confirmation_title) ;
-				builder.setTitle(R.string.open_web_confirmation_msg) ;
-				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						Uri uri = Uri.parse("http://www.dns.com/") ;
-						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
-					}
-				}) ;
-				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss() ;
-					}
-				}) ;
-				builder.show() ;
-			}
-		});
-
-		super.onStart() ;
-		ProgressDialog spinner = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER) ;
-		spinner.setTitle("Fetching Host List") ;
-		((TextView)findViewById(R.id.domainHeaderLabel)).setText(this.getIntent().getStringExtra("domainName")) ;
-		spinner.show() ;
-		Log.d("DomainHostsActivity","Created View") ;
-	}
-
-	private class PostRequestUiChanges implements Runnable {
-
-		private boolean isClean = false ;
-		private String errorMessage = null ;
-		private Activity parent = null ;
-		private StringBuffer filter = null ;
-
-		public PostRequestUiChanges(boolean isClean, String errorMessage, Activity parent) {
-			this.isClean = isClean ;
-			this.errorMessage = errorMessage ;
-			this.parent = parent ;
-		}
-
-		public void run() {
+	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
 
-			findViewById(R.id.domainListView).setVisibility(View.VISIBLE) ;
-			findViewById(R.id.domainListProgressBar).setVisibility(View.INVISIBLE) ;
-			if (isClean) {
-				ListView hostsListView = new ListView(findViewById(R.id.domain_hosts_activity).getContext()) ;
-				HostItemClickedListener hostClickListener = new HostItemClickedListener(parent.getIntent().getStringExtra("domainName")) ;
-				hostsListView.setOnItemClickListener(hostClickListener) ;
-				EditText searchField = new EditText(parent) ;
-				searchField.setHint("Filter") ;
-				SearchInputHandler inputHandler = new SearchInputHandler(filter, hostsListView) ;
-				searchField.setOnKeyListener(inputHandler) ;
-				((LinearLayout)findViewById(R.id.domain_hosts_activity)).addView(searchField) ;
-				hostsListView.setAdapter(new HostListViewAdapter(parent)) ;
-				hostsListView.setBackgroundResource(R.drawable.list_view_color_states) ;
-				((LinearLayout)findViewById(R.id.domain_hosts_activity)).addView(hostsListView) ;
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			findViewById(R.id.hostListView).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-				ErrorAlertDialogListener dialogListener = new ErrorAlertDialogListener(parent) ;
-				builder.setMessage(errorMessage)
-					.setCancelable(false)
-					.setPositiveButton("OK", dialogListener) ;
-			}
-		}
-		
-	}
-
-	private class HostListViewAdapter extends BaseAdapter {
-
-		private ArrayList<Host> hosts = null ;
-		private StringBuffer filter = null ;
-
-		private class BackgroundRequestHandler implements Runnable {
-
-			private ArrayList<Host> hostList = null ;
-			private boolean isClean = true ;
-			private String errorMessage = null ;
-			private Activity parent = null ;
-
-			public BackgroundRequestHandler(Activity parent) {
-				this.parent = parent ;
-				Log.d("DomainHostsActivity","Starting host list background API task.") ;
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
 			}
 
-			public void run() {
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
-				findViewById(R.id.domainListView).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent);
-				String apiHost = null ;
-				if (settings.getBoolean("use.sandbox", true)) {
-					apiHost = "sandbox.dns.com" ;
-				} else {
-					apiHost = "www.dns.com" ;
-				}
-
-				ManagementAPI api = new ManagementAPI(apiHost, !settings.getBoolean("use.sandbox", true), settings.getString("auth.token", "")) ;
-
-				try {
-					Log.d("DomainHostActivity", "Starting API call.") ;
-					JSONObject hostsObject = api.getHostnamesForDomain(parent.getIntent().getStringExtra("domainName")) ;
-					Log.d("DomainHostActivity", "Finished API call") ;
-					
-					try {
-						if (hostsObject.get("error")!=null) {
-							isClean = false ;
-							errorMessage = hostsObject.getString("error") ;
-						}
-					} catch (JSONException jsone) {
-						// Ignore
-					}
-					
-					JSONObject meta = null ;
-					if (isClean) {
-						meta = hostsObject.getJSONObject("meta") ;
-						if (meta==null) {
-							isClean = false ;
-							errorMessage = "'meta' node of the JSON response is NULL" ;
-						}
-					}
-					
-					if (isClean) {
-						int success = 0 ;
-						try {
-							success = meta.getInt("success") ;
-						} catch (JSONException jsone) {
-							success = 0 ;
-						}
-						
-						if (success==0) {
-							isClean = false ;
-							errorMessage = "The meta node does not have a valid success value." ;
-						} else {
-							JSONArray data = hostsObject.getJSONArray("data") ;
-							if (data==null) {
-								isClean = false ;
-								errorMessage = "The data array for the active hosts list is NULL" ;
-							} else {
-								int loopIndex = data.length() ;
-								for (int x=0; x<loopIndex; x++) {
-									Host currentHost = new Host();
-									currentHost.setHostId(data.getJSONObject(x).getInt("id"));
-									currentHost.setName(data.getJSONObject(x).getString("name"));
-									currentHost.setRecordCount(data.getJSONObject(x).getInt("num_rr")) ;
-									hostList.add(currentHost);
-									Log.d("DomainHostsActivity","Adding host '"+data.getJSONObject(x).getString("name")+"'");
-								}
-							}
-						}
-					}
-				} catch (JSONException jsone) {
-					Log.e("DomainHostsActivity", "JSONException while attempting to get host list.", jsone) ;
-					errorMessage = new String("JSONException while attempting to get host list.") ;
-					isClean = false ;
-				}
-				PostRequestUiChanges uiUpdate = new PostRequestUiChanges(isClean, errorMessage, parent) ;
-				findViewById(R.id.domain_hosts_activity).post(uiUpdate) ;
-			}
-			
-		}
-
-		public HostListViewAdapter(Activity parent) {
-			super() ;
-			BackgroundRequestHandler apiInstance = new BackgroundRequestHandler(parent) ;
-
-			new Thread(apiInstance).start() ;
-		}
-
-		public int getCount() {
-			Iterable<Host> filteredHosts = Iterables.filter(hosts, new Predicate<Host>() {
-				public boolean apply(Host input) {
-					if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
-						return true ;
-					} else {
-						return false;
-					}
-				}
-			}) ;
-			return (Iterables.size(filteredHosts)+1) ;
-		}
-
-		public Object getItem(int item) {
-			Iterable<Host> filteredHosts = Iterables.filter(hosts, new Predicate<Host>() {
-				public boolean apply(Host input) {
-					if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
-						return true ;
-					} else {
-						return false;
-					}
-				}
-			}) ;
-			return Iterables.get(filteredHosts, item-1) ;
-		}
-
-		public long getItemId(int arg0) {
-			return arg0 ;
-		}
-
-		public View getView(int arg0, View arg1, ViewGroup arg2) {
-			Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-			Log.d("DomainHostsActivity", "Display size: "+display.getWidth()+"x"+display.getHeight()) ;
-			LinearLayout hostItem = new LinearLayout(getBaseContext()) ;
-			hostItem.setOrientation(LinearLayout.HORIZONTAL) ;
-			hostItem.setMinimumHeight(26) ;
-			hostItem.setMinimumWidth(LayoutParams.FILL_PARENT) ;
-			hostItem.setGravity(Gravity.FILL_HORIZONTAL&Gravity.CENTER_VERTICAL) ;
-			hostItem.setBackgroundResource(R.drawable.list_view_color_states) ;
-			TextView item = null ;
-			item = new TextView(getBaseContext()) ;
-			item.setTextColor(Color.WHITE) ;
-			item.setGravity(Gravity.CENTER_VERTICAL&Gravity.LEFT) ;
-			item.setPadding(8, 0, 0, 0) ;
-			if (arg0==0) {
-				item.setText("[New Host]") ;
-				hostItem.addView(item) ;
-			} else {
-				Iterable<Host> filteredHosts = Iterables.filter(hosts, new Predicate<Host>() {
-					public boolean apply(Host input) {
-						if (input.getName().toLowerCase().contains(filter.toString().toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				Host currentHost = Iterables.get(filteredHosts,arg0-1) ;
-				String name = currentHost.getName().trim().length()==0?"(root)":currentHost.getName() ;
-				long hostId = currentHost.getHostId() ;
-				item.setText(name) ;
-				TextView rrDisplay = new TextView(getBaseContext()) ;
-				rrDisplay.setText(currentHost.getRecordCount()+"") ;
-				rrDisplay.setBackgroundDrawable(getResources().getDrawable(R.drawable.count_background)) ;
-				rrDisplay.setTextColor(Color.WHITE) ;
-				rrDisplay.setGravity(Gravity.CENTER) ;
-
-				TextView hostIdHolder = new TextView(getBaseContext()) ;
-				hostIdHolder.setText(hostId+"") ;
-				hostIdHolder.setVisibility(View.INVISIBLE) ;
-				hostItem.addView(rrDisplay) ;
-				hostItem.addView(item) ;
-				hostItem.addView(hostIdHolder) ;
-			}
-			
-			return hostItem ;
-		}
-		
-	}
-
-	private class ErrorAlertDialogListener implements DialogInterface.OnClickListener {
-
-		private Activity parent = null ;
-
-		public ErrorAlertDialogListener(Activity parent) {
-			this.parent = parent ;
-		}
-
-		public void onClick(DialogInterface dialog, int which) {
-			dialog.dismiss() ;
-			parent.finish() ;
-		}
-	}
-
-	private class HostItemClickedListener implements AdapterView.OnItemClickListener {
-
-		private String domainName = null ;
-
-		public HostItemClickedListener(String domainName) {
-			this.domainName = domainName ;
+			return api.getHostnamesForDomain(params[0]) ;
 		}
 
 		/* (non-Javadoc)
-		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			LinearLayout item = (LinearLayout)arg1 ;
-			int childIdx = item.getChildCount() ;
-			Log.d("DomainHostsActivity", "The ListView item has '"+childIdx+"' child nodes.") ;
-			TextView hostNameHld = (TextView) item.getChildAt(childIdx-2) ;
-			String hostName = hostNameHld.getText().toString().contentEquals("(root)")?"":hostNameHld.getText().toString() ;
-			Log.d("DomainHostsActivity", "Selected hostname: "+hostName) ;
-			if (hostName.trim().contentEquals("[New Host]")) {
-				Intent i = new Intent(getBaseContext(), CreateNewHostActivity.class) ;
-				i.putExtra("domainName", domainName) ;
-				startActivity(i) ;
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			super.onPostExecute(result);
+
+			boolean apiRequestSucceeded = false ;
+			findViewById(R.id.hostListProgressBar).setVisibility(View.INVISIBLE) ;
+			if (result.has("meta")) {
+				try {
+					if (result.getJSONObject("meta").getInt("success")==1) {
+						apiRequestSucceeded = true ;
+					} else {
+						Log.e("DomainHostsActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+						builder.setTitle(R.string.api_request_failed) ;
+						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
+					}
+				} catch (JSONException jsone) {
+					Log.e("DomainHostsActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+					builder.setTitle(R.string.api_request_failed) ;
+					builder.setMessage(jsone.getLocalizedMessage()) ;
+				}
+			}
+
+			if (apiRequestSucceeded) {
+				try {
+					JSONArray data = result.getJSONArray("data") ;
+					for (int x=0; x<data.length(); x++) {
+						JSONObject currentData = data.getJSONObject(x) ;
+						Host currentHost = new Host() ;
+						String hostName = currentData.getString("name").contentEquals("")?"(root)":currentData.getString("name") ;
+						currentHost.setName(hostName) ;
+						Log.d("DomainHostsActivity", "Adding domain '"+currentData.getString("name")+"' to domainList") ;
+						currentHost.setHostId(currentData.getLong("id")) ;
+						hostList.add(currentHost) ;
+					}
+					findViewById(R.id.hostListView).setVisibility(View.VISIBLE) ;
+					((ListView)findViewById(R.id.hostListView)).invalidateViews() ;
+					Log.d("DomainHostsActivity", "Finished parsing JSON response into domainList") ;
+				} catch (JSONException jsone) {
+					Log.e("DomainHostsActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+				}
 			} else {
-				Intent i = new Intent(getBaseContext(), HostRecordListActivity.class) ;
-				i.putExtra("hostName", hostName) ;
-				i.putExtra("domainName", domainName) ;
-				startActivity(i) ;
+				showDialog(R.string.api_request_failed) ;
 			}
 		}
-		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		hostList = new ArrayList<Host>() ;
+		setContentView(R.layout.domain_hosts_activity) ;
+		String domainName = this.getIntent().getExtras().getString("domainName") ;
+		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
+
+		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
+
+		hostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				
+			}
+		}) ;
+
+		hostListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				
+				return false;
+			}
+		}) ;
+
+		hostListView.setAdapter(new BaseAdapter() {
+			
+			public View getView(int position, View convertView, ViewGroup parent) {
+				TextView hostItem = new TextView(parent.getContext()) ;
+				hostItem.setTextColor(Color.WHITE) ;
+				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
+				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+				hostItem.setWidth(LayoutParams.FILL_PARENT) ;
+				if (position==0) {
+					hostItem.setText("[New Host]") ;
+				} else {
+					Host currentHost = hostList.get(position-1);
+					hostItem.setText(currentHost.getName());
+				}
+				return hostItem ;
+			}
+			
+			public long getItemId(int position) {
+				return position+100 ;
+			}
+			
+			public Object getItem(int position) {
+				return hostList.get(position-1) ;
+			}
+			
+			public int getCount() {
+				return hostList.size()+1 ;
+			}
+		}) ;
+
+		new HostListApiTask().execute(domainName) ;
 	}
 }

@@ -4,12 +4,24 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:background="@color/red" android:id="@+id/domains_activity_layout">
-    <ImageView android:layout_height="wrap_content" android:src="@drawable/dns_android_banner" android:layout_width="fill_parent" android:id="@+id/dnsLogo"></ImageView>
-    <TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:text="@string/domains_list_view_label" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4px" android:gravity="center_vertical|left"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/filterInput" android:hint="Filter">
-        <requestFocus></requestFocus>
+    <ImageView android:layout_height="wrap_content" android:src="@drawable/dns_android_banner" 
+    	android:layout_width="fill_parent" android:id="@+id/dnsLogo" android:focusable="false" android:focusableInTouchMode="false"></ImageView>
+    <TextView android:id="@+id/textView1" android:layout_height="wrap_content" 
+    	android:text="@string/domains_list_view_label" android:textColor="@color/white" 
+    	android:layout_width="fill_parent" android:background="@color/dark_grey" 
+    	android:padding="4px" android:gravity="center_vertical|left" android:focusable="false" android:focusableInTouchMode="false"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" 
+    	android:id="@+id/filterInput" android:hint="Filter">
     </EditText>
-    <ListView android:listSelector="@color/list_view_color_states" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/domainListView" android:visibility="invisible"></ListView>
-    <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/domainListProgressBar" android:layout_gravity="center"></ProgressBar>
-    <TextView android:layout_height="wrap_content" android:id="@+id/helpText" android:text="@string/screen_bottom_help_text" android:layout_width="fill_parent" android:layout_gravity="center_horizontal" android:background="@color/dark_grey" android:textColor="@color/white"></TextView>
+    <ListView android:layout_height="wrap_content" 
+    	android:layout_width="fill_parent" android:id="@+id/domainListView" 
+    	android:visibility="invisible" android:background="@drawable/list_view_color_states" android:focusable="true" android:focusableInTouchMode="true">
+        <requestFocus></requestFocus>
+    </ListView>
+    <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:id="@+id/domainListProgressBar" android:layout_gravity="center" android:focusable="false" android:focusableInTouchMode="false"></ProgressBar>
+    <TextView android:layout_height="wrap_content" android:id="@+id/helpText" 
+    	android:text="@string/screen_bottom_help_text" android:layout_width="fill_parent" 
+    	android:layout_gravity="center_horizontal" android:background="@color/dark_grey" 
+    	android:textColor="@color/white" android:focusable="false" android:focusableInTouchMode="false"></TextView>
 </LinearLayout>

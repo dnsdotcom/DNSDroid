@@ -17,8 +17,22 @@
          give it a custom background; see colors.xml for the definition
          of drawable/semi_black-->
     <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"></ImageView>
-    <TextView android:layout_height="wrap_content" android:text="@string/domains_list_view_label" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4px" android:gravity="center_vertical|left" android:id="@+id/domainHeaderLabel"></TextView>
-
+    <TextView android:layout_height="wrap_content" android:text="@string/domains_list_view_label" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4px" android:gravity="center_vertical|left" android:id="@+id/hostHeaderLabel"></TextView>
+    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" 
+    	android:id="@+id/filterInput" android:hint="Filter">
+    </EditText>
+    <ListView android:layout_height="wrap_content" 
+    	android:layout_width="fill_parent" android:id="@+id/hostListView" 
+    	android:visibility="invisible" android:background="@drawable/list_view_color_states" 
+    	android:focusable="true" android:focusableInTouchMode="true">
+        <requestFocus></requestFocus>
+    </ListView>
+    <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" 
+    	android:id="@+id/hostListProgressBar" android:layout_gravity="center" android:focusable="false" android:focusableInTouchMode="false"></ProgressBar>
+    <TextView android:layout_height="wrap_content" android:id="@+id/helpText" 
+    	android:text="@string/screen_bottom_help_text" android:layout_width="fill_parent" 
+    	android:layout_gravity="center_horizontal" android:background="@color/dark_grey" 
+    	android:textColor="@color/white" android:focusable="false" android:focusableInTouchMode="false"></TextView>
 </LinearLayout>
 
 
