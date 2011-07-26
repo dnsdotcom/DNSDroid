@@ -1,65 +1,27 @@
-Android Skeleton App
-~~~~~~~~~~~~~~~~~~~~
+DNS.com Mobile Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This application provides basic access to the capabilities of the DNS.com web
+site from a simplified Android application. The app provides access to all
+functions which are currently available via the DNS.com API.
 
-This directory contains the full implementation of a basic application for
-the Android platform, demonstrating the basic facilities that applications
-will use.  You can run the application either directly from the "test"
-list in the app launcher (it is named Skeleton App) or by selecting it from
-the top list in the Sample Code app.
+https://github.com/dnsdotcom/API_DOC
 
-The files contained here:
+Basic features include:
 
+View/Delete/Modify/Create domains and domain groups
+View/Delete/Modify/Create hosts
+View/Delete/Modify/Create resource records
+View/Delete/Modify/Create geo-location groups
 
-AndroidManifest.xml
+In addition to the DNS.com access, we have included some tools to assist the user
+in troubleshooting DNS issues. The tools will allow you to perform:
 
-This XML file describes to the Android platform what your application can do.
-It is a required file, and is the mechanism you use to show your application
-to the user (in the app launcher's list), handle data types, etc.
+* WHOIS lookups
+* DNS queries against specific DNS servers
+* Geo-Location testing (By implementing the EDNS0 extension and specifying a
+  source IP address)
+* Perform traceroutes to a given IP address
 
-
-src/*
-
-Under this directory is the Java source for for your application.
-
-
-src/com/android/skeletonapp/SkeletonActivity.java
-
-This is the implementation of the "activity" feature described in
-AndroidManifest.xml.  The path each class implementation is
-{src/PACKAGE/CLASS.java}, where PACKAGE comes from the name in the <package>
-tag and CLASS comes from the class in the <activity> tag.
-
-
-res/*
-
-Under this directory are the resources for your application.
-
-
-res/layout/skeleton_activity.xml
-
-The res/layout/ directory contains XML files describing user interface
-view hierarchies.  The skeleton_activity.xml file here is used by
-SkeletonActivity.java to construct its UI.  The base name of each file
-(all text before a '.' character) is taken as the resource name;
-it must be lower-case.
-
-
-res/drawable/violet.png
-
-The res/drawable/ directory contains images and other things that can be
-drawn to the screen.  These can be bitmaps (in .png or .jpeg format) or
-special XML files describing more complex drawings.  The violet.png file
-here is used as the image to display in one of the views in
-skeleton_activity.xml.  Like layout files, the base name is used for the
-resulting resource name.
-
-
-res/values/colors.xml
-res/values/strings.xml
-res/values/styles.xml
-
-These XML files describe additional resources included in the application.
-They all use the same syntax; all of these resources could be defined in one
-file, but we generally split them apart as shown here to keep things organized.
-
+The results of all tests can be sent via e-mail in case you want to send a support
+request to DNS.com or others.
