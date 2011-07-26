@@ -2,6 +2,7 @@ package com.dns.mobile.activities;
 
 import java.util.ArrayList;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,10 +21,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,6 +35,7 @@ import android.widget.TextView;
 public class HostRecordListActivity extends Activity {
 
 	protected ArrayList<ResourceRecord> rrList = null ;
+	protected String filter = new String("") ;
 	protected boolean isDomainGroup = false ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
@@ -205,17 +209,31 @@ public class HostRecordListActivity extends Activity {
 				hostItem.setTextColor(Color.WHITE) ;
 				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
 				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
 				if (position==0) {
 					hostItem.setText("[New RR]") ;
 				} else {
 					TextView rrType = new TextView(getBaseContext()) ;
 					rrType.setBackgroundDrawable(getResources().getDrawable(R.drawable.type_background)) ;
 					rrType.setTextColor(Color.WHITE) ;
-					rrType.setText(ResourceRecord.getTypeAsString(rrList.get(position-1).getType())) ;
+					rrType.setText(ResourceRecord.getTypeAsString(filteredList.get(position-1).getType())) ;
 					rrType.setGravity(Gravity.CENTER) ;
 					listItemLayout.addView(rrType) ;
 					
-					ResourceRecord currentRR = rrList.get(position-1);
+					ResourceRecord currentRR = filteredList.get(position-1);
 
 					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
 					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
@@ -238,14 +256,53 @@ public class HostRecordListActivity extends Activity {
 			}
 			
 			public Object getItem(int position) {
-				return rrList.get(position-1) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.get(position-1) ;
 			}
 			
 			public int getCount() {
-				return rrList.size()+1 ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.size()+1 ;
 			}
 		}) ;
 
 		new RRListApiTask().execute(domainName, hostName) ;
+
+		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
+		// order to have it update the list of displayed hosts.
+		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
+		filterInput.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				EditText filterInput = (EditText) v ;
+				filter = filterInput.getText().toString() ;
+				((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
+				return false;
+			}
+		}) ;
 	}
 }
