@@ -22,6 +22,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,6 +39,8 @@ public class HostRecordListActivity extends Activity {
 	protected ArrayList<ResourceRecord> rrList = null ;
 	protected String filter = new String("") ;
 	protected boolean isDomainGroup = false ;
+	protected String domainName = null ;
+	protected String hostName = null ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -45,8 +49,6 @@ public class HostRecordListActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			findViewById(R.id.rrListView).setVisibility(View.GONE) ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
 			boolean useSSL = false ;
@@ -168,8 +170,8 @@ public class HostRecordListActivity extends Activity {
 		super.onCreate(savedInstanceState) ;
 		setContentView(R.layout.host_rr_activity) ;
 		rrList = new ArrayList<ResourceRecord>() ;
-		final String domainName = this.getIntent().getExtras().getString("domainName") ;
-		final String hostName = this.getIntent().getExtras().getString("hostName") ;
+		domainName = this.getIntent().getExtras().getString("domainName") ;
+		hostName = this.getIntent().getExtras().getString("hostName") ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 
@@ -290,6 +292,8 @@ public class HostRecordListActivity extends Activity {
 			}
 		}) ;
 
+		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
+		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
 		new RRListApiTask().execute(domainName, hostName) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
@@ -304,5 +308,25 @@ public class HostRecordListActivity extends Activity {
 				return false;
 			}
 		}) ;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem refreshRecords = menu.add(Menu.NONE, 0, 0, "Refresh");
+		refreshRecords.setIcon(R.drawable.ic_menu_refresh) ;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case 0:
+				findViewById(R.id.rrListView).setVisibility(View.GONE) ;
+				findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+				rrList.clear() ;
+				new RRListApiTask().execute(domainName, hostName) ;
+				return true;
+		}
+		return false;
 	}
 }

@@ -328,14 +328,14 @@ public class ResourceRecord implements Serializable {
 			case 1:
 				retVal = "A" ;
 				break ;
-			case 6:
-				retVal = "SOA" ;
-				break ;
 			case 2:
 				retVal = "NS" ;
 				break ;
 			case 5:
 				retVal = "CNAME" ;
+				break ;
+			case 6:
+				retVal = "SOA" ;
 				break ;
 			case 15:
 				retVal = "MX" ;

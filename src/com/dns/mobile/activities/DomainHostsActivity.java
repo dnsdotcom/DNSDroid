@@ -36,6 +36,7 @@ public class DomainHostsActivity extends Activity {
 
 	protected ArrayList<Host> hostList = null ;
 	protected String filter = new String("") ;
+	protected String domainName = null ;
 
 	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -45,8 +46,6 @@ public class DomainHostsActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			findViewById(R.id.hostListView).setVisibility(View.GONE) ;
-			findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
 			boolean useSSL = false ;
@@ -123,7 +122,7 @@ public class DomainHostsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		hostList = new ArrayList<Host>() ;
 		setContentView(R.layout.domain_hosts_activity) ;
-		final String domainName = this.getIntent().getExtras().getString("domainName") ;
+		domainName = this.getIntent().getExtras().getString("domainName") ;
 		final boolean isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
 
@@ -234,6 +233,8 @@ public class DomainHostsActivity extends Activity {
 			}
 		}) ;
 
+		findViewById(R.id.hostListView).setVisibility(View.GONE) ;
+		findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
 		new HostListApiTask().execute(domainName) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
@@ -255,7 +256,9 @@ public class DomainHostsActivity extends Activity {
 		MenuItem addToGroup = menu.add(Menu.NONE, 0, 0, "Add To Group");
 		addToGroup.setIcon(android.R.drawable.ic_menu_add) ;
 		MenuItem disableDomain = menu.add(Menu.NONE, 1, 1, "Delete Domain");
-		disableDomain.setIcon(android.R.drawable.ic_input_delete) ;
+		disableDomain.setIcon(android.R.drawable.ic_menu_delete) ;
+		MenuItem refreshHosts = menu.add(Menu.NONE, 2, 2, "Refresh");
+		refreshHosts.setIcon(R.drawable.ic_menu_refresh) ;
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -267,6 +270,12 @@ public class DomainHostsActivity extends Activity {
 				return true ;
 			case 1:
 				// TODO: Domain delete logic.
+				return true ;
+			case 2:
+				findViewById(R.id.hostListView).setVisibility(View.GONE) ;
+				findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+				hostList.clear() ;
+				new HostListApiTask().execute(domainName) ;
 				return true ;
 		}
 		return false;

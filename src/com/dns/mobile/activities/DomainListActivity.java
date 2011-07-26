@@ -19,6 +19,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -44,8 +46,6 @@ public class DomainListActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(Void... params) {
-			findViewById(R.id.domainListView).setVisibility(View.GONE) ;
-			findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
 			boolean useSSL = false ;
@@ -234,6 +234,28 @@ public class DomainListActivity extends Activity {
 			}
 		}) ;
 
+		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
+		findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
 		new DomainListApiTask().execute() ;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem refreshDomains = menu.add(Menu.NONE, 0, 0, "Refresh");
+		refreshDomains.setIcon(R.drawable.ic_menu_refresh) ;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case 0:
+				findViewById(R.id.domainListView).setVisibility(View.GONE) ;
+				findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
+				domainList.clear() ;
+				new DomainListApiTask().execute() ;
+				return true;
+		}
+		return false;
 	}
 }

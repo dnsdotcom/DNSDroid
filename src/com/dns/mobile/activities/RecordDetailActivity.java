@@ -3,6 +3,7 @@
  */
 package com.dns.mobile.activities;
 
+import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -144,6 +146,11 @@ public class RecordDetailActivity extends Activity {
 		sb.append(domainName) ;
 		header.setText(sb.toString()) ;
 
+		ArrayList<String> typeList = new ArrayList<String>() ;
+		for (String temp: getResources().getStringArray(R.array.recordTypes)) {
+			typeList.add(temp) ;
+		}
+
 		// Set up the appropriate views for the record type.
 		switch (currentRR.getType()) {
 			case 1:
@@ -154,6 +161,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 2:
 				// NS Record
@@ -163,6 +171,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 6:
 				// SOA Record
@@ -184,6 +193,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrResponsibleParty)).setText(currentRR.getAnswer()+"") ;
 				findViewById(R.id.rrResponsibleParty).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 5:
 				// CNAME Record
@@ -193,6 +203,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 15:
 				// MX Record
@@ -205,6 +216,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrPriority)).setText(currentRR.getPriority()+"") ;
 				findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 16:
 				// TXT Record
@@ -214,6 +226,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 28:
 				// AAAA Record
@@ -223,6 +236,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 33:
 				// SRV Record
@@ -241,6 +255,7 @@ public class RecordDetailActivity extends Activity {
 				findViewById(R.id.rrSrvWeightLabel).setVisibility(View.VISIBLE) ;
 				((EditText)findViewById(R.id.rrSrvWeight)).setText(currentRR.getWeight()+"") ;
 				findViewById(R.id.rrSrvWeight).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 80000:
 				// URL 302 Record
@@ -250,6 +265,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 80001:
 				// URL 301 Record
@@ -259,6 +275,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			case 80002:
 				// URL Frame Record
@@ -268,6 +285,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(typeList.indexOf(ResourceRecord.getTypeAsString(currentRR.getType()))) ;
 				break ;
 			default:
 				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
@@ -276,6 +294,7 @@ public class RecordDetailActivity extends Activity {
 				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((Spinner)findViewById(R.id.rrTypeSpinner)).setSelection(0) ;
 		}
 	}
 }

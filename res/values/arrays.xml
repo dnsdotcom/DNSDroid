@@ -2,14 +2,15 @@
 <resources>
     <string-array name="recordTypes">
         <item>A</item>
-        <item>CNAME</item>
-        <item>MX</item>
         <item>NS</item>
         <item>SOA</item>
+        <item>CNAME</item>
+        <item>MX</item>
         <item>TXT</item>
+        <item>AAAA</item>
         <item>SRV</item>
-        <item>URL(301)</item>
         <item>URL(302)</item>
+        <item>URL(301)</item>
         <item>URL(FRAME)</item>
     </string-array>
 </resources>
