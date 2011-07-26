@@ -6,11 +6,9 @@ package com.dns.mobile.activities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
@@ -19,7 +17,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -29,7 +28,7 @@ public class RecordDetailActivity extends Activity {
 
 	ResourceRecord currentRR = null ;
 
-	private class RRFetchApiTask extends AsyncTask<String, Void, JSONObject> {
+	private class RRSaveViaAPI extends AsyncTask<ResourceRecord, Void, JSONObject> {
 
 		private long rrId = 0L ;
 
@@ -37,14 +36,13 @@ public class RecordDetailActivity extends Activity {
 		 * @see android.os.AsyncTask#doInBackground(Params[])
 		 */
 		@Override
-		protected JSONObject doInBackground(String... params) {
+		protected JSONObject doInBackground(ResourceRecord... params) {
+			ResourceRecord rr = params[0] ;
 			try {
-				rrId = Long.parseLong(params[3]) ;
+				rrId = params[0].getId() ;
 			} catch (NumberFormatException nfe) {
 				Log.e("RecordDetailActivity", "NumberFormatException trying to parse the RR ID", nfe) ;
 			}
-			findViewById(R.id.rrListView).setVisibility(View.INVISIBLE) ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
 			boolean useSSL = false ;
@@ -58,7 +56,7 @@ public class RecordDetailActivity extends Activity {
 
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
-			return api.getRRSetForHostname(params[0], false, params[1].contentEquals("(root)")?"":params[1]) ;
+			return api.getRRSetForHostname(rr.getDomainName(), false, rr.getHostName().contentEquals("(root)")?"":rr.getHostName()) ;
 		}
 
 		/* (non-Javadoc)
@@ -69,7 +67,6 @@ public class RecordDetailActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.INVISIBLE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -113,8 +110,6 @@ public class RecordDetailActivity extends Activity {
 							}
 						}
 					}
-					findViewById(R.id.rrListView).setVisibility(View.VISIBLE) ;
-					((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
 					Log.d("RecordDetailActivity", "Finished parsing JSON response into ResourceRecord") ;
 				} catch (JSONException jsone) {
 					Log.e("RecordDetailActivity", "JSONException encountered while trying to parse rr details.", jsone) ;
@@ -132,61 +127,149 @@ public class RecordDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rr_details_view) ;
-		long rrId = this.getIntent().getLongExtra("rr_id", 0L) ;
-		int rrType = this.getIntent().getIntExtra("rr_type", 1) ;
-		String domainName = this.getIntent().getStringExtra("domainName") ;
-		String hostName = this.getIntent().getStringExtra("hostName") ;
-		currentRR = new ResourceRecord() ;
+		currentRR = (ResourceRecord) this.getIntent().getSerializableExtra("rrData") ;
+		final String hostName = currentRR.getHostName() ;
+		final String domainName = currentRR.getDomainName() ;
+		TextView header = (TextView) findViewById(R.id.rrHeaderLabel) ;
+		StringBuilder sb = new StringBuilder(header.getText()) ;
+		sb.append(" ") ;
+		sb.append(hostName.contentEquals("")?"(root)":hostName) ;
+		sb.append(".") ;
+		sb.append(domainName) ;
+		header.setText(sb.toString()) ;
 
 		// Set up the appropriate views for the record type.
-		switch (rrType) {
+		switch (currentRR.getType()) {
 			case 1:
 				// A Record
-				findViewById(R.id.rrExpire).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrExpireLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrMinimum).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrMinimumLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrRetryInterval).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrRetryLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriority).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriorityLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrResponsibleParty).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPort).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPortLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeight).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeightLabel).setVisibility(View.INVISIBLE) ;
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
 				break ;
 			case 2:
 				// NS Record
-				findViewById(R.id.rrExpire).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrExpireLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrMinimum).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrMinimumLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrRetryInterval).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrRetryLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriority).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriorityLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrResponsibleParty).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPort).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPortLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeight).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeightLabel).setVisibility(View.INVISIBLE) ;
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
 				break ;
 			case 6:
 				// SOA Record
-				findViewById(R.id.rrAnswer).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrAnswerLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriority).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrPriorityLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPort).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvPortLabel).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeight).setVisibility(View.INVISIBLE) ;
-				findViewById(R.id.rrSrvWeightLabel).setVisibility(View.INVISIBLE) ;
-				
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrExpire)).setText(currentRR.getExpire()+"") ;
+				findViewById(R.id.rrExpire).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrExpireLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrMinimum)).setText(currentRR.getMinimum()+"") ;
+				findViewById(R.id.rrMinimum).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrMinimumLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrRetryInterval)).setText(currentRR.getRetry()+"") ;
+				findViewById(R.id.rrRetryInterval).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrRetryLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrPriority)).setText(currentRR.getPriority()+"") ;
+				findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrResponsibleParty)).setText(currentRR.getAnswer()+"") ;
+				findViewById(R.id.rrResponsibleParty).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 5:
+				// CNAME Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 15:
+				// MX Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrPriority)).setText(currentRR.getPriority()+"") ;
+				findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 16:
+				// TXT Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 28:
+				// AAAA Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 33:
+				// SRV Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrPriority)).setText(currentRR.getPriority()+"") ;
+				findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrSrvPortLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrSrvPort)).setText(currentRR.getPort()+"") ;
+				findViewById(R.id.rrSrvPort).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrSrvWeightLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrSrvWeight)).setText(currentRR.getWeight()+"") ;
+				findViewById(R.id.rrSrvWeight).setVisibility(View.VISIBLE) ;
+				break ;
+			case 80000:
+				// URL 302 Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 80001:
+				// URL 301 Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			case 80002:
+				// URL Frame Record
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
+				break ;
+			default:
+				((EditText)findViewById(R.id.rrAnswer)).setText(currentRR.getAnswer()) ;
+				findViewById(R.id.rrAnswer).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrAnswerLabel).setVisibility(View.VISIBLE) ;
+				((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
+				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.rrTtlLabel).setVisibility(View.VISIBLE) ;
 		}
-
-		new RRFetchApiTask().doInBackground(domainName, hostName, rrId+"") ;
 	}
 }

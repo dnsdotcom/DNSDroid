@@ -40,7 +40,7 @@ public class DomainListActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(Void... params) {
-			findViewById(R.id.domainListView).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.domainListView).setVisibility(View.GONE) ;
 			findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
@@ -65,7 +65,7 @@ public class DomainListActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.domainListProgressBar).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.domainListProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -131,6 +131,7 @@ public class DomainListActivity extends Activity {
 				} else {
 					Intent hostListIntent = new Intent(getApplicationContext(), DomainHostsActivity.class) ;
 					hostListIntent.putExtra("domainName", ((TextView)selectedView).getText().toString()) ;
+					hostListIntent.putExtra("isDomainGroup", domainList.get(position-1).isGroupedDomain()) ;
 					startActivity(hostListIntent) ;
 				}
 			}

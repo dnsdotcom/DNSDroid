@@ -40,7 +40,7 @@ public class DomainGroupHostsListActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(Void... params) {
-			findViewById(R.id.groupListView).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.groupListView).setVisibility(View.GONE) ;
 			findViewById(R.id.groupListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
@@ -65,7 +65,7 @@ public class DomainGroupHostsListActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.groupListProgressBar).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.groupListProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {

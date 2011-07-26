@@ -41,7 +41,7 @@ public class DomainHostsActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			findViewById(R.id.hostListView).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.hostListView).setVisibility(View.GONE) ;
 			findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
@@ -67,7 +67,7 @@ public class DomainHostsActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.hostListProgressBar).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.hostListProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -120,6 +120,7 @@ public class DomainHostsActivity extends Activity {
 		hostList = new ArrayList<Host>() ;
 		setContentView(R.layout.domain_hosts_activity) ;
 		final String domainName = this.getIntent().getExtras().getString("domainName") ;
+		final boolean isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
 
 		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
@@ -132,6 +133,7 @@ public class DomainHostsActivity extends Activity {
 				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
 				rrListActivity.putExtra("domainName", domainName) ;
 				rrListActivity.putExtra("hostName", hostList.get(position-1).getName()) ;
+				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}
 		}) ;

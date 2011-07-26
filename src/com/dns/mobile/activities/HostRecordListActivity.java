@@ -32,6 +32,7 @@ import android.widget.TextView;
 public class HostRecordListActivity extends Activity {
 
 	protected ArrayList<ResourceRecord> rrList = null ;
+	protected boolean isDomainGroup = false ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -40,7 +41,7 @@ public class HostRecordListActivity extends Activity {
 		 */
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			findViewById(R.id.rrListView).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.rrListView).setVisibility(View.GONE) ;
 			findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
@@ -55,7 +56,7 @@ public class HostRecordListActivity extends Activity {
 
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
-			return api.getRRSetForHostname(params[0], false, params[1].contentEquals("(root)")?"":params[1]) ;
+			return api.getRRSetForHostname(params[0], isDomainGroup, params[1].contentEquals("(root)")?"":params[1]) ;
 		}
 
 		/* (non-Javadoc)
@@ -66,7 +67,7 @@ public class HostRecordListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.INVISIBLE) ;
+			findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -96,11 +97,50 @@ public class HostRecordListActivity extends Activity {
 						currentRR.setHostId(currentData.getLong("id")) ;
 						currentRR.setType(currentData.getString("type")) ;
 						currentRR.setId(currentData.getLong("id")) ;
+						currentRR.setTtl(currentData.getLong("ttl")) ;
 						if (currentData.getString("country_iso2").length()>0) {
 							currentRR.setCountryId(currentData.getString("country_iso2")) ;
+							if (!currentData.getString("region").contentEquals("None")) {
+								currentRR.setRegionId(currentData.getInt("region")) ;
+								if (!currentData.getString("city").contentEquals("None")) {
+									currentRR.setCityId(currentData.getInt("city")) ;
+								}
+							}
 						}
+						currentRR.setWildcard(currentData.getBoolean("is_wildcard")) ;
 						if (!currentData.getString("geoGroup").contentEquals("None")) {
 							currentRR.setGeoGroup(currentData.getString("geoGroup")) ;
+							currentRR.setGroup(true) ;
+						}
+						if (currentData.has("retry")) {
+							if (!currentData.getString("retry").contentEquals("null")) {
+								currentRR.setRetry(currentData.getLong("retry"));
+							}
+						}
+						if (currentData.has("minimum")) {
+							if (!currentData.getString("minimum").contentEquals("null")) {
+								currentRR.setMinimum(currentData.getLong("minimum"));
+							}
+						}
+						if (currentData.has("expire")) {
+							if (!currentData.getString("expire").contentEquals("null")) {
+								currentRR.setExpire(currentData.getLong("expire")) ;
+							}
+						}
+						if (currentData.has("priority")) {
+							if (!currentData.getString("priority").contentEquals("null")) {
+								currentRR.setPriority(currentData.getLong("priority")) ;
+							}
+						}
+						if (currentData.has("weight")) {
+							if (!currentData.getString("weight").contentEquals("null")) {
+								currentRR.setWeight(currentData.getInt("weight")) ;
+							}
+						}
+						if (currentData.has("port")) {
+							if (!currentData.getString("port").contentEquals("null")) {
+								currentRR.setPort(currentData.getLong("port")) ;
+							}
 						}
 						rrList.add(currentRR) ;
 					}
@@ -126,6 +166,7 @@ public class HostRecordListActivity extends Activity {
 		rrList = new ArrayList<ResourceRecord>() ;
 		final String domainName = this.getIntent().getExtras().getString("domainName") ;
 		final String hostName = this.getIntent().getExtras().getString("hostName") ;
+		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 
 		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
@@ -136,10 +177,10 @@ public class HostRecordListActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
 				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
-				rrDetailsActivity.putExtra("rr_id", rrList.get(position-1).getId().longValue()) ;
-				rrDetailsActivity.putExtra("rr_type", rrList.get(position-1).getType()) ;
-				rrDetailsActivity.putExtra("domainName", domainName) ;
-				rrDetailsActivity.putExtra("hostName", hostName) ;
+				ResourceRecord clickedRR = rrList.get(position-1) ;
+				clickedRR.setHostName(hostName) ;
+				clickedRR.setDomainName(domainName) ;
+				rrDetailsActivity.putExtra("rrData", clickedRR) ;
 				startActivity(rrDetailsActivity) ;
 			}
 		}) ;
