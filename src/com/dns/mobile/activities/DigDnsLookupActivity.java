@@ -164,8 +164,7 @@ public class DigDnsLookupActivity extends Activity {
 							break ;
 				}
 			} catch (Throwable e) {
-				System.out.println(e.getLocalizedMessage()) ;
-				e.printStackTrace();
+				Log.e("DigDnsLookupActivity", e.getLocalizedMessage(), e) ;
 			}
 			return retVal.toString() ;
 		}
@@ -224,56 +223,52 @@ public class DigDnsLookupActivity extends Activity {
 
 			StringBuilder resultArea = new StringBuilder() ;
 
-			Header hdr = rsp.getHeader() ;
-			resultArea.append(";; Got Answer:\n") ;
-			resultArea.append(";; -<<HEADER<<- opcode: "+Opcode.string(hdr.getOpcode())+", status") ;
-
-			int QCount = rsp.getSectionArray(Section.QUESTION).length ;
-			int AnsCount = rsp.getSectionArray(Section.ANSWER).length ;
-			int AuCount = rsp.getSectionArray(Section.AUTHORITY).length ;
-			int AdCount = rsp.getSectionArray(Section.ADDITIONAL).length ;
-
-			resultArea.append("\t;; flags: "+hdr.printFlags()+"; QUERY: "+QCount+", ANSWER: "+AnsCount+", AUTHORITY: "
-					+ AuCount+", ADDITIONAL: "+AdCount+"\n") ;
-			if (QCount>0) {
-				System.out.print("\t;; QUESTION SECTION:\n");
-				resultArea.append("\t;; QUESTION SECTION:\n");
-				Record[] questions = rsp.getSectionArray(Section.QUESTION) ;
-				for (Record query: questions) {
-					resultArea.append("\t"+this.pp(query,true));
+			if (rsp!=null) {
+				Header hdr = rsp.getHeader();
+				resultArea.append(";; Got Answer:\n");
+				resultArea.append(";; -<<HEADER<<- opcode: " + Opcode.string(hdr.getOpcode()) + ", status");
+				int QCount = rsp.getSectionArray(Section.QUESTION).length;
+				int AnsCount = rsp.getSectionArray(Section.ANSWER).length;
+				int AuCount = rsp.getSectionArray(Section.AUTHORITY).length;
+				int AdCount = rsp.getSectionArray(Section.ADDITIONAL).length;
+				resultArea.append("\t;; flags: " + hdr.printFlags() + "; QUERY: " + QCount + ", ANSWER: " + AnsCount + ", AUTHORITY: " + AuCount + ", ADDITIONAL: " + AdCount + "\n");
+				if (QCount > 0) {
+					resultArea.append("\t;; QUESTION SECTION:\n");
+					Record[] questions = rsp.getSectionArray(Section.QUESTION);
+					for (Record query : questions) {
+						resultArea.append("\t" + this.pp(query, true));
+					}
+					resultArea.append("\n\n");
 				}
-				resultArea.append("\n\n");
-			}
-
-			if (AnsCount>0) {
-				resultArea.append("\t;; ANSWER SECTION:\n");
-				Record[] answers = rsp.getSectionArray(Section.ANSWER) ;
-				for (Record answer: answers) {
-					resultArea.append("\t"+this.pp(answer,false));
+				if (AnsCount > 0) {
+					resultArea.append("\t;; ANSWER SECTION:\n");
+					Record[] answers = rsp.getSectionArray(Section.ANSWER);
+					for (Record answer : answers) {
+						resultArea.append("\t" + this.pp(answer, false));
+					}
+					resultArea.append("\n\n");
 				}
-				resultArea.append("\n\n");
-			}
-
-			if (AuCount>0) {
-				resultArea.append("\t;; AUTHORITY SECTION:\n");
-				Record[] authorities = rsp.getSectionArray(Section.AUTHORITY) ;
-				for (Record authority: authorities) {
-					resultArea.append("\t"+this.pp(authority,false));
+				if (AuCount > 0) {
+					resultArea.append("\t;; AUTHORITY SECTION:\n");
+					Record[] authorities = rsp.getSectionArray(Section.AUTHORITY);
+					for (Record authority : authorities) {
+						resultArea.append("\t" + this.pp(authority, false));
+					}
+					resultArea.append("\n\n");
 				}
-				resultArea.append("\n\n");
-			}
-
-			if (AdCount>0) {
-				resultArea.append("\t;; ADDITIONAL SECTION:\n");
-				Record[] addtions = rsp.getSectionArray(Section.ADDITIONAL) ;
-				for (Record record: addtions) {
-					resultArea.append("\t"+this.pp(record,false));
+				if (AdCount > 0) {
+					resultArea.append("\t;; ADDITIONAL SECTION:\n");
+					Record[] addtions = rsp.getSectionArray(Section.ADDITIONAL);
+					for (Record record : addtions) {
+						resultArea.append("\t" + this.pp(record, false));
+					}
+					resultArea.append("\n\n");
 				}
-				resultArea.append("\n\n");
+				resultArea.append("\t;; Query time: " + (end.getTime() - start.getTime()) + " msec\n");
+				resultArea.append("\t;; MSG SIZE:  rcvd: " + rsp.numBytes() + " bytes\n");
+			} else {
+				resultArea.append("No response was received for the DNS lookup.") ;
 			}
-
-			resultArea.append("\t;; Query time: "+(end.getTime()-start.getTime())+" msec\n");
-			resultArea.append("\t;; MSG SIZE:  rcvd: "+rsp.numBytes()+" bytes\n");
 			((EditText)findViewById(R.id.digResponseArea)).setText(resultArea.toString()) ;
 		}
 	}
@@ -298,9 +293,12 @@ public class DigDnsLookupActivity extends Activity {
 						fqdn = temp+"." ;
 					}
 					String[] types = getResources().getStringArray(R.array.digRecordTypes) ;
-					String type = types[((Spinner)findViewById(R.id.digRecordTypeCombo)).getSelectedItemPosition()] ;
+					int type = Type.value(types[((Spinner)findViewById(R.id.digRecordTypeCombo)).getSelectedItemPosition()]) ;
+					if (type<0) {
+						type = Type.ANY ;
+					}
 					try {
-						Record query = Record.newRecord(new Name(fqdn), Type.value(type), DClass.IN) ;
+						Record query = Record.newRecord(new Name(fqdn), type, DClass.ANY) ;
 						Message lookupRequest = Message.newQuery(query) ;
 						new DigLookupTask().execute(lookupRequest) ;
 					} catch (TextParseException e) {
@@ -324,9 +322,12 @@ public class DigDnsLookupActivity extends Activity {
 					fqdn = temp+"." ;
 				}
 				String[] types = getResources().getStringArray(R.array.digRecordTypes) ;
-				String type = types[((Spinner)findViewById(R.id.digRecordTypeCombo)).getSelectedItemPosition()] ;
+				int type = Type.value(types[((Spinner)findViewById(R.id.digRecordTypeCombo)).getSelectedItemPosition()]) ;
+				if (type<0) {
+					type = Type.ANY ;
+				}
 				try {
-					Record query = Record.newRecord(new Name(fqdn), Type.value(type), DClass.IN) ;
+					Record query = Record.newRecord(new Name(fqdn), type, DClass.ANY) ;
 					Message lookupRequest = Message.newQuery(query) ;
 					new DigLookupTask().execute(lookupRequest) ;
 				} catch (TextParseException e) {
