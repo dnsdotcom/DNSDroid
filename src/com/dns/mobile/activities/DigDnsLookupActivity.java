@@ -270,6 +270,8 @@ public class DigDnsLookupActivity extends Activity {
 				resultArea.append("No response was received for the DNS lookup.") ;
 			}
 			((EditText)findViewById(R.id.digResponseArea)).setText(resultArea.toString()) ;
+			findViewById(R.id.digResponseArea).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.digProgressBar).setVisibility(View.GONE) ;
 		}
 	}
 
@@ -285,6 +287,8 @@ public class DigDnsLookupActivity extends Activity {
 			
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode==KeyEvent.KEYCODE_ENTER) {
+					findViewById(R.id.digResponseArea).setVisibility(View.GONE) ;
+					findViewById(R.id.digProgressBar).setVisibility(View.VISIBLE) ;
 					String temp = ((EditText)findViewById(R.id.digFqdnInput)).getText().toString() ;
 					String fqdn = null ;
 					if (temp.endsWith(".")) {
@@ -314,6 +318,8 @@ public class DigDnsLookupActivity extends Activity {
 		((Button)findViewById(R.id.digButton)).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				findViewById(R.id.digResponseArea).setVisibility(View.GONE) ;
+				findViewById(R.id.digProgressBar).setVisibility(View.VISIBLE) ;
 				String temp = ((EditText)findViewById(R.id.digFqdnInput)).getText().toString() ;
 				String fqdn = null ;
 				if (temp.endsWith(".")) {

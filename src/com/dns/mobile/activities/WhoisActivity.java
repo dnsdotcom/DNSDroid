@@ -46,8 +46,9 @@ public class WhoisActivity extends Activity {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			((EditText)findViewById(R.id.whoisResultTextArea)).setText(result) ;
+			findViewById(R.id.whoisResultTextArea).setVisibility(View.VISIBLE) ;
 			findViewById(R.id.whoisProgressBar).setVisibility(View.GONE) ;
+			((EditText)findViewById(R.id.whoisResultTextArea)).setText(result) ;
 		}
 	}
 
@@ -62,6 +63,7 @@ public class WhoisActivity extends Activity {
 		((Button)findViewById(R.id.whoisButton)).setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+				findViewById(R.id.whoisResultTextArea).setVisibility(View.INVISIBLE) ;
 				findViewById(R.id.whoisProgressBar).setVisibility(View.VISIBLE) ;
 				String domainName = ((EditText)findViewById(R.id.whoisDomainInput)).getText().toString() ;
 				new WhoisTask().execute(domainName) ;
@@ -72,6 +74,7 @@ public class WhoisActivity extends Activity {
 			
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode==KeyEvent.KEYCODE_ENTER) {
+					findViewById(R.id.whoisResultTextArea).setVisibility(View.GONE) ;
 					findViewById(R.id.whoisProgressBar).setVisibility(View.VISIBLE) ;
 					String domainName = ((EditText)findViewById(R.id.whoisDomainInput)).getText().toString() ;
 					new WhoisTask().execute(domainName) ;
