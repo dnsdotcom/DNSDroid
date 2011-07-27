@@ -69,5 +69,12 @@
 	<string name="main_menu_my_geogroups">My Geo-Groups</string>
 	<string name="main_menu_my_nameservers">My Nameservers</string>
 	<string name="main_menu_dns_tools">DNS Tools</string>
+	<string name="dns_tools_whois">WHOIS Lookup</string>
+	<string name="dns_tools_dig">DIG Lookup</string>
+	<string name="dns_tools_header_label">DNS Tools</string>
+	<string name="dns_tool_whois_label">WHOIS</string>
+	<string name="whois_domain_name_label">Enter Domain Name</string>
+	<string name="whois_lookup_button">Lookup</string>
+	<string name="whois_domain_input_hint">domain.tld</string>
 </resources>
 

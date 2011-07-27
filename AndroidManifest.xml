@@ -35,6 +35,8 @@
 	<activity android:name=".activities.RRListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.DomainGroupsListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.RecordDetailActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.DomainNameToolsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.WhoisActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
     </application>
 
 </manifest>

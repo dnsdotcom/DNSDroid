@@ -11,9 +11,11 @@ import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Host ;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -135,6 +137,28 @@ public class DomainHostsActivity extends Activity {
 		domainName = this.getIntent().getExtras().getString("domainName") ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
+				builder.setTitle(R.string.open_web_confirmation_title) ;
+				builder.setTitle(R.string.open_web_confirmation_msg) ;
+				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Uri uri = Uri.parse("http://www.dns.com/") ;
+						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
+					}
+				}) ;
+				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+		});
 
 		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
 
