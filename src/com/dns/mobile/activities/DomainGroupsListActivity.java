@@ -125,6 +125,7 @@ public class DomainGroupsListActivity extends Activity {
 				DomainGroup selected = domainGroupList.get(position-1) ;
 				Intent hostListIntent = new Intent(getApplicationContext(), DomainHostsActivity.class) ;
 				hostListIntent.putExtra("domainName", selected.getName()) ;
+				hostListIntent.putExtra("isDomainGroup", true) ;
 				startActivity(hostListIntent) ;
 			}
 			

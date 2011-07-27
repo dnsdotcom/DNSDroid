@@ -22,7 +22,9 @@
         <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
             <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal" android:id="@+id/linearLayout1">
                 <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:id="@+id/recordTypeLabel" android:text="@string/rr_type_selection_label" android:layout_width="wrap_content"></TextView>
-                <Spinner android:layout_weight="1" android:id="@+id/rrTypeSpinner" android:layout_height="wrap_content" android:entries="@array/recordTypes" android:layout_width="115dp"></Spinner>
+                <Spinner android:layout_weight="1" android:id="@+id/rrTypeSpinner" android:layout_height="wrap_content" android:entries="@array/recordTypes" android:layout_width="115dp">
+			        <requestFocus></requestFocus>
+                </Spinner>
             </LinearLayout>
             <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:text="@string/rr_answer_label" android:layout_width="fill_parent" android:id="@+id/rrAnswerLabel"></TextView>
             <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/rrAnswer"></EditText>

@@ -87,7 +87,6 @@ public class DNSActivity extends Activity {
 		});
 
 		ListView mainMenu = (ListView) findViewById(R.id.mainMenuListView) ;
-		mainMenu.setBackgroundResource(R.drawable.list_view_color_states) ;
 		mainMenu.setAdapter(new MainMenuListAdapter()) ;
 
 		AdapterView.OnItemClickListener menuListener = new AdapterView.OnItemClickListener() {

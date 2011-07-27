@@ -37,6 +37,7 @@ public class DomainHostsActivity extends Activity {
 	protected ArrayList<Host> hostList = null ;
 	protected String filter = new String("") ;
 	protected String domainName = null ;
+	protected boolean isDomainGroup = false ;
 
 	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -59,7 +60,11 @@ public class DomainHostsActivity extends Activity {
 
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
-			return api.getHostnamesForDomain(params[0]) ;
+			if (isDomainGroup) {
+				return api.getHostnamesForGroup(params[0]) ;
+			} else {
+				return api.getHostnamesForDomain(params[0]) ;
+			}
 		}
 
 		/* (non-Javadoc)
@@ -77,15 +82,17 @@ public class DomainHostsActivity extends Activity {
 						apiRequestSucceeded = true ;
 					} else {
 						Log.e("DomainHostsActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
-						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
+						builder.show() ;
 					}
 				} catch (JSONException jsone) {
 					Log.e("DomainHostsActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
-					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;
+					builder.show() ;
 				}
 			}
 
@@ -109,7 +116,10 @@ public class DomainHostsActivity extends Activity {
 					Log.e("DomainHostsActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
 				}
 			} else {
-				showDialog(R.string.api_request_failed) ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()) ;
+				builder.setTitle(R.string.api_request_failed) ;
+				builder.setMessage("Unknown error experienced while trying to make an API call to DNS.com.") ;
+				builder.show() ;
 			}
 		}
 	}
@@ -123,7 +133,7 @@ public class DomainHostsActivity extends Activity {
 		hostList = new ArrayList<Host>() ;
 		setContentView(R.layout.domain_hosts_activity) ;
 		domainName = this.getIntent().getExtras().getString("domainName") ;
-		final boolean isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
+		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
 
 		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;

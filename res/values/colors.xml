@@ -26,6 +26,8 @@
     <color name="grey">#ffc6c6c6</color>
     <color name="dark_grey">#ff969696</color>
     <color name="white">#ffffffff</color>
+    <color name="transparent">#0fff</color>
+    <drawable name="transparent">#0fff</drawable>
     <drawable name="red">#ffff0000</drawable>
     <drawable name="blue">#ff0d74d1</drawable>
     <drawable name="grey">#ffc6c6c6</drawable>

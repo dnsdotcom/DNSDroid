@@ -183,6 +183,25 @@ public class GenericAPI {
 			}
 		} else {
 			Log.d("GenericAPI", "Status '"+answer.getStatusLine().getStatusCode()+"' was not valid") ;
+			BufferedReader bis = null ;
+			try {
+				bis = new BufferedReader(new InputStreamReader(answer.getEntity().getContent()));
+			} catch (IllegalStateException e) {
+				Log.e("GenericAPI", e.getLocalizedMessage(), e) ;
+			} catch (IOException e) {
+				Log.e("GenericAPI", e.getLocalizedMessage(), e) ;
+			}
+			StringBuilder responseText = new StringBuilder() ;
+			String line = null ;
+			Log.d("GenericAPI", "Reading in the response body.") ;
+			try {
+				while ((line = bis.readLine()) != null) {
+					responseText.append(line) ;
+				}
+			} catch (IOException e) {
+				Log.e("GenericAPI", e.getLocalizedMessage(), e) ;
+			}
+			Log.d("GenericAPI", "Response body read and stored\n\n"+responseText.toString()+"\n") ;
 			response = new JSONObject() ;
 			try {
 				response.put("error", "HttpClient response has code '"+answer.getStatusLine().getStatusCode()+"'.");
