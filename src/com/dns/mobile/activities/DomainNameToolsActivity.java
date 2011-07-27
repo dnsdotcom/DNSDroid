@@ -80,6 +80,9 @@ public class DomainNameToolsActivity extends Activity {
 					case 0:
 						toolActivity.setClass(getApplicationContext(), WhoisActivity.class) ;
 						break ;
+					case 1:
+						toolActivity.setClass(getApplicationContext(), DigDnsLookupActivity.class) ;
+						break ;
 				}
 				startActivity(toolActivity) ;
 			}

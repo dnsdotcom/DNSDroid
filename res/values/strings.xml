@@ -76,5 +76,10 @@
 	<string name="whois_domain_name_label">Enter Domain Name</string>
 	<string name="whois_lookup_button">Lookup</string>
 	<string name="whois_domain_input_hint">domain.tld</string>
+	<string name="dig_fqdn_label">Enter Host Name</string>
+	<string name="dig_lookup_button">Lookup</string>
+	<string name="dig_fqdn_input_hint">host.domain.tld</string>
+	<string name="dig_activity_header">DNS DIG</string>
+	<string name="dig_name_server_select_label">Name Server</string>
 </resources>
 
