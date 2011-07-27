@@ -155,7 +155,7 @@ public class DomainListActivity extends Activity {
 			public View getView(int position, View convertView, ViewGroup parent) {
 				TextView domainItem = new TextView(parent.getContext()) ;
 				domainItem.setTextColor(Color.WHITE) ;
-				domainItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
+				domainItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
 				domainItem.setBackgroundColor(Color.TRANSPARENT) ;
 				domainItem.setWidth(LayoutParams.FILL_PARENT) ;
 

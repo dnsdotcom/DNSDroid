@@ -158,10 +158,11 @@ public class DomainHostsActivity extends Activity {
 			public View getView(int position, View convertView, ViewGroup parent) {
 				LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
 				listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
+				listItemLayout.setGravity(Gravity.CENTER_VERTICAL&Gravity.LEFT) ;
 
 				TextView hostItem = new TextView(parent.getContext()) ;
 				hostItem.setTextColor(Color.WHITE) ;
-				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
+				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
 				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
 
 				@SuppressWarnings("unchecked")

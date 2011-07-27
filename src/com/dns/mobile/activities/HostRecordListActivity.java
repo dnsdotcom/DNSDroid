@@ -209,7 +209,7 @@ public class HostRecordListActivity extends Activity {
 
 				TextView hostItem = new TextView(parent.getContext()) ;
 				hostItem.setTextColor(Color.WHITE) ;
-				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10) ;
+				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
 				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
 
 				@SuppressWarnings("unchecked")

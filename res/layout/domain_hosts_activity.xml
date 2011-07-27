@@ -21,7 +21,7 @@
     <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" 
     	android:id="@+id/filterInput" android:hint="Filter">
     </EditText>
-    <ListView android:layout_height="wrap_content" 
+    <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="wrap_content" 
     	android:layout_width="fill_parent" android:id="@+id/hostListView" 
     	android:visibility="invisible" android:background="@drawable/list_view_color_states" 
     	android:focusable="true" android:focusableInTouchMode="true">

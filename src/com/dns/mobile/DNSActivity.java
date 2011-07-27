@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,6 +87,7 @@ public class DNSActivity extends Activity {
 		});
 
 		ListView mainMenu = (ListView) findViewById(R.id.mainMenuListView) ;
+		mainMenu.setBackgroundResource(R.drawable.list_view_color_states) ;
 		mainMenu.setAdapter(new MainMenuListAdapter()) ;
 
 		AdapterView.OnItemClickListener menuListener = new AdapterView.OnItemClickListener() {
@@ -190,15 +192,15 @@ public class DNSActivity extends Activity {
 		public Object getItem(int position) {
 			switch (position) {
 				case 0:
-					return "My Domains" ;
+					return getResources().getString(R.string.main_menu_my_domains) ;
 				case 1:
-					return "My Domain Groups" ;
+					return getResources().getString(R.string.main_menu_my_domain_groups) ;
 				case 2:
-					return "My Geo-Groups" ;
+					return getResources().getString(R.string.main_menu_my_geogroups) ;
 				case 3:
-					return "My Name Servers" ;
+					return getResources().getString(R.string.main_menu_my_nameservers) ;
 				case 4:
-					return "DNS Tools" ;
+					return getResources().getString(R.string.main_menu_dns_tools) ;
 			}
 			return null ;
 		}
@@ -209,11 +211,10 @@ public class DNSActivity extends Activity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			TextView menuItem = new TextView(getBaseContext()) ;
-			menuItem.setHeight(50) ;
+			menuItem.setHeight(90) ;
 			menuItem.setTextColor(Color.WHITE) ;
-			menuItem.setTextSize(20) ;
 			menuItem.setGravity(Gravity.CENTER) ;
-			//menuItem.setTextSize(TypedValue.COMPLEX_UNIT_PT, 8) ;
+			menuItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
 			switch (position) {
 				case 0:
 					menuItem.setText(R.string.main_menu_my_domains) ;
@@ -222,10 +223,10 @@ public class DNSActivity extends Activity {
 					menuItem.setText(R.string.main_menu_my_domain_groups) ;
 					break ;
 				case 2:
-					menuItem.setText(R.string.main_menu_my_geo_groups) ;
+					menuItem.setText(R.string.main_menu_my_geogroups) ;
 					break;
 				case 3:
-					menuItem.setText(R.string.main_menu_my_name_servers) ;
+					menuItem.setText(R.string.main_menu_my_nameservers) ;
 					break ;
 				case 4:
 					menuItem.setText(R.string.main_menu_dns_tools) ;

@@ -49,11 +49,6 @@
 	<string name="configuration_token_dialog_message">Enter Account Token</string>
 	<string name="configuration_token_dialog_title">Enter the authorization token from the Settings->API Settings page on the DNS.com web site.</string>
 	<string name="configuration_sandbox_summary">Checking this box will cause the application to use the DNS.com sandbox instead of live production data. You can use this to test access to DNS.com from the app without making real changes.</string>
-	<string name="main_menu_my_domains">My Domains</string>
-	<string name="main_menu_my_domain_groups">My Domain Groups</string>
-	<string name="main_menu_my_geo_groups">My Geo-Groups</string>
-	<string name="main_menu_my_name_servers">My Name Servers</string>
-	<string name="main_menu_dns_tools">DNS Tools</string>
 	<string name="screen_bottom_help_text">Long press to delete items</string>
 	<string name="api_request_failed">API request failed</string>
 	<string name="domain_groups_list_label">My Domain Groups</string>
@@ -69,5 +64,10 @@
 	<string name="rr_expire_label">Expire</string>
 	<string name="rr_min_label">Minimum TTL (in seconds)</string>
 	<string name="rr_details_save">Save</string>
+	<string name="main_menu_my_domains">My Domains</string>
+	<string name="main_menu_my_domain_groups">My Domain Groups</string>
+	<string name="main_menu_my_geogroups">My Geo-Groups</string>
+	<string name="main_menu_my_nameservers">My Nameservers</string>
+	<string name="main_menu_dns_tools">DNS Tools</string>
 </resources>
 

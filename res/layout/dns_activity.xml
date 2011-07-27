@@ -18,6 +18,6 @@
          of drawable/semi_black-->
     <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"></ImageView>
     <FrameLayout android:id="@+id/frameLayout1" android:layout_width="fill_parent" android:layout_height="2dp" android:background="@color/dark_grey"></FrameLayout>
-    <ListView android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/mainMenuListView" android:listSelector="@color/list_view_color_states"></ListView>
+    <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/mainMenuListView" android:listSelector="@color/list_view_color_states"></ListView>
 
 </LinearLayout>

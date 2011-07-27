@@ -362,6 +362,35 @@ public class ResourceRecord implements Serializable {
 		return retVal ;
 	}
 
+	public static final int getTypeForIdentifier(String type) {
+		int retVal = 1 ;
+		if (type.toLowerCase().contentEquals("a")) {
+			retVal = 1 ;
+		} else if (type.toLowerCase().contentEquals("aaaa")) {
+			retVal = 28 ;
+		} else if (type.toLowerCase().contentEquals("soa")) {
+			retVal = 6 ;
+		} else if (type.toLowerCase().contentEquals("txt")) {
+			retVal = 16 ;
+		} else if (type.toLowerCase().contentEquals("mx")) {
+			retVal = 15 ;
+		} else if (type.toLowerCase().contentEquals("ns")) {
+			retVal = 2 ;
+		} else if (type.toLowerCase().contentEquals("srv")) {
+			retVal = 33 ;
+		} else if (type.toLowerCase().contentEquals("cname")) {
+			retVal = 5 ;
+		} else if (type.toLowerCase().contentEquals("302")) {
+			retVal = 80000 ;
+		} else if (type.toLowerCase().contentEquals("301")) {
+			retVal = 80001 ;
+		} else if (type.toLowerCase().contentEquals("frame")) {
+			retVal = 80002 ;
+		}
+
+		return retVal ;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
