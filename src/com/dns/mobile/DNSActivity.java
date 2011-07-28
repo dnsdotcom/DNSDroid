@@ -18,11 +18,12 @@ package com.dns.mobile;
 
 import com.dns.mobile.R;
 import com.dns.mobile.activities.ConfigurationActivity;
-import com.dns.mobile.activities.DomainGroupsListActivity;
-import com.dns.mobile.activities.DomainListActivity;
-import com.dns.mobile.activities.DomainNameToolsActivity;
-import com.dns.mobile.activities.GeoGroupsListActivity;
-import com.dns.mobile.activities.NameServersInfoActivity;
+import com.dns.mobile.activities.domains.DomainListActivity;
+import com.dns.mobile.activities.geo.GeoGroupsListActivity;
+import com.dns.mobile.activities.groups.DomainGroupsListActivity;
+import com.dns.mobile.activities.ns.NameServersInfoActivity;
+import com.dns.mobile.activities.tools.DomainNameToolsActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

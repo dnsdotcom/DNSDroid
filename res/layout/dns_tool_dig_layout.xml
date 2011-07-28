@@ -24,7 +24,7 @@
 		android:layout_below="@+id/digFqdnLabel" android:layout_alignParentRight="true" 
 		android:id="@+id/digButton" android:text="@string/dig_lookup_button"></Button>
 	<Spinner android:layout_below="@+id/digFqdnInput"
-		android:layout_alignParentRight="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/nameServerSelectLabel" android:entries="@array/nameServers" android:id="@+id/digNameServerCombo"></Spinner>
+		android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/nameServerSelectLabel" android:entries="@array/nameServers" android:id="@+id/digNameServerCombo" android:layout_toLeftOf="@+id/addNameServerButton"></Spinner>
 	<ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" 
 		style="?android:attr/progressBarStyleLarge" android:layout_below="@+id/digDivider" 
 		android:layout_marginTop="60dp" android:layout_centerInParent="true" 
@@ -33,4 +33,5 @@
 	<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignTop="@+id/digFqdnInput" android:layout_toLeftOf="@+id/digButton" android:id="@+id/digRecordTypeCombo" android:entries="@array/digRecordTypes" android:layout_toRightOf="@+id/digFqdnInput"></Spinner>
 	<FrameLayout android:id="@+id/digDivider" android:layout_width="fill_parent" android:layout_height="4dp" android:background="@color/dark_grey" android:layout_below="@+id/digNameServerCombo" android:layout_alignParentLeft="true"></FrameLayout>
 	<EditText android:enabled="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/digDivider" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" android:layout_alignParentRight="true" android:id="@+id/digResponseArea" android:inputType="textMultiLine" android:cursorVisible="false"></EditText>
+	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/digButton" android:layout_alignParentRight="true" android:id="@+id/addNameServerButton" android:drawableRight="@drawable/icon_edit" android:layout_above="@+id/digDivider"></Button>
 </RelativeLayout>

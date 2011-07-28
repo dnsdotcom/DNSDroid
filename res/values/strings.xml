@@ -81,5 +81,7 @@
 	<string name="dig_fqdn_input_hint">host.domain.tld</string>
 	<string name="dig_activity_header">DNS DIG</string>
 	<string name="dig_name_server_select_label">Name Server</string>
+	<string name="dig_use_custom_ns_button_label">Use</string>
+	<string name="dig_config_servers_label">Manage Name Servers</string>
 </resources>
 

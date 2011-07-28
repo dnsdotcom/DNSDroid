@@ -25,11 +25,9 @@
         <item>URL(FRAME)</item>
     </string-array>
     <string-array name="nameServers">
-    	<item >Default</item>
     	<item>ns1.dns.com</item>
     	<item>ns2.dns.com</item>
     	<item>ns3.dns.com</item>
     	<item>ns4.dns.com</item>
-    	<item>Custom</item>
     </string-array>
 </resources>

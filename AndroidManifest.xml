@@ -25,19 +25,18 @@
             </intent-filter>
 
         </activity>
-	<activity android:name=".activities.DomainListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.DomainHostsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.CreateNewDomainActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.CreateNewHostActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.ConfigurationActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.RRListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.DomainGroupsListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.RecordDetailActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.DomainNameToolsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.WhoisActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-	<activity android:name=".activities.DigDnsLookupActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.tools.DomainNameToolsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.tools.WhoisActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.tools.DigDnsLookupActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.groups.DomainGroupsListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.domains.DomainListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.domains.CreateNewDomainActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.records.HostListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.records.HostRecordListActivityActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.records.CreateNewHostActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.records.HostRecordListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.records.RecordDetailActivityActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
     </application>
 
 </manifest>
