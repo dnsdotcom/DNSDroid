@@ -1,4 +1,4 @@
-package com.dns.mobile.activities;
+package com.dns.mobile.activities.records;
 
 import java.util.ArrayList;
 
