@@ -149,7 +149,7 @@ public class DomainListActivity extends Activity {
 		});
 
 		ListView domainListView = (ListView) findViewById(R.id.domainListView) ;
-		domainListView.setBackgroundResource(R.drawable.list_view_color_states) ;
+		domainListView.setBackgroundResource(R.color.list_view_color_states) ;
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {

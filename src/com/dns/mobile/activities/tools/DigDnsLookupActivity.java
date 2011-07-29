@@ -280,14 +280,6 @@ public class DigDnsLookupActivity extends Activity {
 			((Spinner)findViewById(R.id.digNameServerCombo)).invalidate() ;
 		}
 
-		((Button)findViewById(R.id.addNameServerButton)).setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				Intent configNameServers = new Intent(getApplicationContext(), DigServerManagerActivity.class) ;
-				
-			}
-		}) ;
-
 		((EditText)findViewById(R.id.digFqdnInput)).setOnKeyListener(new View.OnKeyListener() {
 
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -312,7 +304,9 @@ public class DigDnsLookupActivity extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem sendEmail = menu.add(Menu.NONE, 0, 0, "E-Mail");
+		MenuItem configNameServers = menu.add(Menu.NONE, 0, 0, "Add/Del Servers");
+		configNameServers.setIcon(android.R.drawable.ic_menu_edit) ;
+		MenuItem sendEmail = menu.add(Menu.NONE, 1, 1, "E-Mail");
 		sendEmail.setIcon(android.R.drawable.ic_menu_send) ;
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -330,6 +324,9 @@ public class DigDnsLookupActivity extends Activity {
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "The following DNS lookup was done from the DNS.com mobile app.\n\n"+digResults) ;
 				startActivity(emailIntent) ;
 				return true;
+			case 1:
+				// TODO: Add an intent and activity to add/remove name servers.
+				break ;
 		}
 		return false;
 	}
