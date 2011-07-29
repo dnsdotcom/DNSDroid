@@ -29,7 +29,7 @@
     </EditText>
     <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="wrap_content" 
     	android:layout_width="fill_parent" android:id="@+id/hostListView" 
-    	android:visibility="invisible" android:background="@drawable/list_view_color_states" 
+    	android:visibility="invisible" 
     	android:focusable="true" android:focusableInTouchMode="true" android:layout_below="@id/filterInput"
     	android:layout_above="@id/helpText">
         <requestFocus></requestFocus>

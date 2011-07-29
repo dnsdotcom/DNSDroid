@@ -32,9 +32,5 @@
     <style name="TextAppearance.ActionButton">
         <item name="android:textStyle">italic</item>
     </style>
-    <style name="domain_list_style">
-    	<item name="android:textSize">8pt</item>
-    	<item name="android:background">@drawable/list_view_color_states</item>
-    </style>
 </resources>
 

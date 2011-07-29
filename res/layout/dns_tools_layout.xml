@@ -11,7 +11,7 @@
 	<TextView android:id="@+id/dnsToolsHeader" android:layout_height="wrap_content" 
 		android:layout_below="@id/dnsLogo" android:textColor="@color/white"
 		android:background="@color/grey" android:padding="2dp" android:layout_width="fill_parent" android:text="@string/dns_tools_header_label"></TextView>
-	<ListView android:id="@+id/dns_tools_menu_list" android:background="@drawable/list_view_color_states" android:focusable="true" 
+	<ListView android:id="@+id/dns_tools_menu_list" android:focusable="true" 
     	android:focusableInTouchMode="true" android:layout_gravity="center_vertical" 
     	android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="fill_parent" 
     	android:layout_width="fill_parent" android:layout_below="@id/dnsToolsHeader" android:layout_alignParentBottom="true" android:visibility="visible"></ListView>

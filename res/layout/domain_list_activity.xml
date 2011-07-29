@@ -19,7 +19,7 @@
     	android:dividerHeight="2.0sp" android:layout_height="fill_parent" 
     	android:layout_width="fill_parent" android:layout_below="@id/filterInput"
     	android:id="@+id/domainListView" android:visibility="invisible" 
-    	android:background="@drawable/list_view_color_states" android:focusable="true" 
+    	android:focusable="true" 
     	android:focusableInTouchMode="true" android:layout_above="@id/helpText">
         <requestFocus></requestFocus>
     </ListView>

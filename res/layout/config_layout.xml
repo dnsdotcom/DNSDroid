@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:weightSum="1" android:id="@+id/configurationLayout">
-    <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/titleLabel" android:text="@string/dns_configuration_label" android:textSize="16dp" android:textColor="@color/white" android:textStyle="bold"></TextView>
-    <TextView android:id="@+id/authTokenLabel" android:layout_height="wrap_content" android:text="@string/auth_token_label" android:layout_width="fill_parent" android:hapticFeedbackEnabled="true"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:hint="@string/auth_token_input_hint" android:id="@+id/authTokenInput">
-        <requestFocus></requestFocus>
-    </EditText>
-    <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="fill_parent">
-        <CheckBox android:id="@+id/useSandbox" android:gravity="center" android:text="@string/use_sandbox_config_label" android:layout_height="wrap_content" android:layout_width="155dp"></CheckBox>
-        <FrameLayout android:id="@+id/frameLayout1" android:layout_height="fill_parent" android:layout_width="45dp"></FrameLayout>
-        <Button android:id="@+id/saveConfigButton" android:drawableLeft="@android:drawable/ic_menu_save" android:clickable="false" android:text="@string/configuration_save_button_label" android:layout_height="48dp" android:layout_width="wrap_content"></Button>
-    </LinearLayout>
+    <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:text="TextView" android:layout_alignParentTop="true" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/configurationTitle"></TextView>
     
-</LinearLayout>
+</RelativeLayout>

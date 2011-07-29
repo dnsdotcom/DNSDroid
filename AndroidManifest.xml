@@ -29,7 +29,9 @@
 	<activity android:name=".activities.tools.DomainNameToolsActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.tools.WhoisActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.tools.DigDnsLookupActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.tools.DigServerManagerActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.groups.DomainGroupsListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+	<activity android:name=".activities.groups.DigServerManagerActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.domains.DomainListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.domains.CreateNewDomainActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	<activity android:name=".activities.records.HostListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>

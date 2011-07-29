@@ -26,12 +26,12 @@ import org.xbill.DNS.SimpleResolver;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 import com.dns.mobile.R;
+import com.dns.mobile.data.NameServer;
+import com.dns.mobile.data.NameServers;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -178,10 +178,10 @@ public class DigDnsLookupActivity extends Activity {
 		@Override
 		protected Message doInBackground(Message... params) {
 			Message query = params[0] ;
-			int selectedIndex = ((Spinner)findViewById(R.id.digNameServerCombo)).getSelectedItemPosition() ;
+			NameServer ns = (NameServer) ((Spinner)findViewById(R.id.digNameServerCombo)).getSelectedItem() ;
 			SimpleResolver resolver = null ;
 			try {
-				String nameServer = getResources().getStringArray(R.array.nameServers)[selectedIndex] ;
+				String nameServer = ns.getAddress() ;
 				Log.d("DigDnsLookupActivity", "Using name server: "+nameServer) ;
 				resolver = new SimpleResolver(nameServer) ;
 				start = new Date() ;
@@ -268,17 +268,10 @@ public class DigDnsLookupActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_dig_layout) ;
-		nameServerAdapter = new ArrayAdapter<String>(getBaseContext(), R.id.digNameServerCombo, getResources().getStringArray(R.array.nameServers)) ;
+		ArrayAdapter<NameServer> nsAdapter = new ArrayAdapter<NameServer>(getBaseContext(), android.R.layout.simple_spinner_item, new NameServers(getBaseContext()).getNameServers()) ;
+		nsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) ;
 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this) ;
-		if (settings.contains("nameServers")) {
-			String[] nameServerList = settings.getString("nameServers", "ns1.dns.com,ns2.dns.com,ns3.dns.com,ns4.dns.com").split(",") ;
-			nameServerAdapter.clear() ;
-			for (String item: nameServerList) {
-				nameServerAdapter.add(item) ;
-			}
-			((Spinner)findViewById(R.id.digNameServerCombo)).invalidate() ;
-		}
+		((Spinner)findViewById(R.id.digNameServerCombo)).setAdapter(nsAdapter) ;
 
 		((EditText)findViewById(R.id.digFqdnInput)).setOnKeyListener(new View.OnKeyListener() {
 
@@ -304,7 +297,7 @@ public class DigDnsLookupActivity extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem configNameServers = menu.add(Menu.NONE, 0, 0, "Add/Del Servers");
+		MenuItem configNameServers = menu.add(Menu.NONE, 0, 0, "Config Servers");
 		configNameServers.setIcon(android.R.drawable.ic_menu_edit) ;
 		MenuItem sendEmail = menu.add(Menu.NONE, 1, 1, "E-Mail");
 		sendEmail.setIcon(android.R.drawable.ic_menu_send) ;
@@ -314,7 +307,7 @@ public class DigDnsLookupActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case 0:
+			case 1:
 				String digResults = ((EditText)findViewById(R.id.digResponseArea)).getText().toString() ;
 				String resolvedHost = ((EditText)findViewById(R.id.digFqdnInput)).getText().toString() ;
 				String subjectLine = "DIG Result for: "+resolvedHost ;
@@ -324,11 +317,23 @@ public class DigDnsLookupActivity extends Activity {
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "The following DNS lookup was done from the DNS.com mobile app.\n\n"+digResults) ;
 				startActivity(emailIntent) ;
 				return true;
-			case 1:
-				// TODO: Add an intent and activity to add/remove name servers.
+			case 0:
+				Intent configNameServers = new Intent(getApplicationContext(), DigServerManagerActivity.class) ;
+				startActivityForResult(configNameServers, 1) ;
 				break ;
 		}
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode==1) {
+			((Spinner)findViewById(R.id.digNameServerCombo)).invalidate() ;
+		}
 	}
 
 	/**
