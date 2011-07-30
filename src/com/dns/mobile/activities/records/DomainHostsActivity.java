@@ -286,6 +286,166 @@ public class DomainHostsActivity extends Activity {
 		}) ;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		domainName = intent.getExtras().getString("domainName") ;
+		isDomainGroup = intent.getExtras().getBoolean("isDomainGroup") ;
+		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
+				builder.setTitle(R.string.open_web_confirmation_title) ;
+				builder.setTitle(R.string.open_web_confirmation_msg) ;
+				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Uri uri = Uri.parse("http://www.dns.com/") ;
+						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
+					}
+				}) ;
+				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+		});
+
+		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
+
+		hostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public void onItemClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
+				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
+				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+				rrListActivity.putExtra("domainName", domainName) ;
+				rrListActivity.putExtra("hostName", selectedHost.getName()) ;
+				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
+				startActivity(rrListActivity) ;
+			}
+		}) ;
+
+		hostListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				
+				return false;
+			}
+		}) ;
+
+		hostListView.setAdapter(new BaseAdapter() {
+			
+			public View getView(int position, View convertView, ViewGroup parent) {
+				LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
+				listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
+				listItemLayout.setGravity(Gravity.CENTER_VERTICAL&Gravity.LEFT) ;
+
+				TextView hostItem = new TextView(parent.getContext()) ;
+				hostItem.setTextColor(Color.WHITE) ;
+				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
+				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
+				if (position==0) {
+					hostItem.setText("[New Host]") ;
+				} else {
+					TextView rrCount = new TextView(getBaseContext()) ;
+					rrCount.setBackgroundDrawable(getResources().getDrawable(R.drawable.count_background)) ;
+					rrCount.setTextColor(Color.WHITE) ;
+					rrCount.setText(filteredList.get(position-1).getRecordCount()+"") ;
+					rrCount.setGravity(Gravity.CENTER) ;
+					listItemLayout.addView(rrCount) ;
+
+					Host currentHost = filteredList.get(position-1);
+					hostItem.setText(currentHost.getName());
+				}
+				listItemLayout.addView(hostItem) ;
+				return listItemLayout ;
+			}
+			
+			public long getItemId(int position) {
+				return position+200 ;
+			}
+			
+			public Object getItem(int position) {
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.get(position-1) ;
+			}
+			
+			public int getCount() {
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						Host current = (Host) object ;
+						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.size()+1 ;
+			}
+		}) ;
+
+		findViewById(R.id.hostListView).setVisibility(View.GONE) ;
+		findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+		new HostListApiTask().execute(domainName) ;
+
+		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
+		// order to have it update the list of displayed hosts.
+		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
+		filterInput.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				EditText filterInput = (EditText) v ;
+				filter = filterInput.getText().toString() ;
+				((ListView)findViewById(R.id.hostListView)).invalidateViews() ;
+				return false;
+			}
+		}) ;
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem addToGroup = menu.add(Menu.NONE, 0, 0, "Add To Group");

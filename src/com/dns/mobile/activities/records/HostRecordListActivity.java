@@ -334,6 +334,176 @@ public class HostRecordListActivity extends Activity {
 		}) ;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		domainName = this.getIntent().getExtras().getString("domainName") ;
+		hostName = this.getIntent().getExtras().getString("hostName") ;
+		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
+		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
+				builder.setTitle(R.string.open_web_confirmation_title) ;
+				builder.setTitle(R.string.open_web_confirmation_msg) ;
+				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Uri uri = Uri.parse("http://www.dns.com/") ;
+						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
+					}
+				}) ;
+				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+		});
+
+		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
+		ListView rrListView = (ListView) findViewById(R.id.rrListView) ;
+		rrListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
+				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
+				ResourceRecord clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
+				clickedRR.setHostName(hostName) ;
+				clickedRR.setDomainName(domainName) ;
+				rrDetailsActivity.putExtra("rrData", clickedRR) ;
+				startActivity(rrDetailsActivity) ;
+			}
+		}) ;
+		rrListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			/* (non-Javadoc)
+			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+			 */
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				
+				return false;
+			}
+		}) ;
+
+		rrListView.setAdapter(new BaseAdapter() {
+			
+			public View getView(int position, View convertView, ViewGroup parent) {
+				LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
+				listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
+
+				TextView hostItem = new TextView(parent.getContext()) ;
+				hostItem.setTextColor(Color.WHITE) ;
+				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
+				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+
+				if (position==0) {
+					hostItem.setText("[New RR]") ;
+				} else {
+					TextView rrType = new TextView(getBaseContext()) ;
+					rrType.setBackgroundDrawable(getResources().getDrawable(R.drawable.type_background)) ;
+					rrType.setTextColor(Color.WHITE) ;
+					rrType.setText(ResourceRecord.getTypeAsString(filteredList.get(position-1).getType())) ;
+					rrType.setGravity(Gravity.CENTER) ;
+					listItemLayout.addView(rrType) ;
+					
+					ResourceRecord currentRR = filteredList.get(position-1);
+
+					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
+					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
+						Log.d("HostRecordListActivity", "Country Code is: "+currentRR.getCountryId()) ;
+						indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
+					}
+
+					ImageView geoIndicator = new ImageView(getBaseContext()) ;
+					geoIndicator.setImageDrawable(indicatorIcon) ;
+					listItemLayout.addView(geoIndicator) ;
+
+					hostItem.setText(currentRR.getAnswer()) ;
+				}
+				listItemLayout.addView(hostItem) ;
+				return listItemLayout ;
+			}
+			
+			public long getItemId(int position) {
+				return position+300 ;
+			}
+			
+			public Object getItem(int position) {
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.get(position-1) ;
+			}
+			
+			public int getCount() {
+
+				@SuppressWarnings("unchecked")
+				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+					
+					public boolean evaluate(Object object) {
+						ResourceRecord current = (ResourceRecord) object ;
+						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+							return true ;
+						} else {
+							return false;
+						}
+					}
+				}) ;
+				return filteredList.size()+1 ;
+			}
+		}) ;
+
+		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
+		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+		new RRListApiTask().execute(domainName, hostName) ;
+
+		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
+		// order to have it update the list of displayed hosts.
+		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
+		filterInput.setOnKeyListener(new View.OnKeyListener() {
+			
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				EditText filterInput = (EditText) v ;
+				filter = filterInput.getText().toString() ;
+				((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
+				return false;
+			}
+		}) ;
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem refreshRecords = menu.add(Menu.NONE, 0, 0, "Refresh");
