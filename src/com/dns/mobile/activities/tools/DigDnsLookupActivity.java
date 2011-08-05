@@ -41,6 +41,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -184,17 +185,18 @@ public class DigDnsLookupActivity extends Activity {
 				String nameServer = ns.getAddress() ;
 				Log.d("DigDnsLookupActivity", "Using name server: "+nameServer) ;
 				resolver = new SimpleResolver(nameServer) ;
+				resolver.setPort(53) ;
 				start = new Date() ;
 				try {
 					Message rsp = resolver.send(query) ;
 					end = new Date() ;
 					return rsp ;
 				} catch (IOException ioe) {
-					((EditText)findViewById(R.id.digResponseArea)).setText(ioe.getLocalizedMessage()) ;
+					((TextView)findViewById(R.id.digResponseArea)).setText(ioe.getLocalizedMessage()) ;
 					Log.e("DigDnsLookupActivity", ioe.getLocalizedMessage(), ioe) ;
 				}
 			} catch (UnknownHostException uhe) {
-				((EditText)findViewById(R.id.digResponseArea)).setText(uhe.getLocalizedMessage()) ;
+				((TextView)findViewById(R.id.digResponseArea)).setText(uhe.getLocalizedMessage()) ;
 				Log.e("DigDnsLookupActivity", uhe.getLocalizedMessage(), uhe) ;
 			}
 			return null;
@@ -255,7 +257,7 @@ public class DigDnsLookupActivity extends Activity {
 			} else {
 				resultArea.append("No response was received for the DNS lookup.") ;
 			}
-			((EditText)findViewById(R.id.digResponseArea)).setText(resultArea.toString()) ;
+			((TextView)findViewById(R.id.digResponseArea)).setText(resultArea.toString()) ;
 			findViewById(R.id.digResponseArea).setVisibility(View.VISIBLE) ;
 			findViewById(R.id.digProgressBar).setVisibility(View.GONE) ;
 		}
@@ -268,7 +270,7 @@ public class DigDnsLookupActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_dig_layout) ;
-		ArrayAdapter<NameServer> nsAdapter = new ArrayAdapter<NameServer>(getBaseContext(), android.R.layout.simple_spinner_item, new NameServers(getBaseContext()).getNameServers()) ;
+		ArrayAdapter<NameServer> nsAdapter = new ArrayAdapter<NameServer>(getBaseContext(), android.R.layout.simple_spinner_item, NameServers.getInstance(getBaseContext()).getNameServers()) ;
 		nsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) ;
 
 		((Spinner)findViewById(R.id.digNameServerCombo)).setAdapter(nsAdapter) ;

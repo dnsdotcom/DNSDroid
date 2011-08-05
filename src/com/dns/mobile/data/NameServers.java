@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 /**
@@ -24,9 +24,22 @@ public class NameServers implements Serializable {
 	private ArrayList<NameServer> nameServers = null ;
 
 	private SharedPreferences prefs = null ;
+	private static NameServers instance = null ;
 
-	public NameServers(Context ctx) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx) ;
+	public static NameServers getInstance(Context ctx) {
+		if (instance==null) {
+			instance = new NameServers(ctx) ;
+		}
+
+		return instance ;
+	}
+
+	public static NameServers getInstance() {
+		return instance ;
+	}
+
+	protected NameServers(Context ctx) {
+		prefs = ctx.getSharedPreferences("dnsMobile", Context.MODE_PRIVATE) ;
 		nameServers = new ArrayList<NameServer>() ;
 		String[] serverNames = prefs.getString("serverNames", "ns1.dns.com,ns2.dns.com,ns3.dns.com,ns4.dns.com").split(",") ;
 		String[] serverAddr = prefs.getString("serverAddr", "ns1.dns.com,ns2.dns.com,ns3.dns.com,ns4.dns.com").split(",") ;
@@ -55,10 +68,46 @@ public class NameServers implements Serializable {
 		saveNameServers() ;
 	}
 
+	public void deleteNameServer(String serverName) {
+		nameServers.remove(getIndexForName(serverName)) ;
+		saveNameServers() ;
+	}
+
 	public void moveUp(int item) {
 		NameServer temp = nameServers.get(item-1) ;
 		nameServers.set(item-1, nameServers.get(item)) ;
 		nameServers.set(item, temp) ;
+		saveNameServers() ;
+	}
+
+	public void moveDown(String server) {
+		int index = getIndexForName(server) ;
+		NameServer temp = nameServers.get(index+1) ;
+		nameServers.set(index+1, nameServers.get(index)) ;
+		nameServers.set(index, temp) ;
+		saveNameServers() ;
+	}
+
+	public void moveUp(String server) {
+		int index = getIndexForName(server) ;
+		NameServer temp = nameServers.get(index-1) ;
+		nameServers.set(index-1, nameServers.get(index)) ;
+		nameServers.set(index, temp) ;
+		saveNameServers() ;
+	}
+
+	public int getIndexForName(String name) {
+		int retVal = 0 ;
+
+		for (int x=0; x<nameServers.size(); x++) {
+			NameServer current = nameServers.get(x) ;
+			if (current.getName().contentEquals(name)) {
+				retVal = x ;
+			}
+			current = null ;
+		}
+
+		return retVal ;
 	}
 
 	private String getServerNameList() {
@@ -84,8 +133,9 @@ public class NameServers implements Serializable {
 	}
 
 	private void saveNameServers() {
-		prefs.edit().putString("serverNames", getServerNameList()) ;
-		prefs.edit().putString("serverAddr", getServerAddrList()) ;
-		prefs.edit().commit() ;
+		Editor prefEditor = prefs.edit() ;
+		prefEditor.putString("serverNames", getServerNameList()) ;
+		prefEditor.putString("serverAddr", getServerAddrList()) ;
+		prefEditor.commit() ;
 	}
 }

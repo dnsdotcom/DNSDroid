@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xbill.DNS.Type;
+
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
@@ -22,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,7 +46,6 @@ public class RecordDetailActivity extends Activity {
 	 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
 	 *
 	 */
-	@SuppressWarnings("unused")
 	private class RRSaveViaAPI extends AsyncTask<ResourceRecord, Void, JSONObject> {
 
 		private long rrId = 0L ;
@@ -152,6 +154,32 @@ public class RecordDetailActivity extends Activity {
 			hostName = currentRR.getHostName() ;
 			domainName = currentRR.getDomainName() ;
 		}
+
+		((Button)findViewById(R.id.rrSaveButton)).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				currentRR.setType(Type.value(((Spinner)findViewById(R.id.rrTypeSpinner)).getSelectedItem().toString())) ;
+				switch(currentRR.getType()) {
+					case 6:
+						currentRR.setPriority(null) ;
+						currentRR.setAnswer(((EditText)findViewById(R.id.rrResponsibleParty)).getText().toString()) ;
+						currentRR.setMinimum(Long.parseLong(((EditText)findViewById(R.id.rrMinimum)).getText().toString())) ;
+						currentRR.setExpire(Long.parseLong(((EditText)findViewById(R.id.rrExpire)).getText().toString())) ;
+						currentRR.setRetry(Long.parseLong(((EditText)findViewById(R.id.rrRetryInterval)).getText().toString())) ;
+						break ;
+					case 15:
+						currentRR.setPriority(Long.parseLong(((EditText)findViewById(R.id.rrPriority)).getText().toString())) ;
+						currentRR.setAnswer(((EditText)findViewById(R.id.rrAnswer)).getText().toString()) ;
+						break ;
+					case 33:
+						break ;
+					default:
+						
+				}
+				new RRSaveViaAPI().execute(currentRR) ;
+			}
+		}) ;
+
 		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -194,10 +222,9 @@ public class RecordDetailActivity extends Activity {
 				// SOA Record
 				if (isExistingRecord) {
 					((EditText)findViewById(R.id.rrTtlInput)).setText(currentRR.getTtl()+"") ;
-					((EditText)findViewById(R.id.rrExpire)).setText(currentRR.getExpire()+"") ;
-					((EditText)findViewById(R.id.rrMinimum)).setText(currentRR.getMinimum()+"") ;
-					((EditText)findViewById(R.id.rrRetryInterval)).setText(currentRR.getRetry()+"") ;
-					((EditText)findViewById(R.id.rrPriority)).setText(currentRR.getPriority()+"") ;
+					((EditText)findViewById(R.id.rrExpire)).setText(currentRR.getExpire()==null?"1209600":currentRR.getExpire()+"") ;
+					((EditText)findViewById(R.id.rrMinimum)).setText(currentRR.getMinimum()==null?"1800":currentRR.getMinimum()+"") ;
+					((EditText)findViewById(R.id.rrRetryInterval)).setText(currentRR.getRetry()==null?"1200":currentRR.getRetry()+"") ;
 					((EditText)findViewById(R.id.rrResponsibleParty)).setText(currentRR.getAnswer()+"") ;
 				}
 				findViewById(R.id.rrTtlInput).setVisibility(View.VISIBLE) ;
@@ -208,8 +235,6 @@ public class RecordDetailActivity extends Activity {
 				findViewById(R.id.rrMinimumLabel).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrRetryInterval).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrRetryLabel).setVisibility(View.VISIBLE) ;
-				findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
-				findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrResponsibleParty).setVisibility(View.VISIBLE) ;
 				findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.VISIBLE) ;
 				break ;
@@ -343,7 +368,6 @@ public class RecordDetailActivity extends Activity {
 	 */
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
 		currentRR = (ResourceRecord) intent.getSerializableExtra("rrData") ;
 		if (currentRR==null) {

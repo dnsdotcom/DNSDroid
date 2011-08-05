@@ -5,12 +5,12 @@ package com.dns.mobile.activities.tools;
 
 import com.dns.mobile.R;
 import com.dns.mobile.data.NameServers;
+import com.dns.mobile.tools.NameServerAdapter;
 import android.app.Activity;
-import android.content.Intent;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 /**
@@ -29,71 +29,35 @@ public class DigServerManagerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tools_dig_name_server_config) ;
 
-		nameServers = new NameServers(getBaseContext()) ;
+		nameServers = NameServers.getInstance(getBaseContext()) ;
 
 		ListView serverList = (ListView) findViewById(R.id.digNameServerListView) ;
 		serverList.setEnabled(false) ;
 
-		serverList.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View selectedView, ViewGroup nsListView) {
-				View itemView = new NameServerItemLayout(nsListView.getContext(), nameServers.getNameServer(position), position) ;
-				itemView.setFocusable(false) ;
-				itemView.setFocusableInTouchMode(false) ;
-				itemView.setClickable(false) ;
-				itemView.setEnabled(false) ;
-				return itemView ;
-			}
-			
-			public long getItemId(int position) {
-				return position + 48294 ;
-			}
-			
-			public Object getItem(int position) {
-				return nameServers.getNameServer(position) ;
-			}
-			
-			public int getCount() {
-				return nameServers.getNameServers().size() ;
-			}
-		}) ;
+		serverList.setAdapter(NameServerAdapter.getInstance()) ;
 	}
 
 	/* (non-Javadoc)
-	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
-	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
-		super.onNewIntent(intent);
-		nameServers = new NameServers(getBaseContext()) ;
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem addNameServer = menu.add(Menu.NONE, 0, 0, "Add");
+		addNameServer.setIcon(android.R.drawable.ic_menu_add) ;
+		return super.onCreateOptionsMenu(menu);
+	}
 
-		ListView serverList = (ListView) findViewById(R.id.digNameServerListView) ;
-		serverList.setEnabled(false) ;
-
-		serverList.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View selectedView, ViewGroup nsListView) {
-				View itemView = new NameServerItemLayout(nsListView.getContext(), nameServers.getNameServer(position), position) ;
-				itemView.setFocusable(false) ;
-				itemView.setFocusableInTouchMode(false) ;
-				itemView.setClickable(false) ;
-				itemView.setEnabled(false) ;
-				return itemView ;
-			}
-			
-			public long getItemId(int position) {
-				return position + 48294 ;
-			}
-			
-			public Object getItem(int position) {
-				return nameServers.getNameServer(position) ;
-			}
-			
-			public int getCount() {
-				return nameServers.getNameServers().size() ;
-			}
-		}) ;
-
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case 0:
+				Dialog addSrvDialog = new DigAddServerDialog(this) ;
+				addSrvDialog.show() ;
+				return true;
+		}
+		return false;
 	}
 }

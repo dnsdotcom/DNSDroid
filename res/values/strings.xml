@@ -83,5 +83,15 @@
 	<string name="dig_name_server_select_label">Name Server</string>
 	<string name="dig_use_custom_ns_button_label">Use</string>
 	<string name="dig_config_servers_label">Manage Name Servers</string>
+	<string name="dig_config_delete_title">Delete Confirmation</string>
+	<string name="dig_config_delete_message">Are you sure you want to delete NAMESERVER from the name server list?</string>
+	<string name="dig_config_delete_positive">Yes</string>
+	<string name="dig_config_delete_negative">No</string>
+	<string name="dig_edit_server_dialog_title">Add Server</string>
+	<string name="dig_add_server_name_label">Name</string>
+	<string name="dig_add_server_addr_label">Address</string>
+	<string name="string_save">Save</string>
+	<string name="string_cancel">Cancel</string>
+	<string name="rrRefreshLabel">Refresh Interval</string>
 </resources>
 

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -48,7 +49,7 @@ public class WhoisActivity extends Activity {
 			super.onPostExecute(result);
 			findViewById(R.id.whoisResultTextArea).setVisibility(View.VISIBLE) ;
 			findViewById(R.id.whoisProgressBar).setVisibility(View.GONE) ;
-			((EditText)findViewById(R.id.whoisResultTextArea)).setText(result) ;
+			((TextView)findViewById(R.id.whoisResultTextArea)).setText(result) ;
 		}
 	}
 
@@ -99,7 +100,7 @@ public class WhoisActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case 0:
-				String whoisResults = ((EditText)findViewById(R.id.whoisResultTextArea)).getText().toString() ;
+				String whoisResults = ((TextView)findViewById(R.id.whoisResultTextArea)).getText().toString() ;
 				String resolvedHost = ((EditText)findViewById(R.id.whoisDomainInput)).getText().toString() ;
 				String subjectLine = "WHOIS Result for: "+resolvedHost ;
 				Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND) ;

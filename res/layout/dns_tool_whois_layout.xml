@@ -17,6 +17,10 @@
 	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/whoisDomainNameLabel" android:layout_alignParentRight="true" android:id="@+id/whoisButton" android:text="@string/whois_lookup_button"></Button>
 	<FrameLayout android:layout_height="4dp" android:layout_below="@+id/whoisDomainInput" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/whoisDivider" android:background="@color/dark_grey"></FrameLayout>
 	<ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" style="?android:attr/progressBarStyleLarge" android:layout_below="@+id/whoisDivider" android:layout_marginTop="60dp" android:layout_centerInParent="true" android:layout_centerVertical="true" android:visibility="gone" android:id="@+id/whoisProgressBar"></ProgressBar>
-	<EditText android:enabled="true" android:inputType="textMultiLine" android:id="@+id/whoisResultTextArea" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_alignParentLeft="true" android:layout_below="@+id/whoisDivider" android:isScrollContainer="true"></EditText>
+	<ScrollView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/scrollView1" android:layout_below="@+id/whoisDivider" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" android:layout_alignParentRight="true">
+		<LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent">
+			<TextView android:text="TextView" android:id="@+id/whoisResultTextArea" android:visibility="invisible" android:layout_height="fill_parent" android:layout_width="fill_parent" android:textColor="@color/dark_grey" android:background="@color/white"></TextView>
+		</LinearLayout>
+	</ScrollView>
 
 </RelativeLayout>

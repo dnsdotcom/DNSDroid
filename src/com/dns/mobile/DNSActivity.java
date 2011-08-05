@@ -92,18 +92,18 @@ public class DNSActivity extends Activity {
 
 		AdapterView.OnItemClickListener menuListener = new AdapterView.OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-				final ConnectivityManager mgr = (ConnectivityManager) v.getContext().getSystemService(CONNECTIVITY_SERVICE) ;
+			public void onItemClick(AdapterView<?> menuListView, View selectedView, int position, long viewId) {
+				final ConnectivityManager mgr = (ConnectivityManager) selectedView.getContext().getSystemService(CONNECTIVITY_SERVICE) ;
 				final android.net.NetworkInfo wifi = mgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI) ;
 				final android.net.NetworkInfo mobile = mgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) ;
 				if (wifi.isConnectedOrConnecting() || mobile.isConnectedOrConnecting()) {
-					Log.d("DNSActivity","User clicked '"+((TextView)v).getText().toString()+"' with ID of '"+arg2+"'") ;
+					Log.d("DNSActivity","User clicked '"+((TextView)selectedView).getText().toString()+"' with ID of '"+position+"'") ;
 
 					@SuppressWarnings("rawtypes")
 					Class targetActivity = null ;
 
 					Intent i = new Intent("android.intent.action.VIEW") ;
-					switch (arg2) {
+					switch (position) {
 						case 0:
 							targetActivity = DomainListActivity.class ;
 							break ;
@@ -123,9 +123,10 @@ public class DNSActivity extends Activity {
 					i.setClass(getApplicationContext(), targetActivity) ;
 					startActivity(i) ;
 				} else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(menuListView.getContext()) ;
 					builder.setTitle("Network Error") ;
-					builder.setMessage("Not currently connected to the Internet.")
+					builder.setMessage("Not currently connected to any networks. You must connect to the Internet " +
+							"through WiFi or Cellular in order to use this application.")
 						.setCancelable(false)
 						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							
