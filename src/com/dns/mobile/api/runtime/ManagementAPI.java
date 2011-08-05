@@ -785,7 +785,6 @@ public class ManagementAPI extends com.dns.mobile.api.compiletime.ManagementAPI 
 	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>isWildcard</code> - (OPTIONAL) Set TRUE if this is a wildcard record, or <code>null</code> or FALSE.<br />
 	 * @return A <code>com.dns.mobile.json.JSONObject</code> containing the JSON response or an error code.
 	 * @throws <code>InvalidArgumentsException</code> If the required arguments are not specified
-	 */
 	public JSONObject updateRRData(HashMap<String, Object> args) throws InvalidArgumentsException {
 		if (args.get("rrId")!=null && args.get("rdata")!=null) {
 			return super.updateRRData((Integer)args.get("rrId"), (String)args.get("rdata"), (Integer)args.get("ttl"), (Integer)args.get("priority"), (Boolean)args.get("isWildcard")) ;
@@ -793,4 +792,5 @@ public class ManagementAPI extends com.dns.mobile.api.compiletime.ManagementAPI 
 			throw new InvalidArgumentsException("One or more required arguments are missing.") ;
 		}
 	}
+	 */
 }

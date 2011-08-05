@@ -170,7 +170,7 @@ public class HostListActivity extends Activity {
 				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
 				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
 				rrListActivity.putExtra("domainName", domainName) ;
-				rrListActivity.putExtra("hostName", selectedHost.getName()) ;
+				rrListActivity.putExtra("hostName", selectedHost.getName().contentEquals("(root)")?"":selectedHost.getName()) ;
 				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}

@@ -11,6 +11,8 @@ import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
+import android.util.Log;
+
 /**
  * An implementation of the Management API which validates arguments at compile time
  * @author Deven Phillips <deven.phillips@gmail.com>
@@ -274,7 +276,7 @@ public class ManagementAPI extends GenericAPI {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
 		if (iso2Code!=null) {
-			uriBuilder.append("&country_iso2="+geoGroup) ;
+			uriBuilder.append("&country_iso2="+iso2Code) ;
 		}
 		if (region!=null) {
 			uriBuilder.append("&region="+region) ;
@@ -1108,20 +1110,80 @@ public class ManagementAPI extends GenericAPI {
 	 * @param isWildcard (OPTIONAL) Set TRUE if this is a wildcard record, or <code>null</code> or FALSE.
 	 * @return A <code>com.dns.mobile.json.JSONObject</code> containing the JSON response or an error code.
 	 */
-	public JSONObject updateRRData(int rrId, String rdata, Integer ttl, Integer priority, Boolean isWildcard) {
-		StringBuilder uriBuilder = new StringBuilder("/api/removeHostname/?") ;
+	public JSONObject updateRRData(int rrId, String rdata, Integer ttl, Integer priority, Boolean isWildcard, 
+			Integer retry, Integer expire, Integer minimum, Integer weight, Integer port, String title, 
+			String keywords, String description) {
+		/*
+@required integer `rr_id` rdata id as queried from server.
+@required string `rdata` answer data
+
+@optional integer `ttl` Time To Live for resolvers to hold cache of rdata, between 1 and 604800 ( 7 days )
+@optional integer `priority` 0,5,15,20,25 MX preferences
+@optioanl boolean `is_wildcard` is this a wildcard record or not
+
+@optional string `retry` retry for SOA record, between 0 and 2147483647L (32bit)
+@optional string `expire` expire for SOA record, between 0 and 2147483647L (32bit)
+@optional string `minimum` minimum for SOA record, between 0 and 2147483647L (32bit)
+
+@optional string `weight` weight for SRV record, between 0 and 65535 (16bit)
+@optional string `port` port for SRV record, between 0 and 65535 (16bit)
+@optional string `priority` priority  for SRV record, between 0 and 2147483647L (32bit)
+
+@optional string `title` title for URLFrame record
+@optional string `keywords` keywords for URLFrame record-
+@optional string `description` description  for URLFrame record
+		 */
+		StringBuilder uriBuilder = new StringBuilder("/api/updateRRData/?") ;
+		Log.d("ManagementAPI","Setting API Token") ;
 		uriBuilder.append("AUTH_TOKEN="+apiToken) ;
 
 		uriBuilder.append("&rr_id="+rrId) ;
+		Log.d("ManagementAPI","Setting RR ID") ;
 		uriBuilder.append("&rdata="+rdata) ;
+		Log.d("ManagementAPI","Setting RR rdata") ;
 		if (ttl!=null) {
+			Log.d("ManagementAPI","Setting RR TTL") ;
 			uriBuilder.append("&ttl="+ttl) ;
 		}
 		if (priority!=null) {
+			Log.d("ManagementAPI","Setting RR priority") ;
 			uriBuilder.append("&priority="+priority) ;
 		}
 		if (isWildcard.booleanValue()) {
-			uriBuilder.append("&is_wildcard=true") ;
+			Log.d("ManagementAPI","Setting RR isWildcard") ;
+			uriBuilder.append("&is_wildcard="+Boolean.toString(isWildcard)) ;
+		}
+		if (retry!=null) {
+			Log.d("ManagementAPI","Setting RR retry") ;
+			uriBuilder.append("&retry="+retry) ;
+		}
+		if (expire!=null) {
+			Log.d("ManagementAPI","Setting RR expire") ;
+			uriBuilder.append("&expire="+expire) ;
+		}
+		if (minimum!=null) {
+			Log.d("ManagementAPI","Setting RR minimum") ;
+			uriBuilder.append("&minimum="+minimum) ;
+		}
+		if (weight!=null) {
+			Log.d("ManagementAPI","Setting RR weight") ;
+			uriBuilder.append("&weight="+weight) ;
+		}
+		if (port!=null) {
+			Log.d("ManagementAPI","Setting RR port") ;
+			uriBuilder.append("&port="+port) ;
+		}
+		if (title!=null) {
+			Log.d("ManagementAPI","Setting RR title") ;
+			uriBuilder.append("&title="+URLEncoder.encode(title)) ;
+		}
+		if (keywords!=null) {
+			Log.d("ManagementAPI","Setting RR keywords") ;
+			uriBuilder.append("&keywords="+URLEncoder.encode(keywords)) ;
+		}
+		if (description!=null) {
+			Log.d("ManagementAPI","Setting RR description") ;
+			uriBuilder.append("&description="+URLEncoder.encode(description)) ;
 		}
 
 		return makeHttpRequest(uriBuilder.toString()) ;

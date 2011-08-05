@@ -6,7 +6,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:orientation="vertical" android:background="@color/red" android:weightSum="1" android:id="@+id/domain_hosts_activity">
+    android:orientation="vertical" android:background="@color/red" android:weightSum="1" android:id="@+id/rr_details_view">
 
     <!-- First view is a text editor.  We want it to use all available
          horizontal space, and stretch to fill whatever vertical space

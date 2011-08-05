@@ -21,7 +21,7 @@ public class ResourceRecord implements Serializable {
 
 	private Long id = 0L ;
 
-	private String answer = new String("") ;
+	private String answer = null ;
 
 	private Integer cityId = null ;
 
@@ -47,23 +47,29 @@ public class ResourceRecord implements Serializable {
 
 	private Integer regionId = null ;
 
-	private Long prioExpire = null ;
+	private Integer prioExpire = null ;
 
 	private Integer weight = null ;
 
-	private Long portRefresh = null ;
+	private Integer portRefresh = null ;
 
-	private Long priority = null ;
+	private Integer priority = null ;
 
-	private Long minimum = null ;
+	private Integer minimum = null ;
 
-	private Long retry = null ;
+	private Integer retry = null ;
 
-	private Long ttl = 3600L ;
+	private Integer ttl = 3600 ;
 
 	private Long xfr = null ;
 
 	private Long hostId = null ;
+
+	private String title = null ;
+
+	private String keywords = null ;
+
+	private String description = null ;
 
 	/**
 	 * Returns the RR ID
@@ -241,11 +247,11 @@ public class ResourceRecord implements Serializable {
 		this.regionId = regionId;
 	}
 
-	public Long getExpire() {
+	public Integer getExpire() {
 		return prioExpire;
 	}
 
-	public void setExpire(Long prioExpire) {
+	public void setExpire(Integer prioExpire) {
 		this.prioExpire = prioExpire;
 	}
 
@@ -257,52 +263,52 @@ public class ResourceRecord implements Serializable {
 		this.weight = weight;
 	}
 
-	public Long getRefresh() {
+	public Integer getRefresh() {
 		return portRefresh;
 	}
 
-	public void setRefresh(Long portRefresh) {
+	public void setRefresh(Integer portRefresh) {
 		this.portRefresh = portRefresh;
 	}
 
-	public Long getPort() {
+	public Integer getPort() {
 		return portRefresh;
 	}
 
-	public void setPort(Long portRefresh) {
+	public void setPort(Integer portRefresh) {
 		this.portRefresh = portRefresh;
 	}
 
-	public Long getPriority() {
+	public Integer getPriority() {
 		return priority;
 	}
 
-	public void setPriority(Long priority) {
+	public void setPriority(Integer priority) {
 		this.priority = priority;
 		this.prioExpire = priority ;
 	}
 
-	public Long getMinimum() {
+	public Integer getMinimum() {
 		return minimum;
 	}
 
-	public void setMinimum(Long minimum) {
+	public void setMinimum(Integer minimum) {
 		this.minimum = minimum;
 	}
 
-	public Long getRetry() {
+	public Integer getRetry() {
 		return retry;
 	}
 
-	public void setRetry(Long retry) {
+	public void setRetry(Integer retry) {
 		this.retry = retry;
 	}
 
-	public Long getTtl() {
+	public Integer getTtl() {
 		return ttl;
 	}
 
-	public void setTtl(Long ttl) {
+	public void setTtl(Integer ttl) {
 		this.ttl = ttl;
 	}
 
@@ -389,6 +395,30 @@ public class ResourceRecord implements Serializable {
 		}
 
 		return retVal ;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xbill.DNS.Type;
-
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
@@ -48,7 +47,7 @@ public class RecordDetailActivity extends Activity {
 	 */
 	private class RRSaveViaAPI extends AsyncTask<ResourceRecord, Void, JSONObject> {
 
-		private long rrId = 0L ;
+		private int rrId = 0 ;
 
 		/* (non-Javadoc)
 		 * @see android.os.AsyncTask#doInBackground(Params[])
@@ -57,11 +56,11 @@ public class RecordDetailActivity extends Activity {
 		protected JSONObject doInBackground(ResourceRecord... params) {
 			ResourceRecord rr = params[0] ;
 			try {
-				rrId = params[0].getId() ;
+				rrId = rr.getId().intValue() ;
 			} catch (NumberFormatException nfe) {
 				Log.e("RecordDetailActivity", "NumberFormatException trying to parse the RR ID", nfe) ;
 			}
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) ;
 			String apiHost = null ;
 			boolean useSSL = false ;
 			if (settings.getBoolean("use.sandbox", true)) {
@@ -74,7 +73,47 @@ public class RecordDetailActivity extends Activity {
 
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
-			return api.getRRSetForHostname(rr.getDomainName(), false, rr.getHostName().contentEquals("(root)")?"":rr.getHostName()) ;
+			// Replace this call with updateRRData
+			if (isExistingRecord) {
+				return api.updateRRData(rrId, rr.getAnswer(), rr.getTtl(), rr.getPriority(), rr.isWildcard(), rr.getRetry(), rr.getExpire(), rr.getMinimum(), rr.getWeight(), rr.getPort(), rr.getTitle(), rr.getKeywords(), rr.getDescription()) ;
+			} else {
+				JSONObject retVal = null ;
+				switch (rr.getType()) {
+					case Type.A:
+						retVal = api.createARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case Type.AAAA:
+						retVal = api.createAAAARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case Type.SOA:
+						retVal = api.createSOARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.getRetry(), rr.getExpire(), rr.getMinimum(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"",rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case Type.SRV:
+						retVal = api.createSRVRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.getWeight(), rr.getPriority(), rr.getPort(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCountryId()+"", rr.getTtl()) ;
+						break ;
+					case Type.TXT:
+						retVal = api.createTXTRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case Type.MX:
+						retVal = api.createMXRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.getPriority(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case Type.CNAME:
+						retVal = api.createCNAMERecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case 80000:
+						retVal = api.createURL302Record(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case 80001:
+						retVal = api.createURL301Record(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					case 80002:
+						retVal = api.createURLFrameRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.getTitle(), rr.getDescription(), rr.getKeywords(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
+					default:
+						retVal = api.createARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+				}
+				return retVal ;
+			}
 		}
 
 		/* (non-Javadoc)
@@ -89,15 +128,25 @@ public class RecordDetailActivity extends Activity {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
 						apiRequestSucceeded = true ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
+						builder.setTitle(R.string.rr_update_saved_title) ;
+						builder.setMessage(R.string.rr_update_saved_body) ;
+						builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss() ;
+							}
+						}) ;
+						builder.show() ;
 					} else {
 						Log.e("RecordDetailActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
-						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
 					}
 				} catch (JSONException jsone) {
 					Log.e("RecordDetailActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
-					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;
 				}
@@ -133,7 +182,10 @@ public class RecordDetailActivity extends Activity {
 					Log.e("RecordDetailActivity", "JSONException encountered while trying to parse rr details.", jsone) ;
 				}
 			} else {
-				showDialog(R.string.api_request_failed) ;
+				Log.e("RecordDetailActivity", "API Call failed.") ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
+				builder.setTitle(R.string.api_request_failed) ;
+				builder.setMessage(result.toString()) ;
 			}
 		}
 	}
@@ -146,32 +198,41 @@ public class RecordDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rr_details_view) ;
 		currentRR = (ResourceRecord) this.getIntent().getSerializableExtra("rrData") ;
-		if (currentRR==null) {
-			currentRR = new ResourceRecord() ;
+		if (currentRR.getAnswer()==null) {
 			currentRR.setType(1) ;
 			isExistingRecord = false ;
-		} else {
-			hostName = currentRR.getHostName() ;
-			domainName = currentRR.getDomainName() ;
 		}
+		hostName = currentRR.getHostName() ;
+		domainName = currentRR.getDomainName() ;
+		Log.d("RecordDetailActivity","Setting host/domain name to: "+hostName+"/"+domainName) ;
 
 		((Button)findViewById(R.id.rrSaveButton)).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
 				currentRR.setType(Type.value(((Spinner)findViewById(R.id.rrTypeSpinner)).getSelectedItem().toString())) ;
+				currentRR.setActive(true) ;
+				currentRR.setAnswer(((EditText)findViewById(R.id.rrAnswer)).getText().toString()) ;
+				currentRR.setTtl(Integer.parseInt(((EditText)findViewById(R.id.rrTtlInput)).getText().toString())) ;
 				switch(currentRR.getType()) {
 					case 6:
-						currentRR.setPriority(null) ;
 						currentRR.setAnswer(((EditText)findViewById(R.id.rrResponsibleParty)).getText().toString()) ;
-						currentRR.setMinimum(Long.parseLong(((EditText)findViewById(R.id.rrMinimum)).getText().toString())) ;
-						currentRR.setExpire(Long.parseLong(((EditText)findViewById(R.id.rrExpire)).getText().toString())) ;
-						currentRR.setRetry(Long.parseLong(((EditText)findViewById(R.id.rrRetryInterval)).getText().toString())) ;
+						currentRR.setMinimum(Integer.parseInt(((EditText)findViewById(R.id.rrMinimum)).getText().toString())) ;
+						currentRR.setExpire(Integer.parseInt(((EditText)findViewById(R.id.rrExpire)).getText().toString())) ;
+						currentRR.setRetry(Integer.parseInt(((EditText)findViewById(R.id.rrRetryInterval)).getText().toString())) ;
 						break ;
 					case 15:
-						currentRR.setPriority(Long.parseLong(((EditText)findViewById(R.id.rrPriority)).getText().toString())) ;
-						currentRR.setAnswer(((EditText)findViewById(R.id.rrAnswer)).getText().toString()) ;
+						currentRR.setPriority(Integer.parseInt(((EditText)findViewById(R.id.rrPriority)).getText().toString())) ;
 						break ;
 					case 33:
+						currentRR.setPort(Integer.parseInt(((EditText)findViewById(R.id.rrSrvPort)).getText().toString())) ;
+						currentRR.setPriority(Integer.parseInt(((EditText)findViewById(R.id.rrPriority)).getText().toString())) ;
+						currentRR.setWeight(Integer.parseInt(((EditText)findViewById(R.id.rrSrvWeight)).getText().toString())) ;
+						break ;
+					case 80000:
+						break ;
+					case 80001:
+						break ;
+					case 80002:
 						break ;
 					default:
 						
@@ -321,8 +382,6 @@ public class RecordDetailActivity extends Activity {
 						findViewById(R.id.rrMinimumLabel).setVisibility(View.VISIBLE) ;
 						findViewById(R.id.rrRetryInterval).setVisibility(View.VISIBLE) ;
 						findViewById(R.id.rrRetryLabel).setVisibility(View.VISIBLE) ;
-						findViewById(R.id.rrPriority).setVisibility(View.VISIBLE) ;
-						findViewById(R.id.rrPriorityLabel).setVisibility(View.VISIBLE) ;
 						findViewById(R.id.rrResponsibleParty).setVisibility(View.VISIBLE) ;
 						findViewById(R.id.rrResponsiblePartyLabel).setVisibility(View.VISIBLE) ;
 						break ;

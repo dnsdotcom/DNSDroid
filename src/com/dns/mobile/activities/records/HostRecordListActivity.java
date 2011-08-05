@@ -105,7 +105,7 @@ public class HostRecordListActivity extends Activity {
 						currentRR.setHostId(currentData.getLong("id")) ;
 						currentRR.setType(currentData.getString("type")) ;
 						currentRR.setId(currentData.getLong("id")) ;
-						currentRR.setTtl(currentData.getLong("ttl")) ;
+						currentRR.setTtl(currentData.getInt("ttl")) ;
 						if (currentData.getString("country_iso2").length()>0) {
 							currentRR.setCountryId(currentData.getString("country_iso2")) ;
 							if (!currentData.getString("region").contentEquals("None")) {
@@ -122,22 +122,22 @@ public class HostRecordListActivity extends Activity {
 						}
 						if (currentData.has("retry")) {
 							if (!currentData.getString("retry").contentEquals("null")) {
-								currentRR.setRetry(currentData.getLong("retry"));
+								currentRR.setRetry(currentData.getInt("retry"));
 							}
 						}
 						if (currentData.has("minimum")) {
 							if (!currentData.getString("minimum").contentEquals("null")) {
-								currentRR.setMinimum(currentData.getLong("minimum"));
+								currentRR.setMinimum(currentData.getInt("minimum"));
 							}
 						}
 						if (currentData.has("expire")) {
 							if (!currentData.getString("expire").contentEquals("null")) {
-								currentRR.setExpire(currentData.getLong("expire")) ;
+								currentRR.setExpire(currentData.getInt("expire")) ;
 							}
 						}
 						if (currentData.has("priority")) {
 							if (!currentData.getString("priority").contentEquals("null")) {
-								currentRR.setPriority(currentData.getLong("priority")) ;
+								currentRR.setPriority(currentData.getInt("priority")) ;
 							}
 						}
 						if (currentData.has("weight")) {
@@ -147,7 +147,22 @@ public class HostRecordListActivity extends Activity {
 						}
 						if (currentData.has("port")) {
 							if (!currentData.getString("port").contentEquals("null")) {
-								currentRR.setPort(currentData.getLong("port")) ;
+								currentRR.setPort(currentData.getInt("port")) ;
+							}
+						}
+						if (currentData.has("title")) {
+							if (!currentData.getString("title").contentEquals("null")) {
+								currentRR.setTitle(currentData.getString("title")) ;
+							}
+						}
+						if (currentData.has("keywords")) {
+							if (!currentData.getString("keywords").contentEquals("null")) {
+								currentRR.setKeywords(currentData.getString("keywords")) ;
+							}
+						}
+						if (currentData.has("description")) {
+							if (!currentData.getString("description").contentEquals("null")) {
+								currentRR.setDescription(currentData.getString("description")) ;
 							}
 						}
 						rrList.add(currentRR) ;
@@ -174,6 +189,7 @@ public class HostRecordListActivity extends Activity {
 		rrList = new ArrayList<ResourceRecord>() ;
 		domainName = this.getIntent().getExtras().getString("domainName") ;
 		hostName = this.getIntent().getExtras().getString("hostName") ;
+		Log.d("HostRecordListActivity","Setting host/domain name to: "+hostName+"/"+domainName) ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
@@ -207,7 +223,12 @@ public class HostRecordListActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
 				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
-				ResourceRecord clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
+				ResourceRecord clickedRR = null ;
+				if (position!=0) {
+					clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
+				} else {
+					clickedRR = new ResourceRecord() ;
+				}
 				clickedRR.setHostName(hostName) ;
 				clickedRR.setDomainName(domainName) ;
 				rrDetailsActivity.putExtra("rrData", clickedRR) ;
