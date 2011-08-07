@@ -13,6 +13,10 @@ public class Domain implements Serializable {
 	private String name = null ;
 	private boolean isGroupedDomain = false ;
 	private String domainGroup = null ;
+	private String rName = null ;
+	private boolean isXfr = false ;
+	private String master = null ;
+	private int refresh = 0 ;
 
 	public long getDomainId() {
 		return domainId;
@@ -44,6 +48,38 @@ public class Domain implements Serializable {
 
 	public void setDomainGroup(String domainGroup) {
 		this.domainGroup = domainGroup;
+	}
+
+	public String getrName() {
+		return rName;
+	}
+
+	public void setrName(String rName) {
+		this.rName = rName;
+	}
+
+	public boolean isXfr() {
+		return isXfr;
+	}
+
+	public void setXfr(boolean isXfr) {
+		this.isXfr = isXfr;
+	}
+
+	public String getMaster() {
+		return master;
+	}
+
+	public void setMaster(String master) {
+		this.master = master;
+	}
+
+	public int getRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(int refresh) {
+		this.refresh = refresh;
 	}
 
 	@Override

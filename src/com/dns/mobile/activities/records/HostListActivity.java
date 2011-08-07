@@ -454,6 +454,8 @@ public class HostListActivity extends Activity {
 		disableDomain.setIcon(android.R.drawable.ic_menu_delete) ;
 		MenuItem refreshHosts = menu.add(Menu.NONE, 2, 2, "Refresh");
 		refreshHosts.setIcon(R.drawable.ic_menu_refresh) ;
+		MenuItem setXfr = menu.add(Menu.NONE, 3, 3, "Zone Transfer");
+		setXfr.setIcon(android.R.drawable.ic_menu_upload) ;
 		return super.onCreateOptionsMenu(menu);
 	}
 

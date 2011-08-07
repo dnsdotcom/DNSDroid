@@ -96,6 +96,7 @@ public class DomainListActivity extends Activity {
 					JSONArray data = result.getJSONArray("data") ;
 					for (int x=0; x<data.length(); x++) {
 						JSONObject currentData = data.getJSONObject(x) ;
+						Log.d("DomainListActivity","JSON: "+currentData.toString()) ;
 						Domain currentDomain = new Domain() ;
 						currentDomain.setName(currentData.getString("name")) ;
 						Log.d("DomainListActivity", "Adding domain '"+currentData.getString("name")+"' to domainList") ;
@@ -153,14 +154,19 @@ public class DomainListActivity extends Activity {
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
-				if (selected.isGroupedDomain()) {
-					// TODO: Add Intent for showing the members of the associated domain group
+				if (position!=0) {
+					Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
+					if (selected.isGroupedDomain()) {
+						// TODO: Add Intent for showing the members of the associated domain group
+					} else {
+						Intent hostListIntent = new Intent(getApplicationContext(), HostListActivity.class);
+						hostListIntent.putExtra("domainName", ((TextView) selectedView).getText().toString());
+						hostListIntent.putExtra("isDomainGroup", domainList.get(position - 1).isGroupedDomain());
+						startActivity(hostListIntent);
+					}
 				} else {
-					Intent hostListIntent = new Intent(getApplicationContext(), HostListActivity.class) ;
-					hostListIntent.putExtra("domainName", ((TextView)selectedView).getText().toString()) ;
-					hostListIntent.putExtra("isDomainGroup", domainList.get(position-1).isGroupedDomain()) ;
-					startActivity(hostListIntent) ;
+					Intent newDomainIntent = new Intent(getApplicationContext(), CreateNewDomainActivity.class) ;
+					startActivity(newDomainIntent) ;
 				}
 			}
 			
