@@ -30,4 +30,12 @@
     	<item>ns3.dns.com</item>
     	<item>ns4.dns.com</item>
     </string-array>
+    <string-array name="domain_details_options">
+    	<item>Records</item>
+    	<item>New Record</item>
+    	<item>Secondary DNS</item>
+    	<item>Group Settings</item>
+    	<item>New Record</item>
+    	<item>Delete</item>
+    </string-array>
 </resources>

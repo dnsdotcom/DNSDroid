@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.dns.mobile.R;
-import com.dns.mobile.activities.records.HostListActivity;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Domain;
 import android.app.Activity;
@@ -71,47 +70,50 @@ public class DomainListActivity extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
-			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.domainListProgressBar).setVisibility(View.GONE) ;
-			if (result.has("meta")) {
-				try {
-					if (result.getJSONObject("meta").getInt("success")==1) {
-						apiRequestSucceeded = true ;
-					} else {
-						Log.e("DomainListActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
-						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
-						builder.setTitle(R.string.api_request_failed) ;
-						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
-					}
-				} catch (JSONException jsone) {
-					Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
-					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
-					builder.setTitle(R.string.api_request_failed) ;
-					builder.setMessage(jsone.getLocalizedMessage()) ;
-				}
-			}
-
-			if (apiRequestSucceeded) {
-				try {
-					JSONArray data = result.getJSONArray("data") ;
-					for (int x=0; x<data.length(); x++) {
-						JSONObject currentData = data.getJSONObject(x) ;
-						Log.d("DomainListActivity","JSON: "+currentData.toString()) ;
-						Domain currentDomain = new Domain() ;
-						currentDomain.setName(currentData.getString("name")) ;
-						Log.d("DomainListActivity", "Adding domain '"+currentData.getString("name")+"' to domainList") ;
-						currentDomain.setDomainId(currentData.getLong("id")) ;
-						currentDomain.setGroupedDomain(currentData.getString("mode").contentEquals("group")) ;
-						if (currentDomain.isGroupedDomain()) {
-							currentDomain.setDomainGroup(currentData.getString("group")) ;
+			if (result!=null) {
+				boolean apiRequestSucceeded = false;
+				findViewById(R.id.domainListProgressBar).setVisibility(View.GONE);
+				if (result.has("meta")) {
+					try {
+						if (result.getJSONObject("meta").getInt("success") == 1) {
+							apiRequestSucceeded = true;
+						} else {
+							Log.e("DomainListActivity", "API Error: " + result.getJSONObject("meta").getString("error"));
+							AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+							builder.setTitle(R.string.api_request_failed);
+							builder.setMessage(result.getJSONObject("meta").getString("error"));
 						}
-						domainList.add(currentDomain) ;
+					} catch (JSONException jsone) {
+						Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone);
+						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+						builder.setTitle(R.string.api_request_failed);
+						builder.setMessage(jsone.getLocalizedMessage());
 					}
-					findViewById(R.id.domainListView).setVisibility(View.VISIBLE) ;
-					((ListView)findViewById(R.id.domainListView)).invalidateViews() ;
-					Log.d("DomainListActivity", "Finished parsing JSON response into domainList") ;
-				} catch (JSONException jsone) {
-					Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+				}
+				if (apiRequestSucceeded) {
+					try {
+						JSONArray data = result.getJSONArray("data");
+						for (int x = 0; x < data.length(); x++) {
+							JSONObject currentData = data.getJSONObject(x);
+							Log.d("DomainListActivity", "JSON: " + currentData.toString());
+							Domain currentDomain = new Domain();
+							currentDomain.setName(currentData.getString("name"));
+							Log.d("DomainListActivity", "Adding domain '" + currentData.getString("name") + "' to domainList");
+							currentDomain.setDomainId(currentData.getLong("id"));
+							currentDomain.setGroupedDomain(currentData.getString("mode").contentEquals("group"));
+							if (currentDomain.isGroupedDomain()) {
+								currentDomain.setDomainGroup(currentData.getString("group"));
+							}
+							domainList.add(currentDomain);
+						}
+						findViewById(R.id.domainListView).setVisibility(View.VISIBLE);
+						((ListView) findViewById(R.id.domainListView)).invalidateViews();
+						Log.d("DomainListActivity", "Finished parsing JSON response into domainList");
+					} catch (JSONException jsone) {
+						Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone);
+					}
+				} else {
+					showDialog(R.string.api_request_failed);
 				}
 			} else {
 				showDialog(R.string.api_request_failed) ;
@@ -159,7 +161,7 @@ public class DomainListActivity extends Activity {
 					if (selected.isGroupedDomain()) {
 						// TODO: Add Intent for showing the members of the associated domain group
 					} else {
-						Intent hostListIntent = new Intent(getApplicationContext(), HostListActivity.class);
+						Intent hostListIntent = new Intent(getApplicationContext(), DomainDetails.class);
 						hostListIntent.putExtra("domainName", ((TextView) selectedView).getText().toString());
 						hostListIntent.putExtra("isDomainGroup", domainList.get(position - 1).isGroupedDomain());
 						startActivity(hostListIntent);
