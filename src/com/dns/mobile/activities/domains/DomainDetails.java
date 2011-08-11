@@ -1,6 +1,7 @@
 package com.dns.mobile.activities.domains;
 
 import com.dns.mobile.R;
+import com.dns.mobile.activities.records.CreateNewHostActivity;
 import com.dns.mobile.activities.records.HostListActivity;
 
 import android.app.Activity;
@@ -26,7 +27,8 @@ public class DomainDetails extends Activity {
 		isGroupedDomain = this.getIntent().getBooleanExtra("isDomainGroup", false);
 
 		((TextView) findViewById(R.id.domainNameLabel)).setText(domainName);
-		((TextView) findViewById(R.id.domainNameLabel)).setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.domainNameLabel)).setVisibility(View.VISIBLE) ;
+
 		ListView domainDetailOptions = (ListView) findViewById(R.id.domainDetailsOptionList);
 		domainDetailOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			/*
@@ -45,6 +47,10 @@ public class DomainDetails extends Activity {
 						DomainDetails.this.startActivity(hostListIntent) ;
 						break;
 					case 1:
+						Intent newHostIntent = new Intent(getApplicationContext(), CreateNewHostActivity.class) ;
+						newHostIntent.putExtra("domainName", DomainDetails.this.domainName) ;
+						newHostIntent.putExtra("isDomainGroup", DomainDetails.this.isGroupedDomain) ;
+						DomainDetails.this.startActivity(newHostIntent) ;
 						break;
 					case 2:
 						break;

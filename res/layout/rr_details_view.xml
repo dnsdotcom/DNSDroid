@@ -17,9 +17,9 @@
          give it a custom background; see colors.xml for the definition
          of drawable/semi_black-->
     <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"></ImageView>
-    <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4px" android:gravity="center_vertical|left" android:id="@+id/rrHeaderLabel" android:text="@string/rr_details_header_label"></TextView>
+    <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4dp" android:gravity="center_vertical|left" android:id="@+id/rrHeaderLabel" android:text="@string/rr_details_header_label"></TextView>
     <ScrollView android:id="@+id/scrollView1" android:layout_width="fill_parent" android:layout_height="fill_parent">
-        <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+        <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:padding="4dp">
             <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal" android:id="@+id/linearLayout1">
                 <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:id="@+id/recordTypeLabel" android:text="@string/rr_type_selection_label" android:layout_width="wrap_content"></TextView>
                 <Spinner android:layout_weight="1" android:id="@+id/rrTypeSpinner" android:layout_height="wrap_content" android:entries="@array/recordTypes" android:layout_width="115dp">
