@@ -272,16 +272,16 @@ public class ManagementAPI extends GenericAPI {
 
 		uriBuilder.append("&rdata="+rdata) ;
 
-		if (geoGroup!=null) {
+		if (geoGroup!=null&&(geoGroup.compareTo("null")!=0)) {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
-		if (iso2Code!=null) {
+		if (iso2Code!=null&&(iso2Code.compareTo("null")!=0)) {
 			uriBuilder.append("&country_iso2="+iso2Code) ;
 		}
-		if (region!=null) {
+		if (region!=null&&(region.compareTo("null")!=0)) {
 			uriBuilder.append("&region="+region) ;
 		}
-		if (city!=null) {
+		if (city!=null&&(city.compareTo("null")!=0)) {
 			uriBuilder.append("&city="+city) ;
 		}
 		if (ttl!=null) {

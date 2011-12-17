@@ -386,11 +386,11 @@ public class ResourceRecord implements Serializable {
 			retVal = 33 ;
 		} else if (type.toLowerCase().contentEquals("cname")) {
 			retVal = 5 ;
-		} else if (type.toLowerCase().contentEquals("302")) {
+		} else if (type.toLowerCase().contains("302")) {
 			retVal = 80000 ;
-		} else if (type.toLowerCase().contentEquals("301")) {
+		} else if (type.toLowerCase().contains("301")) {
 			retVal = 80001 ;
-		} else if (type.toLowerCase().contentEquals("frame")) {
+		} else if (type.toLowerCase().contains("frame")) {
 			retVal = 80002 ;
 		}
 
