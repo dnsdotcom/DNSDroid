@@ -4,11 +4,11 @@
 	android:layout_height="fill_parent" android:background="@color/red" android:visibility="visible">
 	<ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
-		android:layout_alignParentTop="true"></ImageView>
+		android:contentDescription="@string/dns_logo_description" android:layout_alignParentTop="true"></ImageView>
 	<TextView android:layout_height="wrap_content"
 		android:textColor="@color/white"
 		android:layout_width="fill_parent" android:background="@color/dark_grey"
-		android:padding="4px" android:gravity="center_vertical|left"
+		android:padding="4dp" android:gravity="center_vertical|left"
 		android:layout_below="@id/dnsLogo" android:id="@+id/dnsToolDigHeader" 
 		android:text="@string/dig_activity_header"></TextView>
 	<TextView android:layout_height="wrap_content" android:layout_below="@+id/dnsToolDigHeader" 
@@ -17,7 +17,7 @@
 		android:paddingLeft="4.0sp" android:paddingRight="4.0sp" android:textColor="@color/white" 
 		android:text="@string/dig_fqdn_label"></TextView>
 	<EditText android:layout_height="wrap_content" android:layout_below="@+id/digFqdnLabel" 
-		android:layout_alignParentLeft="true" android:id="@+id/digFqdnInput" android:hint="@string/dig_fqdn_input_hint" android:layout_width="170dp">
+		android:layout_alignParentLeft="true" android:id="@+id/digFqdnInput" android:hint="@string/dig_fqdn_input_hint" android:layout_width="170dp" android:inputType="textNoSuggestions">
 		<requestFocus></requestFocus>
 	</EditText>
 	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" 
@@ -33,8 +33,8 @@
 	<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignTop="@+id/digFqdnInput" android:layout_toLeftOf="@+id/digButton" android:id="@+id/digRecordTypeCombo" android:entries="@array/digRecordTypes" android:layout_toRightOf="@+id/digFqdnInput"></Spinner>
 	<FrameLayout android:id="@+id/digDivider" android:layout_width="fill_parent" android:layout_height="4dp" android:background="@color/dark_grey" android:layout_below="@+id/digNameServerCombo" android:layout_alignParentLeft="true"></FrameLayout>
 	<ScrollView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/scrollView1" android:layout_below="@+id/digDivider" android:layout_alignParentLeft="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true">
-		<LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent">
-			<TextView android:text="TextView" android:id="@+id/digResponseArea" android:layout_height="fill_parent" android:layout_width="fill_parent" android:background="@color/white" android:textColor="@color/dark_grey"></TextView>
+		<LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<TextView android:id="@+id/digResponseArea" android:layout_height="fill_parent" android:layout_width="fill_parent" android:background="@color/white" android:textColor="@color/dark_grey"></TextView>
 		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>

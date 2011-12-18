@@ -3,7 +3,7 @@
 	package="com.dns.mobile">
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4"
+	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="4"
 		android:maxSdkVersion="12"></uses-sdk>
 	<application android:label="@string/dns_app" android:icon="@drawable/dns_launcher_icon">
 

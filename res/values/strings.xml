@@ -37,7 +37,7 @@
     <string name="dns_mobile_description">Manage your DNS.com domain settings from your mobile device.</string>
     <string name="new_entry">[New]</string>
     <string name="domains_list_view_label">My Domains</string>
-    <string name="open_web_confirmation_title">Confirmation...</string>
+    <string name="open_web_confirmation_title">Confirmation&#8230;</string>
     <string name="open_web_confirmation_msg">Visit DNS.com on the web?</string>
 	<string name="open_web_confirmation_yes">Yes</string>
 	<string name="open_web_confirmation_no">No</string>
@@ -58,7 +58,7 @@
 	<string name="rr_ttl_label">TTL (in seconds)</string>
 	<string name="rr_details_header_label">Details For: </string>
 	<string name="rr_srv_weight_label">Weight</string>
-	<string name="rr_srv_port_label">Port Number (0 - 65535)</string>
+	<string name="rr_srv_port_label">Port Number (0 &#8212; 65535)</string>
 	<string name="priority_label">Priority</string>
 	<string name="rr_retry_label">Retry Interval (in seconds)</string>
 	<string name="rr_expire_label">Expire</string>
@@ -113,5 +113,6 @@
 	<string name="host_delete_dialog_message">Press &quot;Yes&quot; to confirm delete of the record or cancel to return to the list.</string>
 	<string name="yes">Yes</string>
 	<string name="cancel">Cancel</string>
+	<string name="dns_logo_description">DNS.com Logo</string>
 </resources>
 

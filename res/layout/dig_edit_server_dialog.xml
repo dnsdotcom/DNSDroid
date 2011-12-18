@@ -5,11 +5,11 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:id="@+id/digEditServerLayout">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/digAddServerNameLabel" android:text="@string/dig_add_server_name_label" android:textSize="20dp" android:width="90dp"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/diggAddServerNameInput">
+    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/diggAddServerNameInput" android:inputType="textNoSuggestions">
         <requestFocus></requestFocus>
     </EditText>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/digAddServerAddrLabel" android:text="@string/dig_add_server_addr_label" android:textSize="20dp" android:width="90dp"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/digAddServerAddrInput"></EditText>
+    <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/digAddServerAddrInput" android:inputType="textNoSuggestions"></EditText>
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/RelativeLayout1">
         <Button android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:text="@string/string_save" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/digAddServerSaveButton" android:textSize="20dp"></Button>
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:id="@+id/digAddServerCancelButton" android:text="@string/string_cancel" android:textSize="20dp"></Button>
