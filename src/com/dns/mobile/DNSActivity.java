@@ -23,7 +23,6 @@ import com.dns.mobile.activities.geo.GeoGroupsListActivity;
 import com.dns.mobile.activities.groups.DomainGroupsListActivity;
 import com.dns.mobile.activities.ns.NameServersInfoActivity;
 import com.dns.mobile.activities.tools.DomainNameToolsActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -43,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -52,6 +52,8 @@ import android.widget.TextView;
  * displays and edits some internal text.
  */
 public class DNSActivity extends Activity {
+
+	private static final String TAG = "DNSActivity" ;
 
 	public DNSActivity() {
 	}
@@ -64,25 +66,31 @@ public class DNSActivity extends Activity {
 
 		// Inflate our UI from its XML layout description.
 		setContentView(R.layout.dns_activity);
-		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
-			
+		ImageView dnsLogo = (ImageView) findViewById(R.id.dnsLogo) ;
+		if (dnsLogo==null) {
+			Log.e(TAG, "Unable to retrieve reference to dnsLogo") ;
+		}
+		dnsLogo.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View v) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
 				builder.setTitle(R.string.open_web_confirmation_title) ;
 				builder.setTitle(R.string.open_web_confirmation_msg) ;
 				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
-					
+
 					public void onClick(DialogInterface dialog, int which) {
 						Uri uri = Uri.parse("http://www.dns.com/") ;
 						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
 					}
 				}) ;
+
 				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
 					
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss() ;
 					}
 				}) ;
+
 				builder.show() ;
 			}
 		});
@@ -97,7 +105,7 @@ public class DNSActivity extends Activity {
 				final android.net.NetworkInfo wifi = mgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI) ;
 				final android.net.NetworkInfo mobile = mgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) ;
 				if (wifi.isConnectedOrConnecting() || mobile.isConnectedOrConnecting()) {
-					Log.d("DNSActivity","User clicked '"+((TextView)selectedView).getText().toString()+"' with ID of '"+position+"'") ;
+					Log.d(TAG,"User clicked '"+((TextView)selectedView).getText().toString()+"' with ID of '"+position+"'") ;
 
 					@SuppressWarnings("rawtypes")
 					Class targetActivity = null ;
@@ -143,14 +151,14 @@ public class DNSActivity extends Activity {
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (settings.contains("auth.token")) {
-			Log.d("DNSActivity","auth.token found in shared preferences.") ;
+			Log.d(TAG, "auth.token found in shared preferences.") ;
 		} else {
-			Log.d("DNSActivity","auth.token NOT found in shared preferences.") ;
+			Log.d(TAG, "auth.token NOT found in shared preferences.") ;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
 			builder.setTitle("Configuration") ;
 			builder.setMessage("It appears that you have not yet configured this application. Would you like to do so now?") ;
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				
+
 				public void onClick(DialogInterface dialog, int which) {
 					Intent configurationIntent = new Intent() ;
 					configurationIntent.setClass(getBaseContext(), ConfigurationActivity.class) ;
@@ -158,7 +166,7 @@ public class DNSActivity extends Activity {
 				}
 			}) ;
 			builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-				
+
 				public void onClick(DialogInterface dialog, int which) {
 					finish() ;
 				}
@@ -237,7 +245,6 @@ public class DNSActivity extends Activity {
 			}
 			return menuItem ;
 		}
-		
 	}
 
 	/**
@@ -249,12 +256,12 @@ public class DNSActivity extends Activity {
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this) ;
 		if (!settings.contains("auth.token")) {
-			Log.d("DNSActivity","auth.token NOT found in shared preferences.") ;
+			Log.d(TAG, "auth.token NOT found in shared preferences.") ;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
 			builder.setTitle("Configuration") ;
 			builder.setMessage("It appears that you have not yet configured this application. Would you like to do so now?") ;
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				
+
 				public void onClick(DialogInterface dialog, int which) {
 					Intent configurationIntent = new Intent() ;
 					configurationIntent.setClass(getBaseContext(), ConfigurationActivity.class) ;
@@ -262,14 +269,14 @@ public class DNSActivity extends Activity {
 				}
 			}) ;
 			builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-				
+
 				public void onClick(DialogInterface dialog, int which) {
 					finish() ;
 				}
 			}) ;
 			builder.show() ;
 		} else {
-			Log.d("DNSActivity","auth.token found in shared preferences.") ;
+			Log.d(TAG, "auth.token found in shared preferences.") ;
 		}
 	}
 }

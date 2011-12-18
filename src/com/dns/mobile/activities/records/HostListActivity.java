@@ -168,9 +168,14 @@ public class HostListActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
 				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
-				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+				Intent rrListActivity = null ;
+				if (position==0) {
+					rrListActivity = new Intent(getApplicationContext(), CreateNewHostActivity.class) ;
+				} else {
+					rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+					rrListActivity.putExtra("hostName", selectedHost.getName().contentEquals("(root)")?"":selectedHost.getName()) ;
+				}
 				rrListActivity.putExtra("domainName", domainName) ;
-				rrListActivity.putExtra("hostName", selectedHost.getName().contentEquals("(root)")?"":selectedHost.getName()) ;
 				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}
@@ -235,19 +240,29 @@ public class HostListActivity extends Activity {
 			
 			public Object getItem(int position) {
 
-				@SuppressWarnings("unchecked")
-				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						Host current = (Host) object ;
-						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.get(position-1) ;
+				if (position>0) {
+					@SuppressWarnings("unchecked")
+					ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils
+							.select(hostList,
+									new org.apache.commons.collections.Predicate() {
+
+										public boolean evaluate(Object object) {
+											Host current = (Host) object;
+											if (current
+													.getName()
+													.toLowerCase()
+													.contains(
+															filter.toLowerCase())) {
+												return true;
+											} else {
+												return false;
+											}
+										}
+									});
+					return filteredList.get(position - 1);
+				} else {
+					return null ;
+				}
 			}
 			
 			public int getCount() {
@@ -394,19 +409,29 @@ public class HostListActivity extends Activity {
 			
 			public Object getItem(int position) {
 
-				@SuppressWarnings("unchecked")
-				ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils.select(hostList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						Host current = (Host) object ;
-						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.get(position-1) ;
+				if (position>0) {
+					@SuppressWarnings("unchecked")
+					ArrayList<Host> filteredList = (ArrayList<Host>) CollectionUtils
+							.select(hostList,
+									new org.apache.commons.collections.Predicate() {
+
+										public boolean evaluate(Object object) {
+											Host current = (Host) object;
+											if (current
+													.getName()
+													.toLowerCase()
+													.contains(
+															filter.toLowerCase())) {
+												return true;
+											} else {
+												return false;
+											}
+										}
+									});
+					return filteredList.get(position - 1);
+				} else {
+					return null ;
+				}
 			}
 			
 			public int getCount() {

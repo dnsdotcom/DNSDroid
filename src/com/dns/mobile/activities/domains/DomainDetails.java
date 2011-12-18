@@ -62,8 +62,6 @@ public class DomainDetails extends Activity {
 						break;
 					case 4:
 						break;
-					case 5:
-						break;
 					default:
 				}
 			}

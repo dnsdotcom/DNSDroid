@@ -219,41 +219,41 @@ public class DigDnsLookupActivity extends Activity {
 				int AnsCount = rsp.getSectionArray(Section.ANSWER).length;
 				int AuCount = rsp.getSectionArray(Section.AUTHORITY).length;
 				int AdCount = rsp.getSectionArray(Section.ADDITIONAL).length;
-				resultArea.append("\t;; flags: " + hdr.printFlags() + "; QUERY: " + QCount + ", ANSWER: " + AnsCount + ", AUTHORITY: " + AuCount + ", ADDITIONAL: " + AdCount + "\n");
+				resultArea.append(";; flags: " + hdr.printFlags() + "; QUERY: " + QCount + ", ANSWER: " + AnsCount + ", AUTHORITY: " + AuCount + ", ADDITIONAL: " + AdCount + "\n");
 				if (QCount > 0) {
-					resultArea.append("\t;; QUESTION SECTION:\n");
+					resultArea.append(";; QUESTION SECTION:\n");
 					Record[] questions = rsp.getSectionArray(Section.QUESTION);
 					for (Record query : questions) {
-						resultArea.append("\t" + this.pp(query, true));
+						resultArea.append("" + this.pp(query, true));
 					}
 					resultArea.append("\n\n");
 				}
 				if (AnsCount > 0) {
-					resultArea.append("\t;; ANSWER SECTION:\n");
+					resultArea.append(";; ANSWER SECTION:\n");
 					Record[] answers = rsp.getSectionArray(Section.ANSWER);
 					for (Record answer : answers) {
-						resultArea.append("\t" + this.pp(answer, false));
+						resultArea.append(this.pp(answer, false));
 					}
 					resultArea.append("\n\n");
 				}
 				if (AuCount > 0) {
-					resultArea.append("\t;; AUTHORITY SECTION:\n");
+					resultArea.append(";; AUTHORITY SECTION:\n");
 					Record[] authorities = rsp.getSectionArray(Section.AUTHORITY);
 					for (Record authority : authorities) {
-						resultArea.append("\t" + this.pp(authority, false));
+						resultArea.append(this.pp(authority, false));
 					}
 					resultArea.append("\n\n");
 				}
 				if (AdCount > 0) {
-					resultArea.append("\t;; ADDITIONAL SECTION:\n");
+					resultArea.append(";; ADDITIONAL SECTION:\n");
 					Record[] addtions = rsp.getSectionArray(Section.ADDITIONAL);
 					for (Record record : addtions) {
-						resultArea.append("\t" + this.pp(record, false));
+						resultArea.append(this.pp(record, false));
 					}
 					resultArea.append("\n\n");
 				}
-				resultArea.append("\t;; Query time: " + (end.getTime() - start.getTime()) + " msec\n");
-				resultArea.append("\t;; MSG SIZE:  rcvd: " + rsp.numBytes() + " bytes\n");
+				resultArea.append(";; Query time: " + (end.getTime() - start.getTime()) + " msec\n");
+				resultArea.append(";; MSG SIZE:  rcvd: " + rsp.numBytes() + " bytes\n");
 			} else {
 				resultArea.append("No response was received for the DNS lookup.") ;
 			}
@@ -310,13 +310,19 @@ public class DigDnsLookupActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case 1:
-				String digResults = ((EditText)findViewById(R.id.digResponseArea)).getText().toString() ;
+				String digResults = ((TextView)findViewById(R.id.digResponseArea)).getText().toString() ;
 				String resolvedHost = ((EditText)findViewById(R.id.digFqdnInput)).getText().toString() ;
+				Spinner nsSpinner = (Spinner)findViewById(R.id.digNameServerCombo) ;
+				NameServer selected = (NameServer) nsSpinner.getSelectedItem() ;
+				String nsAddress = selected.getAddress() ;
+				String nsName = selected.getName() ;
 				String subjectLine = "DIG Result for: "+resolvedHost ;
 				Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND) ;
 				emailIntent.setType("plain/text") ;
 				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subjectLine) ;
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "The following DNS lookup was done from the DNS.com mobile app.\n\n"+digResults) ;
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "The following DNS lookup was done from the DNS.com mobile app.\nQueried Server was '"+nsName+"("+nsAddress+")'\n"+digResults) ;
+				String[] recipients = {"support@dns.com"} ;
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients) ;
 				startActivity(emailIntent) ;
 				return true;
 			case 0:

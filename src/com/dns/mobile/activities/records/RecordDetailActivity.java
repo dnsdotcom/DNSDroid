@@ -34,6 +34,7 @@ import android.widget.TextView;
  */
 public class RecordDetailActivity extends Activity {
 
+	private static final String TAG = "RecordDetailActivity" ;
 	protected ResourceRecord currentRR = null ;
 	protected ArrayList<String> typeList = null ;
 	protected String domainName = null ;
@@ -58,7 +59,7 @@ public class RecordDetailActivity extends Activity {
 			try {
 				rrId = rr.getId().intValue() ;
 			} catch (NumberFormatException nfe) {
-				Log.e("RecordDetailActivity", "NumberFormatException trying to parse the RR ID", nfe) ;
+				Log.e(TAG, "NumberFormatException trying to parse the RR ID", nfe) ;
 			}
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) ;
 			String apiHost = null ;
@@ -139,13 +140,13 @@ public class RecordDetailActivity extends Activity {
 						}) ;
 						builder.show() ;
 					} else {
-						Log.e("RecordDetailActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						Log.e(TAG, "API Error: "+result.getJSONObject("meta").getString("error")) ;
 						AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
 					}
 				} catch (JSONException jsone) {
-					Log.e("RecordDetailActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone) ;
 					AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;
@@ -160,7 +161,7 @@ public class RecordDetailActivity extends Activity {
 						if (currentData.getLong("id")==rrId) {
 							currentRR
 									.setAnswer(currentData.getString("answer"));
-							Log.d("RecordDetailActivity", "Adding RR '"
+							Log.d(TAG, "Adding RR '"
 									+ currentData.getString("answer")
 									+ "' to rrList");
 							currentRR.setHostId(currentData.getLong("id"));
@@ -177,12 +178,12 @@ public class RecordDetailActivity extends Activity {
 							}
 						}
 					}
-					Log.d("RecordDetailActivity", "Finished parsing JSON response into ResourceRecord") ;
+					Log.d(TAG, "Finished parsing JSON response into ResourceRecord") ;
 				} catch (JSONException jsone) {
-					Log.e("RecordDetailActivity", "JSONException encountered while trying to parse rr details.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse rr details.", jsone) ;
 				}
 			} else {
-				Log.e("RecordDetailActivity", "API Call failed.") ;
+				Log.e(TAG, "API Call failed.") ;
 				AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 				builder.setTitle(R.string.api_request_failed) ;
 				builder.setMessage(result.toString()) ;
@@ -204,7 +205,7 @@ public class RecordDetailActivity extends Activity {
 		}
 		hostName = currentRR.getHostName() ;
 		domainName = currentRR.getDomainName() ;
-		Log.d("RecordDetailActivity","Setting host/domain name to: "+hostName+"/"+domainName) ;
+		Log.d(TAG,"Setting host/domain name to: "+hostName+"/"+domainName+" and displaying RR: "+currentRR.getId()) ;
 
 		((Button)findViewById(R.id.rrSaveButton)).setOnClickListener(new View.OnClickListener() {
 			

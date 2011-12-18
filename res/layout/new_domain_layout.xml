@@ -16,7 +16,15 @@
 	<EditText android:layout_height="wrap_content" android:layout_below="@+id/domainNameLabel" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/domainName" android:hint="@string/example_domain_name"></EditText>
 	<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:id="@+id/responsiblePartyLabel" android:layout_alignParentLeft="true" android:layout_below="@+id/domainName" android:text="@string/rr_rname_label"></TextView>
 	<EditText android:inputType="textEmailAddress" android:layout_height="wrap_content" android:layout_below="@+id/responsiblePartyLabel" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/responsibleParty" android:hint="@string/example_rname"></EditText>
-	<Spinner android:id="@+id/domainGroupSelect" android:layout_alignParentLeft="true" android:layout_alignParentRight="true" android:layout_below="@+id/responsibleParty" android:layout_width="fill_parent"></Spinner>
+
+	<Spinner
+	    android:id="@+id/domainGroupSelect"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_below="@+id/responsibleParty" >
+	</Spinner>
 	<CheckBox android:gravity="right|center_vertical" android:id="@+id/setSlave" android:layout_below="@+id/domainGroupSelect" android:layout_centerInParent="true" android:text="@string/slave_zone" android:layout_height="wrap_content" android:layout_width="wrap_content" android:width="140dp"></CheckBox>
 	<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:id="@+id/masterLabel" android:layout_alignParentLeft="true" android:layout_below="@+id/setSlave" android:text="@string/master_label" android:visibility="gone"></TextView>
 	<EditText android:inputType="textUri" android:layout_height="wrap_content" android:layout_below="@+id/masterLabel" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/masterAddr" android:hint="@string/example_ip_address" android:visibility="gone"></EditText>

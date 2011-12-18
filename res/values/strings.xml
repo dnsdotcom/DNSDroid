@@ -109,5 +109,9 @@
 	<string name="view_records_button_label">Records</string>
 	<string name="new_host_name_header">New Host</string>
 	<string name="new_host_name_label">"New Host's Name"</string>
+	<string name="host_delete_dialog_title">Delete the record ||RECORDNAME||?</string>
+	<string name="host_delete_dialog_message">Press &quot;Yes&quot; to confirm delete of the record or cancel to return to the list.</string>
+	<string name="yes">Yes</string>
+	<string name="cancel">Cancel</string>
 </resources>
 

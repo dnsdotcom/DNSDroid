@@ -43,6 +43,8 @@ public class HostRecordListActivity extends Activity {
 	protected boolean isDomainGroup = false ;
 	protected String domainName = null ;
 	protected String hostName = null ;
+	protected ListView rrListView = null ;
+	private static final String TAG = "HostRecordListActivity" ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -81,13 +83,13 @@ public class HostRecordListActivity extends Activity {
 					if (result.getJSONObject("meta").getInt("success")==1) {
 						apiRequestSucceeded = true ;
 					} else {
-						Log.e("HostRecordListActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						Log.e(TAG, "API Error: "+result.getJSONObject("meta").getString("error")) ;
 						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
 					}
 				} catch (JSONException jsone) {
-					Log.e("HostRecordListActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone) ;
 					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;
@@ -101,7 +103,7 @@ public class HostRecordListActivity extends Activity {
 						JSONObject currentData = data.getJSONObject(x) ;
 						ResourceRecord currentRR = new ResourceRecord() ;
 						currentRR.setAnswer(currentData.getString("answer")) ;
-						Log.d("HostRecordListActivity", "Adding RR '"+currentData.getString("answer")+"' to rrList") ;
+						Log.d(TAG, "Adding RR '"+currentData.getString("answer")+"' to rrList") ;
 						currentRR.setHostId(currentData.getLong("id")) ;
 						currentRR.setType(currentData.getString("type")) ;
 						currentRR.setId(currentData.getLong("id")) ;
@@ -169,16 +171,15 @@ public class HostRecordListActivity extends Activity {
 					}
 					findViewById(R.id.rrListView).setVisibility(View.VISIBLE) ;
 					((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
-					Log.d("HostRecordListActivity", "Finished parsing JSON response into domainList") ;
+					Log.d(TAG, "Finished parsing JSON response into domainList") ;
 				} catch (JSONException jsone) {
-					Log.e("HostRecordListActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone) ;
 				}
 			} else {
 				showDialog(R.string.api_request_failed) ;
 			}
 		}
 	}
-
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -189,7 +190,7 @@ public class HostRecordListActivity extends Activity {
 		rrList = new ArrayList<ResourceRecord>() ;
 		domainName = this.getIntent().getExtras().getString("domainName") ;
 		hostName = this.getIntent().getExtras().getString("hostName") ;
-		Log.d("HostRecordListActivity","Setting host/domain name to: "+hostName+"/"+domainName) ;
+		Log.d(TAG,"Setting host/domain name to: "+hostName+"/"+domainName) ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
@@ -216,7 +217,7 @@ public class HostRecordListActivity extends Activity {
 		});
 
 		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
-		ListView rrListView = (ListView) findViewById(R.id.rrListView) ;
+		rrListView = (ListView) findViewById(R.id.rrListView) ;
 		rrListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			/* (non-Javadoc)
 			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
@@ -233,16 +234,6 @@ public class HostRecordListActivity extends Activity {
 				clickedRR.setDomainName(domainName) ;
 				rrDetailsActivity.putExtra("rrData", clickedRR) ;
 				startActivity(rrDetailsActivity) ;
-			}
-		}) ;
-		rrListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			/* (non-Javadoc)
-			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
-			 */
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				
-				return false;
 			}
 		}) ;
 
@@ -284,7 +275,7 @@ public class HostRecordListActivity extends Activity {
 
 					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
 					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
-						Log.d("HostRecordListActivity", "Country Code is: "+currentRR.getCountryId()) ;
+						Log.d(TAG, "Country Code is: "+currentRR.getCountryId()) ;
 						indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
 					}
 
@@ -453,7 +444,7 @@ public class HostRecordListActivity extends Activity {
 
 					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
 					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
-						Log.d("HostRecordListActivity", "Country Code is: "+currentRR.getCountryId()) ;
+						Log.d(TAG, "Country Code is: "+currentRR.getCountryId()) ;
 						indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
 					}
 

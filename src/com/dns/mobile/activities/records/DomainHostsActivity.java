@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Host ;
+import com.dns.mobile.data.ResourceRecord;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,10 +38,46 @@ import android.widget.TextView;
 
 public class DomainHostsActivity extends Activity {
 
+	private static final String TAG = "DomainHostsActivity" ;
 	protected ArrayList<Host> hostList = null ;
 	protected String filter = new String("") ;
 	protected String domainName = null ;
 	protected boolean isDomainGroup = false ;
+	protected ListView hostListView = null ;
+
+	private class HostDeleteApiTask extends AsyncTask<String, Void, JSONObject> {
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
+			} else {
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
+			}
+
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
+
+			return api.removeHostname(params[0], Boolean.valueOf(params[1]), params[2], Boolean.valueOf(params[3])) ;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			DomainHostsActivity.this.hostListView.invalidateViews() ;
+		}
+	}
 
 	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -131,6 +169,7 @@ public class DomainHostsActivity extends Activity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "Entered onCreate method.") ;
 		super.onCreate(savedInstanceState);
 		hostList = new ArrayList<Host>() ;
 		setContentView(R.layout.domain_hosts_activity) ;
@@ -160,7 +199,7 @@ public class DomainHostsActivity extends Activity {
 			}
 		});
 
-		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
+		hostListView = (ListView) findViewById(R.id.hostListView) ;
 
 		hostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			/* (non-Javadoc)
@@ -168,9 +207,14 @@ public class DomainHostsActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
 				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
-				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+				Intent rrListActivity = null ;
+				if (position==0) {
+					rrListActivity = new Intent(getApplicationContext(), CreateNewHostActivity.class) ;
+				} else {
+					rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+					rrListActivity.putExtra("hostName", selectedHost.getName()) ;
+				}
 				rrListActivity.putExtra("domainName", domainName) ;
-				rrListActivity.putExtra("hostName", selectedHost.getName()) ;
 				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}
@@ -180,13 +224,34 @@ public class DomainHostsActivity extends Activity {
 			/* (non-Javadoc)
 			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
 			 */
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Log.d(TAG, "Item long pressed.") ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(DomainHostsActivity.this) ;
+				final ResourceRecord deleteTarget = (ResourceRecord) arg0.getAdapter().getItem(arg2) ;
+				String hostName = deleteTarget.getHostName() ;
+				Log.d(TAG, "Hostname '"+hostName+"' long pressed.") ;
+				builder.setTitle(getResources().getString(R.string.host_delete_dialog_title).replaceAll("||RECORDNAME||", hostName)) ;
+				builder.setMessage(getResources().getString(R.string.host_delete_dialog_message)) ;
+				builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						new HostDeleteApiTask().execute(deleteTarget.getDomainName(), deleteTarget.isGroup()?"true":"false", deleteTarget.getHostName(), "true") ;
+						dialog.dismiss() ;
+					}
+				}) ;
+
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
 				return false;
 			}
 		}) ;
 
+		Log.d(TAG, "Setting ListView adapter.") ;
 		hostListView.setAdapter(new BaseAdapter() {
 			
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -319,7 +384,7 @@ public class DomainHostsActivity extends Activity {
 			}
 		});
 
-		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
+		hostListView = (ListView) findViewById(R.id.hostListView) ;
 
 		hostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			/* (non-Javadoc)
@@ -327,9 +392,14 @@ public class DomainHostsActivity extends Activity {
 			 */
 			public void onItemClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
 				Host selectedHost = (Host) hostListView.getAdapter().getItem(position) ;
-				Intent rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+				Intent rrListActivity = null ;
+				if (position==0) {
+					rrListActivity = new Intent(getApplicationContext(), CreateNewHostActivity.class) ;
+				} else {
+					rrListActivity = new Intent(getApplicationContext(), HostRecordListActivity.class) ;
+					rrListActivity.putExtra("hostName", selectedHost.getName()) ;
+				}
 				rrListActivity.putExtra("domainName", domainName) ;
-				rrListActivity.putExtra("hostName", selectedHost.getName()) ;
 				rrListActivity.putExtra("isDomainGroup", isDomainGroup) ;
 				startActivity(rrListActivity) ;
 			}
@@ -339,9 +409,29 @@ public class DomainHostsActivity extends Activity {
 			/* (non-Javadoc)
 			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
 			 */
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				Log.d(TAG, "Item long pressed.") ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(DomainHostsActivity.this) ;
+				final ResourceRecord deleteTarget = (ResourceRecord) arg0.getAdapter().getItem(arg2) ;
+				String hostName = deleteTarget.getHostName() ;
+				Log.d(TAG, "Hostname '"+hostName+"' long pressed.") ;
+				builder.setTitle(getResources().getString(R.string.host_delete_dialog_title).replaceAll("||RECORDNAME||", hostName)) ;
+				builder.setMessage(getResources().getString(R.string.host_delete_dialog_message)) ;
+				builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						new HostDeleteApiTask().execute(deleteTarget.getDomainName(), deleteTarget.isGroup()?"true":"false", deleteTarget.getHostName(), "true") ;
+						dialog.dismiss() ;
+					}
+				}) ;
+
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
 				return false;
 			}
 		}) ;
