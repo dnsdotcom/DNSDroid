@@ -42,7 +42,7 @@ public class NameServers implements Serializable {
 		prefs = ctx.getSharedPreferences("dnsMobile", Context.MODE_PRIVATE) ;
 		nameServers = new ArrayList<NameServer>() ;
 		String[] serverNames = prefs.getString("serverNames", "ns1.dns.com,ns2.dns.com,ns3.dns.com,ns4.dns.com").split(",") ;
-		String[] serverAddr = prefs.getString("serverAddr", "ns1.dns.com,ns2.dns.com,ns3.dns.com,ns4.dns.com").split(",") ;
+		String[] serverAddr = prefs.getString("serverAddr", "8.20.241.1,8.20.243.1,8.20.241.2,8.20.243.2").split(",") ;
 		for (int x=0; x<serverNames.length; x++) {
 			Log.d("NameServers", "Adding '"+serverNames[x]+"' with address of '"+serverAddr[x]+"'") ;
 			nameServers.add(new NameServer(serverNames[x], serverAddr[x])) ;
