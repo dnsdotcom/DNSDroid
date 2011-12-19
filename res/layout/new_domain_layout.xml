@@ -5,12 +5,13 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:background="@color/red">
 	<ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent"
+	    android:contentDescription="@string/dns_logo_description"
 		android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
 		android:layout_alignParentTop="true"></ImageView>
 	<TextView android:layout_height="wrap_content"
 		android:textColor="@color/white"
 		android:layout_width="fill_parent" android:background="@color/dark_grey"
-		android:padding="4px" android:gravity="center_vertical|left"
+		android:padding="4dp" android:gravity="center_vertical|left"
 		android:layout_below="@id/dnsLogo" android:id="@+id/newDomainHeader" android:text="@string/add_domain_header"></TextView>
 	<TextView android:layout_height="wrap_content" android:layout_below="@+id/newDomainHeader" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/domainNameLabel" android:textColor="@color/white" android:textSize="18dp" android:text="@string/domain_name"></TextView>
 	<EditText android:layout_height="wrap_content" android:layout_below="@+id/domainNameLabel" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/domainName" android:hint="@string/example_domain_name"></EditText>
@@ -25,11 +26,22 @@
 	    android:layout_alignParentRight="true"
 	    android:layout_below="@+id/responsibleParty" >
 	</Spinner>
-	<CheckBox android:gravity="right|center_vertical" android:id="@+id/setSlave" android:layout_below="@+id/domainGroupSelect" android:layout_centerInParent="true" android:text="@string/slave_zone" android:layout_height="wrap_content" android:layout_width="wrap_content" android:width="140dp"></CheckBox>
-	<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:id="@+id/masterLabel" android:layout_alignParentLeft="true" android:layout_below="@+id/setSlave" android:text="@string/master_label" android:visibility="gone"></TextView>
-	<EditText android:inputType="textUri" android:layout_height="wrap_content" android:layout_below="@+id/masterLabel" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/masterAddr" android:hint="@string/example_ip_address" android:visibility="gone"></EditText>
-	<TextView android:id="@+id/ttlLabel" android:layout_below="@+id/masterAddr" android:layout_height="wrap_content" android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:layout_alignParentLeft="true" android:text="@string/rr_ttl_label" android:visibility="gone"></TextView>
-	<EditText android:id="@+id/ttlValue" android:layout_below="@+id/ttlLabel" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:inputType="number" android:text="3600" android:visibility="gone"></EditText>
-	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/ttlValue" android:text="@string/string_save" android:layout_centerHorizontal="true" android:id="@+id/saveNewDomain"></Button>
+	<CheckBox android:gravity="right|center_vertical" android:id="@+id/setSlave" android:layout_below="@+id/domainGroupSelect" 
+	    android:layout_centerInParent="true" android:text="@string/slave_zone" android:layout_height="wrap_content" 
+	    android:layout_width="wrap_content" android:width="140dp"></CheckBox>
+	<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textColor="@color/white" 
+	    android:textSize="18dp" android:id="@+id/masterLabel" android:layout_alignParentLeft="true" android:layout_below="@+id/setSlave" 
+	    android:text="@string/master_label" android:visibility="gone"></TextView>
+	<EditText android:inputType="textUri" android:layout_height="wrap_content" android:layout_below="@+id/masterLabel" 
+	    android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:id="@+id/masterAddr" 
+	    android:hint="@string/example_ip_address" android:visibility="gone"></EditText>
+	<TextView android:id="@+id/ttlLabel" android:layout_below="@+id/masterAddr" android:layout_height="wrap_content" 
+	    android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:layout_alignParentLeft="true" 
+	    android:text="@string/rr_ttl_label" android:visibility="gone"></TextView>
+	<EditText android:id="@+id/ttlValue" android:layout_below="@+id/ttlLabel" android:layout_height="wrap_content" 
+	    android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:inputType="number" android:text="3600" 
+	    android:visibility="gone"></EditText>
+	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/ttlValue" 
+	    android:text="@string/string_save" android:layout_centerHorizontal="true" android:id="@+id/saveNewDomain"></Button>
 
 </RelativeLayout>

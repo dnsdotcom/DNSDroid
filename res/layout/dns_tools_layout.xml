@@ -6,6 +6,7 @@
 	android:layout_height="fill_parent" android:background="@color/red"
 	android:id="@+id/dns_tools_activity">
 	<ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" 
+	    android:contentDescription="@string/dns_logo_description"
 		android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
 		android:layout_alignParentTop="true"></ImageView>
 	<TextView android:id="@+id/dnsToolsHeader" android:layout_height="wrap_content" 
@@ -14,5 +15,6 @@
 	<ListView android:id="@+id/dns_tools_menu_list" android:focusable="true" 
     	android:focusableInTouchMode="true" android:layout_gravity="center_vertical" 
     	android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="fill_parent" 
-    	android:layout_width="fill_parent" android:layout_below="@id/dnsToolsHeader" android:layout_alignParentBottom="true" android:visibility="visible"></ListView>
+    	android:layout_width="fill_parent" android:layout_below="@id/dnsToolsHeader" android:layout_alignParentBottom="true" 
+    	android:visibility="visible"></ListView>
 </RelativeLayout>

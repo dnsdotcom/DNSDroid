@@ -322,7 +322,8 @@ public class HostListActivity extends Activity {
 		public boolean onItemLongClick(AdapterView<?> hostListView, View hostItemView, int position, long itemId) {
 			final Host deleteHost = (Host) hostListView.getAdapter().getItem(position) ;
 			AlertDialog.Builder builder = new AlertDialog.Builder(HostListActivity.this) ;
-			String dialogTitle = HostListActivity.this.getResources().getString(R.string.host_delete_dialog_title).replaceAll("||REPLACE||", deleteHost.getName()) ;
+			String title1 = HostListActivity.this.getResources().getString(R.string.host_delete_dialog_title) ;
+			String dialogTitle = title1 + " '" + deleteHost.getName() + "'?" ;
 			builder.setTitle(dialogTitle) ;
 			builder.setMessage(R.string.host_delete_dialog_message) ;
 			final int itemPosition = position ;

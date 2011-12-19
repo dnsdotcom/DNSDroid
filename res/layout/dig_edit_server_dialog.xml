@@ -14,5 +14,4 @@
         <Button android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:text="@string/string_save" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/digAddServerSaveButton" android:textSize="20dp"></Button>
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:id="@+id/digAddServerCancelButton" android:text="@string/string_cancel" android:textSize="20dp"></Button>
     </RelativeLayout>
-    
 </LinearLayout>

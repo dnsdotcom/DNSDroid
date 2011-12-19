@@ -8,26 +8,19 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical" android:background="@color/red" android:weightSum="1" 
     android:id="@+id/domain_hosts_activity">
-
-    <!-- First view is a text editor.  We want it to use all available
-         horizontal space, and stretch to fill whatever vertical space
-         is available to it.  Note the use of the "id" attribute, which
-         allows us to find this object from the Java code. -->
-
-    <!-- Next view is another linear layout manager, now horizontal.  We
-         give it a custom background; see colors.xml for the definition
-         of drawable/semi_black-->
     <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" 
+        android:contentDescription="@string/dns_logo_description"
     	android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
     	android:layout_alignParentTop="true"></ImageView>
     <TextView android:layout_height="wrap_content" android:text="@string/domains_list_view_label" 
     	android:textColor="@color/white" android:layout_width="fill_parent" 
-    	android:background="@color/dark_grey" android:padding="4px" android:gravity="center_vertical|left" 
+    	android:background="@color/dark_grey" android:padding="4dp" android:gravity="center_vertical|left" 
     	android:id="@+id/hostHeaderLabel" android:layout_below="@id/dnsLogo"></TextView>
     <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" 
-    	android:id="@+id/filterInput" android:hint="Filter" android:layout_below="@id/hostHeaderLabel">
+    	android:id="@+id/filterInput" android:hint="@string/input_label_filter" android:layout_below="@id/hostHeaderLabel">
     </EditText>
-    <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" android:layout_height="wrap_content" 
+    <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" android:dividerHeight="2.0sp" 
+        android:layout_height="wrap_content" 
     	android:layout_width="fill_parent" android:id="@+id/hostListView" 
     	android:visibility="invisible" 
     	android:focusable="true" android:focusableInTouchMode="true" android:layout_below="@id/filterInput"

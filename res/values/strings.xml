@@ -22,8 +22,7 @@
     <string name="dns_app">DNS.com Mobile</string>
     <string name="back">Back</string>
     <string name="clear">Clear</string>
-
-    <!-- This is a complex string containing style runs. -->
+	<string name="input_label_filter">Filter</string>
     <string name="main_label">DNS.com Mobile</string>
     <string name="domainViewLabel">Domain List</string>
     <string name="domainGroupListLabel">Domain Group List</string>
@@ -109,7 +108,7 @@
 	<string name="view_records_button_label">Records</string>
 	<string name="new_host_name_header">New Host</string>
 	<string name="new_host_name_label">"New Host's Name"</string>
-	<string name="host_delete_dialog_title">Delete the record ||RECORDNAME||?</string>
+	<string name="host_delete_dialog_title">Delete the record </string>
 	<string name="host_delete_dialog_message">Press &quot;Yes&quot; to confirm delete of the record or cancel to return to the list.</string>
 	<string name="yes">Yes</string>
 	<string name="cancel">Cancel</string>
