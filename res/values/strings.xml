@@ -114,5 +114,9 @@
 	<string name="yes">Yes</string>
 	<string name="cancel">Cancel</string>
 	<string name="dns_logo_description">DNS.com Logo</string>
+	<string name="warning">WARNING!!</string>
+	<string name="dnsdroid_code_state_warning">This app is not yet even Alpha quality. Many features are not yet implemented and many of the ones which are will cause a force close. Do not complain about the state of the app as we know it is not functional yet.</string>
+	<string name="ok">OK</string>
+	<string name="code_state_decline">Get me outta here!</string>
 </resources>
 

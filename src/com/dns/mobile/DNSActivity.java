@@ -125,6 +125,28 @@ public class DNSActivity extends Activity {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (settings.contains("auth.token")) {
 			Log.d(TAG, "auth.token found in shared preferences.") ;
+			AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+			builder.setTitle(R.string.warning) ;
+			builder.setMessage(R.string.dnsdroid_code_state_warning) ;
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss() ;
+				}
+			}) ;
+
+			builder.setNegativeButton(R.string.code_state_decline, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss() ;
+					Intent intent = new Intent(Intent.ACTION_MAIN);
+					intent.addCategory(Intent.CATEGORY_HOME);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+				}
+			}) ;
+
+			builder.show() ;
 		} else {
 			Log.d(TAG, "auth.token NOT found in shared preferences.") ;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
