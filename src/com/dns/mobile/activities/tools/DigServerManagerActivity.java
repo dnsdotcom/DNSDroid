@@ -6,6 +6,8 @@ package com.dns.mobile.activities.tools;
 import com.dns.mobile.R;
 import com.dns.mobile.data.NameServers;
 import com.dns.mobile.tools.NameServerAdapter;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ public class DigServerManagerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tools_dig_name_server_config) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
 		nameServers = NameServers.getInstance(getBaseContext()) ;
 

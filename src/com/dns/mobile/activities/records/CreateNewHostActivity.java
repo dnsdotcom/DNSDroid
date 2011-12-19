@@ -6,6 +6,8 @@ import org.xbill.DNS.Type;
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -175,6 +177,7 @@ public class CreateNewHostActivity extends Activity {
 		currentRR.setDomainName(this.getIntent().getStringExtra("domainName")) ;
 
 		domainName = this.getIntent().getStringExtra("domainName") ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 		Log.d(TAG, "domainName: "+domainName) ;
 		TextView newHostHeader = (TextView)findViewById(R.id.newHostHeader) ;
 		String hostHeaderContent = newHostHeader.getText().toString()+": "+domainName ;

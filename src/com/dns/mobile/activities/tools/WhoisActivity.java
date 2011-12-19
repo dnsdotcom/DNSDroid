@@ -7,10 +7,13 @@ import java.io.IOException;
 
 import com.dns.mobile.R;
 import com.dns.mobile.tools.Whois;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,8 @@ import android.widget.TextView;
  *
  */
 public class WhoisActivity extends Activity {
+
+	private static final String TAG = "WhoisActivity" ;
 
 	private class WhoisTask extends AsyncTask<String, Void, String> {
 		/* (non-Javadoc)
@@ -60,6 +65,9 @@ public class WhoisActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_whois_layout) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+
+		Log.d(TAG, "Entered Whois activity") ;
 
 		((Button)findViewById(R.id.whoisButton)).setOnClickListener(new OnClickListener() {
 			
@@ -67,6 +75,7 @@ public class WhoisActivity extends Activity {
 				findViewById(R.id.whoisResultTextArea).setVisibility(View.INVISIBLE) ;
 				findViewById(R.id.whoisProgressBar).setVisibility(View.VISIBLE) ;
 				String domainName = ((EditText)findViewById(R.id.whoisDomainInput)).getText().toString() ;
+				Log.d(TAG, "Starting WHOIS lookup in the background.") ;
 				new WhoisTask().execute(domainName) ;
 			}
 		}) ;
@@ -78,6 +87,7 @@ public class WhoisActivity extends Activity {
 					findViewById(R.id.whoisResultTextArea).setVisibility(View.GONE) ;
 					findViewById(R.id.whoisProgressBar).setVisibility(View.VISIBLE) ;
 					String domainName = ((EditText)findViewById(R.id.whoisDomainInput)).getText().toString() ;
+					Log.d(TAG, "Starting WHOIS lookup in the background.") ;
 					new WhoisTask().execute(domainName) ;
 					return true ;
 				}

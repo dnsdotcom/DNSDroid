@@ -3,6 +3,7 @@ package com.dns.mobile.activities.domains;
 import com.dns.mobile.R;
 import com.dns.mobile.activities.records.CreateNewHostActivity;
 import com.dns.mobile.activities.records.HostListActivity;
+import com.dns.mobile.util.LogoOnClickListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class DomainDetails extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.domain_details_activity);
 
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 		domainName = this.getIntent().getStringExtra("domainName");
 		isGroupedDomain = this.getIntent().getBooleanExtra("isDomainGroup", false);
 		Log.d(TAG, "domainName: "+domainName) ;

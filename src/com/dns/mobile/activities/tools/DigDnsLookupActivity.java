@@ -28,6 +28,8 @@ import org.xbill.DNS.Type;
 import com.dns.mobile.R;
 import com.dns.mobile.data.NameServer;
 import com.dns.mobile.data.NameServers;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -40,6 +42,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ import android.widget.TextView;
  */
 public class DigDnsLookupActivity extends Activity {
 
+	private static final String TAG = "DigDnsLookupActivity" ;
 	protected ArrayAdapter<String> nameServerAdapter = null ;
 
 	private class DigLookupTask extends AsyncTask<Message, Void, Message> {
@@ -168,7 +172,7 @@ public class DigDnsLookupActivity extends Activity {
 							break ;
 				}
 			} catch (Throwable e) {
-				Log.e("DigDnsLookupActivity", e.getLocalizedMessage(), e) ;
+				Log.e(TAG, e.getLocalizedMessage(), e) ;
 			}
 			return retVal.toString() ;
 		}
@@ -183,7 +187,7 @@ public class DigDnsLookupActivity extends Activity {
 			SimpleResolver resolver = null ;
 			try {
 				String nameServer = ns.getAddress() ;
-				Log.d("DigDnsLookupActivity", "Using name server: "+nameServer) ;
+				Log.d(TAG, "Using name server: "+nameServer) ;
 				resolver = new SimpleResolver(nameServer) ;
 				resolver.setPort(53) ;
 				start = new Date() ;
@@ -193,11 +197,11 @@ public class DigDnsLookupActivity extends Activity {
 					return rsp ;
 				} catch (IOException ioe) {
 					((TextView)findViewById(R.id.digResponseArea)).setText(ioe.getLocalizedMessage()) ;
-					Log.e("DigDnsLookupActivity", ioe.getLocalizedMessage(), ioe) ;
+					Log.e(TAG, ioe.getLocalizedMessage(), ioe) ;
 				}
 			} catch (UnknownHostException uhe) {
 				((TextView)findViewById(R.id.digResponseArea)).setText(uhe.getLocalizedMessage()) ;
-				Log.e("DigDnsLookupActivity", uhe.getLocalizedMessage(), uhe) ;
+				Log.e(TAG, uhe.getLocalizedMessage(), uhe) ;
 			}
 			return null;
 		}
@@ -270,6 +274,13 @@ public class DigDnsLookupActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_dig_layout) ;
+
+		ImageView dnsLogo = (ImageView) findViewById(R.id.dnsLogo) ;
+		if (dnsLogo==null) {
+			Log.e(TAG, "Unable to retrieve reference to dnsLogo") ;
+		}
+		dnsLogo.setOnClickListener(new LogoOnClickListener(this));
+
 		ArrayAdapter<NameServer> nsAdapter = new ArrayAdapter<NameServer>(getBaseContext(), android.R.layout.simple_spinner_item, NameServers.getInstance(getBaseContext()).getNameServers()) ;
 		nsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) ;
 
@@ -368,7 +379,7 @@ public class DigDnsLookupActivity extends Activity {
 			new DigLookupTask().execute(lookupRequest) ;
 		} catch (TextParseException e) {
 			((EditText)findViewById(R.id.digResponseArea)).setText(e.getLocalizedMessage()) ;
-			Log.e("DigDnsLookupActivity", e.getLocalizedMessage(), e) ;
+			Log.e(TAG, e.getLocalizedMessage(), e) ;
 		}
 	}
 }

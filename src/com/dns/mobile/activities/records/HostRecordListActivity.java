@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -193,28 +195,7 @@ public class HostRecordListActivity extends Activity {
 		Log.d(TAG,"Setting host/domain name to: "+hostName+"/"+domainName) ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
-		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
-				builder.setTitle(R.string.open_web_confirmation_title) ;
-				builder.setTitle(R.string.open_web_confirmation_msg) ;
-				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						Uri uri = Uri.parse("http://www.dns.com/") ;
-						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
-					}
-				}) ;
-				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss() ;
-					}
-				}) ;
-				builder.show() ;
-			}
-		});
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
 		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
 		rrListView = (ListView) findViewById(R.id.rrListView) ;

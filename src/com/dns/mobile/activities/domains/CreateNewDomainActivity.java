@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Domain;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -95,6 +97,7 @@ public class CreateNewDomainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.new_domain_layout) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 		((CheckBox)findViewById(R.id.setSlave)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

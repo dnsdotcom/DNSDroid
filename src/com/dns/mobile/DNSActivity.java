@@ -21,8 +21,8 @@ import com.dns.mobile.activities.ConfigurationActivity;
 import com.dns.mobile.activities.domains.DomainListActivity;
 import com.dns.mobile.activities.geo.GeoGroupsListActivity;
 import com.dns.mobile.activities.groups.DomainGroupsListActivity;
-import com.dns.mobile.activities.ns.NameServersInfoActivity;
 import com.dns.mobile.activities.tools.DomainNameToolsActivity;
+import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -70,30 +69,7 @@ public class DNSActivity extends Activity {
 		if (dnsLogo==null) {
 			Log.e(TAG, "Unable to retrieve reference to dnsLogo") ;
 		}
-		dnsLogo.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
-				builder.setTitle(R.string.open_web_confirmation_title) ;
-				builder.setTitle(R.string.open_web_confirmation_msg) ;
-				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						Uri uri = Uri.parse("http://www.dns.com/") ;
-						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
-					}
-				}) ;
-
-				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss() ;
-					}
-				}) ;
-
-				builder.show() ;
-			}
-		});
+		dnsLogo.setOnClickListener(new LogoOnClickListener(this));
 
 		ListView mainMenu = (ListView) findViewById(R.id.mainMenuListView) ;
 		mainMenu.setAdapter(new MainMenuListAdapter()) ;
@@ -122,9 +98,6 @@ public class DNSActivity extends Activity {
 							targetActivity = GeoGroupsListActivity.class ;
 							break ;
 						case 3:
-							targetActivity = NameServersInfoActivity.class ;
-							break ;
-						case 4:
 							targetActivity = DomainNameToolsActivity.class ;
 							break ;
 					}
@@ -195,7 +168,7 @@ public class DNSActivity extends Activity {
 	private class MainMenuListAdapter extends BaseAdapter {
 
 		public int getCount() {
-			return 5;
+			return 4;
 		}
 
 		public Object getItem(int position) {
@@ -207,8 +180,6 @@ public class DNSActivity extends Activity {
 				case 2:
 					return getResources().getString(R.string.main_menu_my_geogroups) ;
 				case 3:
-					return getResources().getString(R.string.main_menu_my_nameservers) ;
-				case 4:
 					return getResources().getString(R.string.main_menu_dns_tools) ;
 			}
 			return null ;
@@ -235,9 +206,6 @@ public class DNSActivity extends Activity {
 					menuItem.setText(R.string.main_menu_my_geogroups) ;
 					break;
 				case 3:
-					menuItem.setText(R.string.main_menu_my_nameservers) ;
-					break ;
-				case 4:
 					menuItem.setText(R.string.main_menu_dns_tools) ;
 					break ;
 				default:
