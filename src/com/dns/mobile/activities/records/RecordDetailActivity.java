@@ -4,7 +4,6 @@
 package com.dns.mobile.activities.records;
 
 import java.util.ArrayList;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xbill.DNS.Type;
@@ -12,7 +11,6 @@ import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -126,11 +124,10 @@ public class RecordDetailActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 
-			boolean apiRequestSucceeded = false ;
+			RecordDetailActivity.this.findViewById(R.id.rrSaveProgress).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
-						apiRequestSucceeded = true ;
 						AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
 						builder.setTitle(R.string.rr_update_saved_title) ;
 						builder.setMessage(R.string.rr_update_saved_body) ;
@@ -154,42 +151,6 @@ public class RecordDetailActivity extends Activity {
 					builder.setMessage(jsone.getLocalizedMessage()) ;
 				}
 			}
-
-			if (apiRequestSucceeded) {
-				try {
-					JSONArray data = result.getJSONArray("data") ;
-					for (int x=0; x<data.length(); x++) {
-						JSONObject currentData = data.getJSONObject(x) ;
-						if (currentData.getLong("id")==rrId) {
-							currentRR
-									.setAnswer(currentData.getString("answer"));
-							Log.d(TAG, "Adding RR '"
-									+ currentData.getString("answer")
-									+ "' to rrList");
-							currentRR.setHostId(currentData.getLong("id"));
-							currentRR.setType(currentData.getString("type"));
-							currentRR.setId(currentData.getLong("id"));
-							if (currentData.getString("country_iso2").length() > 0) {
-								currentRR.setCountryId(currentData
-										.getString("country_iso2"));
-							}
-							if (!currentData.getString("geoGroup")
-									.contentEquals("None")) {
-								currentRR.setGeoGroup(currentData
-										.getString("geoGroup"));
-							}
-						}
-					}
-					Log.d(TAG, "Finished parsing JSON response into ResourceRecord") ;
-				} catch (JSONException jsone) {
-					Log.e(TAG, "JSONException encountered while trying to parse rr details.", jsone) ;
-				}
-			} else {
-				Log.e(TAG, "API Call failed.") ;
-				AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
-				builder.setTitle(R.string.api_request_failed) ;
-				builder.setMessage(result.toString()) ;
-			}
 		}
 	}
 
@@ -212,6 +173,8 @@ public class RecordDetailActivity extends Activity {
 		((Button)findViewById(R.id.rrSaveButton)).setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				Log.d(TAG, "User pressed save.") ;
+				RecordDetailActivity.this.findViewById(R.id.rrSaveProgress).setVisibility(View.VISIBLE) ;
 				currentRR.setType(Type.value(((Spinner)findViewById(R.id.rrTypeSpinner)).getSelectedItem().toString())) ;
 				currentRR.setActive(true) ;
 				currentRR.setAnswer(((EditText)findViewById(R.id.rrAnswer)).getText().toString()) ;

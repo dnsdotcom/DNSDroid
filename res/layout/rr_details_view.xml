@@ -4,49 +4,248 @@
 	All Rights Reserved
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:orientation="vertical" android:background="@color/red" android:weightSum="1" android:id="@+id/rr_details_view">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rr_details_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/red"
+    android:orientation="vertical"
+    android:weightSum="1" >
 
-    <!-- First view is a text editor.  We want it to use all available
-         horizontal space, and stretch to fill whatever vertical space
-         is available to it.  Note the use of the "id" attribute, which
-         allows us to find this object from the Java code. -->
+    <ImageView
+        android:id="@+id/dnsLogo"
+        android:contentDescription="@string/dns_logo_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/dns_android_banner" >
+    </ImageView>
 
-    <!-- Next view is another linear layout manager, now horizontal.  We
-         give it a custom background; see colors.xml for the definition
-         of drawable/semi_black-->
-    <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"></ImageView>
-    <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:layout_width="fill_parent" android:background="@color/dark_grey" android:padding="4dp" android:gravity="center_vertical|left" android:id="@+id/rrHeaderLabel" android:text="@string/rr_details_header_label"></TextView>
-    <ScrollView android:id="@+id/scrollView1" android:layout_width="fill_parent" android:layout_height="fill_parent">
-        <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:padding="4dp">
-            <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal" android:id="@+id/linearLayout1">
-                <TextView android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:id="@+id/recordTypeLabel" android:text="@string/rr_type_selection_label" android:layout_width="wrap_content"></TextView>
-                <Spinner android:layout_weight="1" android:id="@+id/rrTypeSpinner" android:layout_height="wrap_content" android:entries="@array/recordTypes" android:layout_width="115dp">
-			        <requestFocus></requestFocus>
-                </Spinner>
+    <TextView
+        android:id="@+id/rrHeaderLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dnsLogo"
+        android:background="@color/dark_grey"
+        android:gravity="center_vertical|left"
+        android:padding="4dp"
+        android:text="@string/rr_details_header_label"
+        android:textColor="@color/white" >
+    </TextView>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/rrHeaderLabel" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="4dp" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="106.36"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/recordTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rr_type_selection_label"
+                    android:textColor="@color/white"
+                    android:textSize="10pt" />
+
+                <Spinner
+                    android:id="@+id/rrTypeSpinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/recordTypes"
+                    android:visibility="visible" />
+
             </LinearLayout>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:text="@string/rr_answer_label" android:layout_width="fill_parent" android:id="@+id/rrAnswerLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/rrAnswer"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:text="@string/rr_rname_label" android:layout_width="wrap_content" android:id="@+id/rrResponsiblePartyLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/rrResponsibleParty"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:text="@string/rr_ttl_label" android:layout_width="wrap_content" android:id="@+id/rrTtlLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="3600" android:id="@+id/rrTtlInput"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/rr_srv_weight_label" android:id="@+id/rrSrvWeightLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="1" android:id="@+id/rrSrvWeight"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/rr_srv_port_label" android:id="@+id/rrSrvPortLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="5222" android:id="@+id/rrSrvPort"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/priority_label" android:id="@+id/rrPriorityLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="5" android:id="@+id/rrPriority"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/rr_retry_label" android:id="@+id/rrRetryLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="7200" android:id="@+id/rrRetryInterval"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/rr_expire_label" android:id="@+id/rrExpireLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="3600000" android:id="@+id/rrExpire"></EditText>
-            <TextView android:visibility="gone" android:layout_height="wrap_content" android:textColor="@color/white" android:textSize="10pt" android:layout_width="wrap_content" android:text="@string/rr_min_label" android:id="@+id/rrMinimumLabel"></TextView>
-            <EditText android:visibility="gone" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="172800" android:id="@+id/rrMinimum"></EditText>
-            <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/rr_details_save" android:id="@+id/rrSaveButton"></Button>
+
+            <TextView
+                android:id="@+id/rrAnswerLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_answer_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrAnswer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:inputType="textNoSuggestions" />
+
+            <TextView
+                android:id="@+id/rrResponsiblePartyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_rname_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrResponsibleParty"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textNoSuggestions"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrTtlLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_ttl_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrTtlInput"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3600"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrSrvWeightLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_srv_weight_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrSrvWeight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrSrvPortLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_srv_port_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrSrvPort"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5222"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrPriorityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/priority_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrPriority"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrRetryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_retry_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrRetryInterval"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="7200"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrExpireLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_expire_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrExpire"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3600000"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rrMinimumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_min_label"
+                android:textColor="@color/white"
+                android:textSize="10pt"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/rrMinimum"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="172800"
+                android:inputType="number"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/rrSaveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rr_details_save" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/rrSaveProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
+</RelativeLayout>

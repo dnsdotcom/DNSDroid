@@ -100,16 +100,20 @@ public class HostRecordListActivity extends Activity {
 		protected void onPostExecute(ResourceRecord result) {
 			super.onPostExecute(result);
 
+			Log.d(TAG, "onPostExecute for item delete.") ;
+			findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
 			if (result.isActive()) {
+				Log.d(TAG, "result record is marked as active.") ;
 				int itemIndex = rrList.indexOf(result) ;
 				rrList.remove(itemIndex) ;
 				((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
-				findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
 			} else {
+				Log.d(TAG, "result record is marked as inactive.") ;
 				AlertDialog.Builder builder = new AlertDialog.Builder(HostRecordListActivity.this) ;
 				builder.setTitle(R.string.rr_delete_failed_title) ;
 				String messageBody = HostRecordListActivity.this.getResources().getString(R.string.rr_delete_failed_message).replaceAll("||REPLACE||", result.getId()+"") ;
 				builder.setMessage(messageBody) ;
+				builder.show() ;
 			}
 		}
 	}
@@ -284,6 +288,7 @@ public class HostRecordListActivity extends Activity {
 				public void onClick(DialogInterface dialog, int which) {
 					findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
 					ResourceRecord selected = (ResourceRecord) ((ListView)findViewById(R.id.rrListView)).getItemAtPosition(itemPosition) ;
+					selected.setActive(true) ;
 					new RRListApiItemDeleteTask().execute(selected) ;
 				}
 			}) ;
