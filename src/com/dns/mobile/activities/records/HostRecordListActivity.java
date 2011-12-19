@@ -1,7 +1,6 @@
 package com.dns.mobile.activities.records;
 
 import java.util.ArrayList;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,7 +9,6 @@ import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,7 +16,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,6 +44,75 @@ public class HostRecordListActivity extends Activity {
 	protected String domainName = null ;
 	protected String hostName = null ;
 	protected ListView rrListView = null ;
+
+	private class RRListApiItemDeleteTask extends AsyncTask<ResourceRecord, Void, ResourceRecord> {
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected ResourceRecord doInBackground(ResourceRecord... params) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
+			} else {
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
+			}
+
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
+			JSONObject retVal = api.removeRR(params[0].getId().intValue(), true) ;
+			
+			boolean apiRequestSucceeded = false ;
+			if (retVal.has("meta")) {
+				try {
+					if (retVal.getJSONObject("meta").getInt("success")==1) {
+						apiRequestSucceeded = true ;
+					} else {
+						Log.e(TAG, "API Error: "+retVal.getJSONObject("meta").getString("error")) ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+						builder.setTitle(R.string.api_request_failed) ;
+						builder.setMessage(retVal.getJSONObject("meta").getString("error")) ;
+					}
+				} catch (JSONException jsone) {
+					Log.e(TAG, "JSONException encountered while trying to parse delete response.", jsone) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
+					builder.setTitle(R.string.api_request_failed) ;
+					builder.setMessage(jsone.getLocalizedMessage()) ;
+				}
+			}
+
+			if (apiRequestSucceeded) {
+				return params[0] ;
+			} else {
+				ResourceRecord error = params[0] ;
+				error.setActive(false) ;
+				return error ;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(ResourceRecord result) {
+			super.onPostExecute(result);
+
+			if (result.isActive()) {
+				int itemIndex = rrList.indexOf(result) ;
+				rrList.remove(itemIndex) ;
+				((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
+				findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(HostRecordListActivity.this) ;
+				builder.setTitle(R.string.rr_delete_failed_title) ;
+				String messageBody = HostRecordListActivity.this.getResources().getString(R.string.rr_delete_failed_message).replaceAll("||REPLACE||", result.getId()+"") ;
+				builder.setMessage(messageBody) ;
+			}
+		}
+	}
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -182,6 +248,147 @@ public class HostRecordListActivity extends Activity {
 			}
 		}
 	}
+
+	private class ListItemOnClickListener implements AdapterView.OnItemClickListener {
+
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
+			Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
+			ResourceRecord clickedRR = null ;
+			if (position!=0) {
+				clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
+			} else {
+				clickedRR = new ResourceRecord() ;
+			}
+			clickedRR.setHostName(hostName) ;
+			clickedRR.setDomainName(domainName) ;
+			rrDetailsActivity.putExtra("rrData", clickedRR) ;
+			startActivity(rrDetailsActivity) ;
+		}
+	}
+
+	private class ListItemOnLongClickListener implements AdapterView.OnItemLongClickListener {
+		/* (non-Javadoc)
+		 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
+		public boolean onItemLongClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
+
+			final int itemPosition = position ;
+			AlertDialog.Builder builder = new AlertDialog.Builder(HostRecordListActivity.this) ;
+			builder.setTitle(R.string.rr_list_delete_dialog_title) ;
+			builder.setMessage(R.string.rr_list_delete_dialog_message) ;
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+					ResourceRecord selected = (ResourceRecord) ((ListView)findViewById(R.id.rrListView)).getItemAtPosition(itemPosition) ;
+					new RRListApiItemDeleteTask().execute(selected) ;
+				}
+			}) ;
+			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss() ;
+				}
+			}) ;
+			builder.show() ;
+			return true;
+		}
+	}
+
+	private class RRListAdapter extends BaseAdapter {
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
+			listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
+
+			TextView hostItem = new TextView(parent.getContext()) ;
+			hostItem.setTextColor(Color.WHITE) ;
+			hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
+			hostItem.setBackgroundColor(Color.TRANSPARENT) ;
+
+			@SuppressWarnings("unchecked")
+			ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+				
+				public boolean evaluate(Object object) {
+					ResourceRecord current = (ResourceRecord) object ;
+					if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+						return true ;
+					} else {
+						return false;
+					}
+				}
+			}) ;
+
+			if (position==0) {
+				hostItem.setText("[New RR]") ;
+			} else {
+				TextView rrType = new TextView(getBaseContext()) ;
+				rrType.setBackgroundDrawable(getResources().getDrawable(R.drawable.type_background)) ;
+				rrType.setTextColor(Color.WHITE) ;
+				rrType.setText(ResourceRecord.getTypeAsString(filteredList.get(position-1).getType())) ;
+				rrType.setGravity(Gravity.CENTER) ;
+				listItemLayout.addView(rrType) ;
+				
+				ResourceRecord currentRR = filteredList.get(position-1);
+
+				Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
+				if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
+					Log.d(TAG, "Country Code is: "+currentRR.getCountryId()) ;
+					indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
+				}
+
+				ImageView geoIndicator = new ImageView(getBaseContext()) ;
+				geoIndicator.setImageDrawable(indicatorIcon) ;
+				listItemLayout.addView(geoIndicator) ;
+
+				hostItem.setText(currentRR.getAnswer()) ;
+			}
+			listItemLayout.addView(hostItem) ;
+			return listItemLayout ;
+		}
+		
+		public long getItemId(int position) {
+			return position+300 ;
+		}
+		
+		public Object getItem(int position) {
+
+			@SuppressWarnings("unchecked")
+			ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+				
+				public boolean evaluate(Object object) {
+					ResourceRecord current = (ResourceRecord) object ;
+					if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+						return true ;
+					} else {
+						return false;
+					}
+				}
+			}) ;
+			return filteredList.get(position-1) ;
+		}
+		
+		public int getCount() {
+
+			@SuppressWarnings("unchecked")
+			ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
+				
+				public boolean evaluate(Object object) {
+					ResourceRecord current = (ResourceRecord) object ;
+					if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
+						return true ;
+					} else {
+						return false;
+					}
+				}
+			}) ;
+			return filteredList.size()+1 ;
+		}
+
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -199,115 +406,10 @@ public class HostRecordListActivity extends Activity {
 
 		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
 		rrListView = (ListView) findViewById(R.id.rrListView) ;
-		rrListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			/* (non-Javadoc)
-			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
-			 */
-			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
-				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
-				ResourceRecord clickedRR = null ;
-				if (position!=0) {
-					clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
-				} else {
-					clickedRR = new ResourceRecord() ;
-				}
-				clickedRR.setHostName(hostName) ;
-				clickedRR.setDomainName(domainName) ;
-				rrDetailsActivity.putExtra("rrData", clickedRR) ;
-				startActivity(rrDetailsActivity) ;
-			}
-		}) ;
+		rrListView.setOnItemClickListener(new ListItemOnClickListener()) ;
+		rrListView.setOnItemLongClickListener(new ListItemOnLongClickListener()) ;
 
-		rrListView.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View convertView, ViewGroup parent) {
-				LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
-				listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
-
-				TextView hostItem = new TextView(parent.getContext()) ;
-				hostItem.setTextColor(Color.WHITE) ;
-				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
-				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-
-				if (position==0) {
-					hostItem.setText("[New RR]") ;
-				} else {
-					TextView rrType = new TextView(getBaseContext()) ;
-					rrType.setBackgroundDrawable(getResources().getDrawable(R.drawable.type_background)) ;
-					rrType.setTextColor(Color.WHITE) ;
-					rrType.setText(ResourceRecord.getTypeAsString(filteredList.get(position-1).getType())) ;
-					rrType.setGravity(Gravity.CENTER) ;
-					listItemLayout.addView(rrType) ;
-					
-					ResourceRecord currentRR = filteredList.get(position-1);
-
-					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
-					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
-						Log.d(TAG, "Country Code is: "+currentRR.getCountryId()) ;
-						indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
-					}
-
-					ImageView geoIndicator = new ImageView(getBaseContext()) ;
-					geoIndicator.setImageDrawable(indicatorIcon) ;
-					listItemLayout.addView(geoIndicator) ;
-
-					hostItem.setText(currentRR.getAnswer()) ;
-				}
-				listItemLayout.addView(hostItem) ;
-				return listItemLayout ;
-			}
-			
-			public long getItemId(int position) {
-				return position+300 ;
-			}
-			
-			public Object getItem(int position) {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.get(position-1) ;
-			}
-			
-			public int getCount() {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.size()+1 ;
-			}
-		}) ;
+		rrListView.setAdapter(new RRListAdapter()) ;
 
 		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
 		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
@@ -338,145 +440,14 @@ public class HostRecordListActivity extends Activity {
 		hostName = this.getIntent().getExtras().getString("hostName") ;
 		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
-		findViewById(R.id.dnsLogo).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext()) ;
-				builder.setTitle(R.string.open_web_confirmation_title) ;
-				builder.setTitle(R.string.open_web_confirmation_msg) ;
-				builder.setPositiveButton(R.string.open_web_confirmation_yes, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						Uri uri = Uri.parse("http://www.dns.com/") ;
-						startActivity(new Intent(Intent.ACTION_VIEW, uri)) ;
-					}
-				}) ;
-				builder.setNegativeButton(R.string.open_web_confirmation_no, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss() ;
-					}
-				}) ;
-				builder.show() ;
-			}
-		});
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
 		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
 		ListView rrListView = (ListView) findViewById(R.id.rrListView) ;
-		rrListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			/* (non-Javadoc)
-			 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
-			 */
-			public void onItemClick(AdapterView<?> rrListView, View selectedView, int position, long viewId) {
-				Intent rrDetailsActivity = new Intent(getApplicationContext(), RecordDetailActivity.class) ;
-				ResourceRecord clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
-				clickedRR.setHostName(hostName) ;
-				clickedRR.setDomainName(domainName) ;
-				rrDetailsActivity.putExtra("rrData", clickedRR) ;
-				startActivity(rrDetailsActivity) ;
-			}
-		}) ;
-		rrListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			/* (non-Javadoc)
-			 * @see android.widget.AdapterView.OnItemLongClickListener#onItemLongClick(android.widget.AdapterView, android.view.View, int, long)
-			 */
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				
-				return false;
-			}
-		}) ;
+		rrListView.setOnItemClickListener(new ListItemOnClickListener()) ;
+		rrListView.setOnItemLongClickListener(new ListItemOnLongClickListener()) ;
 
-		rrListView.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View convertView, ViewGroup parent) {
-				LinearLayout listItemLayout = new LinearLayout(getBaseContext()) ;
-				listItemLayout.setOrientation(LinearLayout.HORIZONTAL) ;
-
-				TextView hostItem = new TextView(parent.getContext()) ;
-				hostItem.setTextColor(Color.WHITE) ;
-				hostItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
-				hostItem.setBackgroundColor(Color.TRANSPARENT) ;
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-
-				if (position==0) {
-					hostItem.setText("[New RR]") ;
-				} else {
-					TextView rrType = new TextView(getBaseContext()) ;
-					rrType.setBackgroundDrawable(getResources().getDrawable(R.drawable.type_background)) ;
-					rrType.setTextColor(Color.WHITE) ;
-					rrType.setText(ResourceRecord.getTypeAsString(filteredList.get(position-1).getType())) ;
-					rrType.setGravity(Gravity.CENTER) ;
-					listItemLayout.addView(rrType) ;
-					
-					ResourceRecord currentRR = filteredList.get(position-1);
-
-					Drawable indicatorIcon = getResources().getDrawable(R.drawable.globe) ;
-					if (((!currentRR.getCountryId().contentEquals("")) && (!currentRR.getCountryId().contentEquals("null"))) || (currentRR.getGeoGroup()!=null)) {
-						Log.d(TAG, "Country Code is: "+currentRR.getCountryId()) ;
-						indicatorIcon = getResources().getDrawable(R.drawable.pushpin_blue) ;
-					}
-
-					ImageView geoIndicator = new ImageView(getBaseContext()) ;
-					geoIndicator.setImageDrawable(indicatorIcon) ;
-					listItemLayout.addView(geoIndicator) ;
-
-					hostItem.setText(currentRR.getAnswer()) ;
-				}
-				listItemLayout.addView(hostItem) ;
-				return listItemLayout ;
-			}
-			
-			public long getItemId(int position) {
-				return position+300 ;
-			}
-			
-			public Object getItem(int position) {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.get(position-1) ;
-			}
-			
-			public int getCount() {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<ResourceRecord> filteredList = (ArrayList<ResourceRecord>) CollectionUtils.select(rrList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						ResourceRecord current = (ResourceRecord) object ;
-						if (current.getAnswer().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.size()+1 ;
-			}
-		}) ;
+		rrListView.setAdapter(new RRListAdapter()) ;
 
 		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
 		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;

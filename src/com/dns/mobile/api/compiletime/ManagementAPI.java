@@ -495,16 +495,16 @@ public class ManagementAPI extends GenericAPI {
 
 		uriBuilder.append("&rdata="+rdata) ;
 
-		if (geoGroup!=null) {
+		if (geoGroup!=null && (!geoGroup.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
-		if (iso2Code!=null) {
+		if (iso2Code!=null && (!iso2Code.toLowerCase().contains("null"))) {
 			uriBuilder.append("&country_iso2="+geoGroup) ;
 		}
-		if (region!=null) {
+		if (region!=null && (!region.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&region="+region) ;
 		}
-		if (city!=null) {
+		if (city!=null && (!city.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&city="+city) ;
 		}
 		if (ttl!=null) {
@@ -576,16 +576,16 @@ public class ManagementAPI extends GenericAPI {
 		uriBuilder.append("&priority="+priority) ;
 		uriBuilder.append("&type=SRV") ;
 
-		if (geoGroup!=null) {
+		if (geoGroup!=null && (!geoGroup.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
-		if (iso2Code!=null) {
+		if (iso2Code!=null && (!iso2Code.toLowerCase().contains("null"))) {
 			uriBuilder.append("&country_iso2="+geoGroup) ;
 		}
-		if (region!=null) {
+		if (region!=null && (!region.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&region="+region) ;
 		}
-		if (city!=null) {
+		if (city!=null && (!city.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&city="+city) ;
 		}
 		if (ttl!=null) {
@@ -641,16 +641,16 @@ public class ManagementAPI extends GenericAPI {
 
 		uriBuilder.append("&rdata="+rdata) ;
 
-		if (geoGroup!=null) {
+		if (geoGroup!=null && (!geoGroup.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
-		if (iso2Code!=null) {
+		if (iso2Code!=null && (!iso2Code.toLowerCase().contains("null"))) {
 			uriBuilder.append("&country_iso2="+geoGroup) ;
 		}
-		if (region!=null) {
+		if (region!=null && (!region.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&region="+region) ;
 		}
-		if (city!=null) {
+		if (city!=null && (!city.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&city="+city) ;
 		}
 		if (ttl!=null) {
@@ -750,16 +750,16 @@ public class ManagementAPI extends GenericAPI {
 
 		uriBuilder.append("&rdata="+rdata) ;
 
-		if (geoGroup!=null) {
+		if (geoGroup!=null && (!geoGroup.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&geoGroup="+geoGroup) ;
 		}
-		if (iso2Code!=null) {
+		if (iso2Code!=null && (!iso2Code.toLowerCase().contains("null"))) {
 			uriBuilder.append("&country_iso2="+geoGroup) ;
 		}
-		if (region!=null) {
+		if (region!=null && (!region.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&region="+region) ;
 		}
-		if (city!=null) {
+		if (city!=null && (!city.toLowerCase().contentEquals("null"))) {
 			uriBuilder.append("&city="+city) ;
 		}
 		if (ttl!=null) {

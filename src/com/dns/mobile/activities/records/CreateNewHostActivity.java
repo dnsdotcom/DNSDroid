@@ -164,6 +164,10 @@ public class CreateNewHostActivity extends Activity {
 				builder.setTitle(R.string.api_request_failed) ;
 				builder.setMessage(result.toString()) ;
 			}
+
+			findViewById(R.id.saveProgress).setVisibility(View.GONE) ;
+			findViewById(R.id.rrSaveButton).setClickable(true) ;
+			findViewById(R.id.rrSaveButton).setEnabled(true) ;
 		}
 	}
 
@@ -263,6 +267,9 @@ public class CreateNewHostActivity extends Activity {
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) { // The user clicked the save button.
+				v.setEnabled(false) ;
+				v.setClickable(false) ;
+				findViewById(R.id.saveProgress).setVisibility(View.VISIBLE) ;
 				currentRR.setType(ResourceRecord.getTypeForIdentifier(((Spinner)findViewById(R.id.hostType)).getSelectedItem().toString())) ;
 				currentRR.setHostName(((EditText)findViewById(R.id.newHostName)).getText().toString()) ;
 				currentRR.setActive(true) ;

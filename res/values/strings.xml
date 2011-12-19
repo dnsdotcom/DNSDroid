@@ -118,5 +118,9 @@
 	<string name="dnsdroid_code_state_warning">This app is not yet even Alpha quality. Many features are not yet implemented and many of the ones which are will cause a force close. Do not complain about the state of the app as we know it is not functional yet.</string>
 	<string name="ok">OK</string>
 	<string name="code_state_decline">Get me outta here!</string>
+	<string name="rr_list_delete_dialog_title">Are you sure?</string>
+	<string name="rr_list_delete_dialog_message">Pressing OK will delete the selected record and this cannot be undone.</string>
+	<string name="rr_delete_failed_title">Failed to delete resource record</string>
+	<string name="rr_delete_failed_message">There was an error while trying to delete the item ||REPLACE||. Please check your Internet connection and/or try again later.</string>
 </resources>
 
