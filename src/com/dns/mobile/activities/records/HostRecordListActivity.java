@@ -40,13 +40,13 @@ import android.widget.TextView;
 
 public class HostRecordListActivity extends Activity {
 
+	private static final String TAG = "HostRecordListActivity" ;
 	protected ArrayList<ResourceRecord> rrList = null ;
 	protected String filter = new String("") ;
 	protected boolean isDomainGroup = false ;
 	protected String domainName = null ;
 	protected String hostName = null ;
 	protected ListView rrListView = null ;
-	private static final String TAG = "HostRecordListActivity" ;
 
 	private class RRListApiTask extends AsyncTask<String, Void, JSONObject> {
 

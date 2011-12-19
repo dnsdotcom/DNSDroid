@@ -27,6 +27,8 @@ import android.widget.EditText;
 
 public class CreateNewDomainActivity extends Activity {
 
+	private static final String TAG = "CreateNewDomainActivity" ;
+
 	/**
 	 * Handle the API call to create the domain/set up XFR in the background
 	 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -68,13 +70,13 @@ public class CreateNewDomainActivity extends Activity {
 					if (result.getJSONObject("meta").getInt("success")==1) {
 						apiRequestSucceeded = true ;
 					} else {
-						Log.e("DomainGroupsListActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						Log.e(TAG, "API Error: "+result.getJSONObject("meta").getString("error")) ;
 						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
 					}
 				} catch (JSONException jsone) {
-					Log.e("DomainGroupsListActivity", "JSONException encountered while trying to parse domain group list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain group list.", jsone) ;
 					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;

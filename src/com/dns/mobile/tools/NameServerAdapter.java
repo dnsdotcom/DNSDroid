@@ -6,6 +6,7 @@ package com.dns.mobile.tools;
 import com.dns.mobile.activities.tools.NameServerItemLayout;
 import com.dns.mobile.data.NameServers;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,6 +17,7 @@ import android.widget.BaseAdapter;
  */
 public class NameServerAdapter extends BaseAdapter {
 
+	private static final String TAG = "NameServerAdapter" ;
 	private NameServers nameServers = null ;
 	private static NameServerAdapter instance = null ;
 
@@ -23,9 +25,10 @@ public class NameServerAdapter extends BaseAdapter {
 		nameServers = NameServers.getInstance() ;
 	}
 
-	public static NameServerAdapter getInstance() {
+	public synchronized static NameServerAdapter getInstance() {
 		if (instance == null) {
 			instance = new NameServerAdapter() ;
+			Log.d(TAG, "Instantiated the Singleton for NameServerAdapter.") ;
 		}
 		return instance ;
 	}

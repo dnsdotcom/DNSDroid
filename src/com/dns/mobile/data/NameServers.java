@@ -21,14 +21,17 @@ public class NameServers implements Serializable {
 	 */
 	private static final long serialVersionUID = -1710845195608836748L;
 
+	private static final String TAG = "NameServers" ;
+
 	private ArrayList<NameServer> nameServers = null ;
 
 	private SharedPreferences prefs = null ;
 	private static NameServers instance = null ;
 
-	public static NameServers getInstance(Context ctx) {
+	public static synchronized NameServers getInstance(Context ctx) {
 		if (instance==null) {
 			instance = new NameServers(ctx) ;
+			Log.d(TAG, "Instantiated the singleton for NameServers") ;
 		}
 
 		return instance ;

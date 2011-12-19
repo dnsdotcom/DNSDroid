@@ -11,4 +11,5 @@ import android.app.Activity;
  */
 public class GeoGroupsListActivity extends Activity {
 
+	private static final String TAG = "GeoGroupsListActivity" ;
 }

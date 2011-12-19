@@ -34,6 +34,7 @@ import android.widget.TextView;
  */
 public class DomainGroupsListActivity extends Activity {
 
+	private static final String TAG = "DomainGroupsListActivity" ;
 	protected ArrayList<DomainGroup> domainGroupList = null ;
 
 	private class DomainGroupListApiTask extends AsyncTask<Void, Void, JSONObject> {
@@ -73,13 +74,13 @@ public class DomainGroupsListActivity extends Activity {
 					if (result.getJSONObject("meta").getInt("success")==1) {
 						apiRequestSucceeded = true ;
 					} else {
-						Log.e("DomainGroupsListActivity", "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						Log.e(TAG, "API Error: "+result.getJSONObject("meta").getString("error")) ;
 						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 						builder.setTitle(R.string.api_request_failed) ;
 						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
 					}
 				} catch (JSONException jsone) {
-					Log.e("DomainGroupsListActivity", "JSONException encountered while trying to parse domain group list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain group list.", jsone) ;
 					AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext()) ;
 					builder.setTitle(R.string.api_request_failed) ;
 					builder.setMessage(jsone.getLocalizedMessage()) ;
@@ -92,7 +93,7 @@ public class DomainGroupsListActivity extends Activity {
 					for (int x=0; x<data.length(); x++) {
 						JSONObject currentData = data.getJSONObject(x) ;
 						DomainGroup currentGroup = new DomainGroup() ;
-						Log.d("DomainGroupsListActivity", "Adding group '"+currentData.getString("name")+"' to domainGroupList") ;
+						Log.d(TAG, "Adding group '"+currentData.getString("name")+"' to domainGroupList") ;
 						currentGroup.setGroupId(currentData.getLong("id")) ;
 						currentGroup.setName(currentData.getString("name")) ;
 						currentGroup.setMembers(currentData.getLong("num_domains")) ;
@@ -100,9 +101,9 @@ public class DomainGroupsListActivity extends Activity {
 					}
 					findViewById(R.id.groupListView).setVisibility(View.VISIBLE) ;
 					((ListView)findViewById(R.id.groupListView)).invalidateViews() ;
-					Log.d("DomainGroupsListActivity", "Finished parsing JSON response into domainList") ;
+					Log.d(TAG, "Finished parsing JSON response into domainList") ;
 				} catch (JSONException jsone) {
-					Log.e("DomainGroupsListActivity", "JSONException encountered while trying to parse domain list.", jsone) ;
+					Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone) ;
 				}
 			} else {
 				showDialog(R.string.api_request_failed) ;

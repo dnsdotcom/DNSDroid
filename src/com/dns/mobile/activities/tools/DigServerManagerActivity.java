@@ -11,6 +11,7 @@ import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import android.widget.ListView;
  */
 public class DigServerManagerActivity extends Activity {
 
+	private static final String TAG = "DigServerManagerActivity" ;
 	protected NameServers nameServers = null ;
 
 	/* (non-Javadoc)
@@ -37,6 +39,7 @@ public class DigServerManagerActivity extends Activity {
 		ListView serverList = (ListView) findViewById(R.id.digNameServerListView) ;
 		serverList.setEnabled(false) ;
 
+		Log.d(TAG, "Setting up name server list.") ;
 		serverList.setAdapter(NameServerAdapter.getInstance()) ;
 	}
 

@@ -38,6 +38,7 @@ import android.widget.TextView;
  */
 public class DomainListActivity extends Activity {
 
+	private static final String TAG = "DomainListActivity" ;
 	protected ArrayList<Domain> domainList = null ;
 	protected String filter = new String("") ;
 
@@ -77,13 +78,13 @@ public class DomainListActivity extends Activity {
 						if (result.getJSONObject("meta").getInt("success") == 1) {
 							apiRequestSucceeded = true;
 						} else {
-							Log.e("DomainListActivity", "API Error: " + result.getJSONObject("meta").getString("error"));
+							Log.e(TAG, "API Error: " + result.getJSONObject("meta").getString("error"));
 							AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
 							builder.setTitle(R.string.api_request_failed);
 							builder.setMessage(result.getJSONObject("meta").getString("error"));
 						}
 					} catch (JSONException jsone) {
-						Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone);
+						Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone);
 						AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
 						builder.setTitle(R.string.api_request_failed);
 						builder.setMessage(jsone.getLocalizedMessage());
@@ -94,10 +95,10 @@ public class DomainListActivity extends Activity {
 						JSONArray data = result.getJSONArray("data");
 						for (int x = 0; x < data.length(); x++) {
 							JSONObject currentData = data.getJSONObject(x);
-							Log.d("DomainListActivity", "JSON: " + currentData.toString());
+							Log.d(TAG, "JSON: " + currentData.toString());
 							Domain currentDomain = new Domain();
 							currentDomain.setName(currentData.getString("name"));
-							Log.d("DomainListActivity", "Adding domain '" + currentData.getString("name") + "' to domainList");
+							Log.d(TAG, "Adding domain '" + currentData.getString("name") + "' to domainList");
 							currentDomain.setDomainId(currentData.getLong("id"));
 							currentDomain.setGroupedDomain(currentData.getString("mode").contentEquals("group"));
 							if (currentDomain.isGroupedDomain()) {
@@ -107,9 +108,9 @@ public class DomainListActivity extends Activity {
 						}
 						findViewById(R.id.domainListView).setVisibility(View.VISIBLE);
 						((ListView) findViewById(R.id.domainListView)).invalidateViews();
-						Log.d("DomainListActivity", "Finished parsing JSON response into domainList");
+						Log.d(TAG, "Finished parsing JSON response into domainList");
 					} catch (JSONException jsone) {
-						Log.e("DomainListActivity", "JSONException encountered while trying to parse domain list.", jsone);
+						Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone);
 					}
 				} else {
 					showDialog(R.string.api_request_failed);
