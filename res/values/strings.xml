@@ -110,5 +110,7 @@
 	<string name="default_value_priority">5</string>
 	<string name="default_value_srv_port">5222</string>
 	<string name="default_value_retry">7200</string>
+	<string name="domain_group_null_alert_title">The Domain Group name is null!!</string>
+	<string name="domain_group_null_alert_message">Somehow, you got to this screen with a blank domain group name. Press \'OK\' to go back.</string>
 </resources>
 

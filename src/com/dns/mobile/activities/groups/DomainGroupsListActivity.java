@@ -154,9 +154,9 @@ public class DomainGroupsListActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
 				DomainGroup selected = domainGroupList.get(position-1) ;
-				Intent hostListIntent = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class) ;
-				hostListIntent.putExtra("domainGroupName", selected.getName()) ;
-				startActivity(hostListIntent) ;
+				Intent domainGroupDetailsActivity = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class) ;
+				domainGroupDetailsActivity.putExtra("domainGroupName", selected.getName()) ;
+				startActivity(domainGroupDetailsActivity) ;
 			}
 			
 		}) ;
