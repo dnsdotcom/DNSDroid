@@ -15,15 +15,33 @@
     <FrameLayout android:layout_height="wrap_content" android:id="@+id/frameLayout1" 
         android:layout_below="@+id/dnsLogo" android:layout_alignParentLeft="true" 
         android:layout_width="fill_parent" android:background="@color/grey">
-        <TextView android:id="@+id/domainGroupLabel" android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" android:text="@string/ok" android:textColor="@color/white" 
-            android:focusable="false" android:focusableInTouchMode="false" android:visibility="invisible"></TextView>
+
+        <TextView
+            android:id="@+id/domainGroupLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/group_member_activity_label"
+            android:textColor="@color/white" >
+</TextView>
     </FrameLayout>
 
     <ListView
         android:id="@+id/domainGroupMemberList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/frameLayout1" >
+        android:layout_below="@+id/frameLayout1"
+        android:visibility="gone" >
+
     </ListView>
+
+    <ProgressBar
+        android:id="@+id/groupMemberProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

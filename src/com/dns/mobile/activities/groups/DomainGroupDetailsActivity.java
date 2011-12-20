@@ -7,12 +7,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DomainGroupDetailsActivity extends Activity {
 
+	private static final String TAG = "DomainGroupDetailsActivity" ;
 	protected String domainGroupName = null ;
 
 	/** Called when the activity is first created. */
@@ -22,6 +25,9 @@ public class DomainGroupDetailsActivity extends Activity {
 	    setContentView(R.layout.domain_group_details) ;
 
 	    domainGroupName = this.getIntent().getStringExtra("domainGroupName") ;
+	    Log.d(TAG, "Showing options for domain group '"+domainGroupName+"'") ;
+	    String groupDetailsActivityLabel = getResources().getString(R.string.group_member_activity_label) ;
+	    ((TextView)findViewById(R.id.domainGroupLabel)).setText(groupDetailsActivityLabel+" "+domainGroupName) ;
 	    if (domainGroupName==null) {
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
 	    	builder.setTitle(R.string.domain_group_null_alert_title) ;
@@ -44,8 +50,8 @@ public class DomainGroupDetailsActivity extends Activity {
 	    		switch (arg2) {
 	    			case 0: 
 	    				// The user asked to view the list of member domains for this domain group.
-	    				Intent memberActivity = new Intent(DomainGroupDetailsActivity.this, null) ;
-	    				memberActivity.putExtra("domainGroupName", "domainGroupName") ;
+	    				Intent memberActivity = new Intent(DomainGroupDetailsActivity.this, DomainGroupMembersActivity.class) ;
+	    				memberActivity.putExtra("domainGroupName", domainGroupName) ;
 	    				DomainGroupDetailsActivity.this.startActivity(memberActivity) ;
 	    				break ;
 	    			case 1: 

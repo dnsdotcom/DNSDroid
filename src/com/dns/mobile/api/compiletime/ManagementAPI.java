@@ -894,7 +894,7 @@ public class ManagementAPI extends GenericAPI {
 	 * @return A <code>com.dns.mobile.json.JSONObject</code> containing the JSON response or an error code.
 	 */
 	public JSONObject getDomainsInGroup(String group) {
-		StringBuilder uriBuilder = new StringBuilder("/api/getDomainsInGroupg/?") ;
+		StringBuilder uriBuilder = new StringBuilder("/api/getDomainsInGroup/?") ;
 		uriBuilder.append("AUTH_TOKEN="+apiToken) ;
 
 		uriBuilder.append("&group="+group) ;

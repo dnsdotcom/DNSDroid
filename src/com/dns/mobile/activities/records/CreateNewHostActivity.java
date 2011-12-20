@@ -61,6 +61,8 @@ public class CreateNewHostActivity extends Activity {
 				apiHost = "www.dns.com" ;
 			}
 
+			// TODO: Modify this activity to be able to save hosts for a domain group as well as normal domain.
+
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
 			if (isExistingRecord) {
@@ -160,7 +162,7 @@ public class CreateNewHostActivity extends Activity {
 				}
 			} else {
 				Log.e(TAG, "API Call failed.") ;
-				AlertDialog.Builder builder = new AlertDialog.Builder(findViewById(R.id.rr_details_view).getContext()) ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(CreateNewHostActivity.this) ;
 				builder.setTitle(R.string.api_request_failed) ;
 				builder.setMessage(result.toString()) ;
 			}
