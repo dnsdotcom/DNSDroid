@@ -37,4 +37,8 @@
     	<item>Group Settings</item>
     	<item>Delete</item>
     </string-array>
+    <string-array name="domain_group_details_options">
+        <item>Member Domains</item>
+        <item>Records</item>
+    </string-array>
 </resources>

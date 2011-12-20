@@ -65,6 +65,7 @@
 		<activity android:name=".activities.domains.DomainDetails"
 			android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTask"></activity>
+		<activity android:name=".activities.groups.DomainGroupDetailsActivity" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask"></activity>
 	</application>
 
 </manifest>

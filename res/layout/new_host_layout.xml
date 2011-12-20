@@ -68,49 +68,49 @@
 				android:id="@+id/rrTtlLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="3600" android:id="@+id/rrTtlInput" android:inputType="number" />
+				android:text="@string/default_value_ttl" android:id="@+id/rrTtlInput" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/rr_srv_weight_label"
 				android:id="@+id/rrSrvWeightLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="1" android:id="@+id/rrSrvWeight" android:inputType="number" />
+				android:text="@string/default_value_1" android:id="@+id/rrSrvWeight" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/rr_srv_port_label"
 				android:id="@+id/rrSrvPortLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="5222" android:id="@+id/rrSrvPort" android:inputType="number" />
+				android:text="@string/default_value_srv_port" android:id="@+id/rrSrvPort" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/priority_label"
 				android:id="@+id/rrPriorityLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="5" android:id="@+id/rrPriority" android:inputType="number" />
+				android:text="@string/default_value_priority" android:id="@+id/rrPriority" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/rr_retry_label"
 				android:id="@+id/rrRetryLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="7200" android:id="@+id/rrRetryInterval" android:inputType="number" />
+				android:text="@string/default_value_retry" android:id="@+id/rrRetryInterval" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/rr_expire_label"
 				android:id="@+id/rrExpireLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="3600000" android:id="@+id/rrExpire" android:inputType="number" />
+				android:text="@string/default_value_expire" android:id="@+id/rrExpire" android:inputType="number" />
 			<TextView android:visibility="gone" android:layout_height="wrap_content"
 				android:textColor="@color/white" android:textSize="10pt"
 				android:layout_width="wrap_content" android:text="@string/rr_min_label"
 				android:id="@+id/rrMinimumLabel" />
 			<EditText android:visibility="gone" android:layout_weight="1"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:text="172800" android:id="@+id/rrMinimum" android:inputType="number" />
+				android:text="@string/default_value_minTtl" android:id="@+id/rrMinimum" android:inputType="number" />
 			<Button android:layout_height="wrap_content"
 				android:layout_width="wrap_content" android:text="@string/rr_details_save"
 				android:id="@+id/rrSaveButton" />

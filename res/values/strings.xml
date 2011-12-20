@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
-<!-- This file contains resource definitions for displayed strings, allowing
-     them to be changed based on the locale and options. -->
-
 <resources>
     <!-- Simple strings. -->
     <string name="dns_app">DNS.com Mobile</string>
@@ -121,5 +103,12 @@
 	<string name="rr_list_delete_dialog_message">Pressing OK will delete the selected record and this cannot be undone.</string>
 	<string name="rr_delete_failed_title">Failed to delete resource record</string>
 	<string name="rr_delete_failed_message">There was an error while trying to delete the item ||REPLACE||. Please check your Internet connection and/or try again later.</string>
+	<string name="default_value_1">1</string>
+	<string name="default_value_minTtl">172800</string>
+	<string name="default_value_ttl">3600</string>
+	<string name="default_value_expire">3600000</string>
+	<string name="default_value_priority">5</string>
+	<string name="default_value_srv_port">5222</string>
+	<string name="default_value_retry">7200</string>
 </resources>
 

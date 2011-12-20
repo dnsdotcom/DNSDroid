@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.dns.mobile.R;
-import com.dns.mobile.activities.records.HostListActivity;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.DomainGroup;
 import com.dns.mobile.util.LogoOnClickListener;
@@ -111,6 +110,35 @@ public class DomainGroupsListActivity extends Activity {
 		}
 	}
 
+	private class DomainGroupAdapter extends BaseAdapter {
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView domainItem = new TextView(parent.getContext()) ;
+			domainItem.setTextColor(Color.WHITE) ;
+			domainItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
+			domainItem.setBackgroundColor(Color.TRANSPARENT) ;
+			domainItem.setWidth(LayoutParams.FILL_PARENT) ;
+			if (position==0) {
+				domainItem.setText("[New Group]") ;
+			} else {
+				DomainGroup currentDomain = domainGroupList.get(position-1);
+				domainItem.setText(currentDomain.getName());
+			}
+			return domainItem ;
+		}
+		
+		public long getItemId(int position) {
+			return position+400 ;
+		}
+		
+		public Object getItem(int position) {
+			return domainGroupList.get(position-1) ;
+		}
+		
+		public int getCount() {
+			return domainGroupList.size()+1 ;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -126,9 +154,8 @@ public class DomainGroupsListActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
 				DomainGroup selected = domainGroupList.get(position-1) ;
-				Intent hostListIntent = new Intent(getApplicationContext(), HostListActivity.class) ;
-				hostListIntent.putExtra("domainName", selected.getName()) ;
-				hostListIntent.putExtra("isDomainGroup", true) ;
+				Intent hostListIntent = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class) ;
+				hostListIntent.putExtra("domainGroupName", selected.getName()) ;
 				startActivity(hostListIntent) ;
 			}
 			
@@ -142,35 +169,7 @@ public class DomainGroupsListActivity extends Activity {
 			
 		}) ;
 
-		domainListView.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View convertView, ViewGroup parent) {
-				TextView domainItem = new TextView(parent.getContext()) ;
-				domainItem.setTextColor(Color.WHITE) ;
-				domainItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
-				domainItem.setBackgroundColor(Color.TRANSPARENT) ;
-				domainItem.setWidth(LayoutParams.FILL_PARENT) ;
-				if (position==0) {
-					domainItem.setText("[New Group]") ;
-				} else {
-					DomainGroup currentDomain = domainGroupList.get(position-1);
-					domainItem.setText(currentDomain.getName());
-				}
-				return domainItem ;
-			}
-			
-			public long getItemId(int position) {
-				return position+400 ;
-			}
-			
-			public Object getItem(int position) {
-				return domainGroupList.get(position-1) ;
-			}
-			
-			public int getCount() {
-				return domainGroupList.size()+1 ;
-			}
-		}) ;
+		domainListView.setAdapter(new DomainGroupAdapter()) ;
 
 		new DomainGroupListApiTask().execute() ;
 	}

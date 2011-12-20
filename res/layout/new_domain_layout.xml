@@ -39,7 +39,7 @@
 	    android:layout_width="fill_parent" android:textColor="@color/white" android:textSize="18dp" android:layout_alignParentLeft="true" 
 	    android:text="@string/rr_ttl_label" android:visibility="gone"></TextView>
 	<EditText android:id="@+id/ttlValue" android:layout_below="@+id/ttlLabel" android:layout_height="wrap_content" 
-	    android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:inputType="number" android:text="3600" 
+	    android:layout_alignParentLeft="true" android:layout_width="fill_parent" android:inputType="number" android:text="@string/default_value_ttl" 
 	    android:visibility="gone"></EditText>
 	<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/ttlValue" 
 	    android:text="@string/string_save" android:layout_centerHorizontal="true" android:id="@+id/saveNewDomain"></Button>
