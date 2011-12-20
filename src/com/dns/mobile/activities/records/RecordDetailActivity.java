@@ -276,12 +276,13 @@ public class RecordDetailActivity extends Activity {
 		setContentView(R.layout.rr_details_view) ;
 		currentRR = (ResourceRecord) this.getIntent().getSerializableExtra("rrData") ;
 		if (currentRR.getAnswer()==null) {
+			Log.d(TAG, "No RR was passed in the calling Intent.") ;
 			currentRR.setType(1) ;
 			isExistingRecord = false ;
 		}
 		hostName = currentRR.getHostName() ;
 		domainName = currentRR.getDomainName() ;
-		Log.d(TAG,"Setting host/domain name to: "+hostName+"/"+domainName+" and displaying RR: "+currentRR.getId()) ;
+		Log.d(TAG,"Setting host/domain name to: "+hostName+"/"+domainName+" with type '"+currentRR.getType()+"' and displaying RR: "+currentRR.getId()) ;
 
 		((Button)findViewById(R.id.rrSaveButton)).setOnClickListener(new SaveOnClickListener()) ;
 

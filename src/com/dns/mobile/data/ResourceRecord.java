@@ -156,11 +156,11 @@ public class ResourceRecord implements Serializable {
 			this.type = 5 ;
 		} else if (type.contentEquals("SRV")) {
 			this.type = 33 ;
-		} else if (type.contentEquals("302")) {
+		} else if (type.contentEquals("URL") || type.contains("302")) {
 			this.type = 80000 ;
-		} else if (type.contentEquals("301")) {
+		} else if (type.contains("301")) {
 			this.type = 80001 ;
-		} else if (type.contentEquals("FRAME")) {
+		} else if (type.contains("FRAME")) {
 			this.type = 80002 ;
 		} else {
 			Log.e("ResourceRecord", "Unknown record type '"+type+"'") ;
@@ -356,13 +356,13 @@ public class ResourceRecord implements Serializable {
 				retVal = "SRV" ;
 				break ;
 			case 80000:
-				retVal = "302" ;
+				retVal = "URL302" ;
 				break ;
 			case 80001:
-				retVal = "301" ;
+				retVal = "URL301" ;
 				break ;
 			case 80002:
-				retVal = "FRAME" ;
+				retVal = "URLFRAME" ;
 				break ;
 		}
 		return retVal ;

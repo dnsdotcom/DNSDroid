@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent" android:background="@color/red">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent" 
+    android:orientation="vertical" android:background="@color/red" android:weightSum="1" 
+    android:id="@+id/dns_activity_layout">
     <ImageView android:layout_height="wrap_content" android:layout_width="wrap_content" 
         android:contentDescription="@string/dns_logo_description"
         android:src="@drawable/dns_android_banner" android:layout_alignParentTop="true" 
@@ -18,5 +18,4 @@
     <ListView android:layout_width="fill_parent" 
 	    android:layout_below="@+id/frameLayout1" android:layout_alignParentLeft="true" 
 	    android:id="@+id/domainDetailsOptionList" android:entries="@array/domain_details_options" android:layout_height="fill_parent"></ListView>
-    
 </RelativeLayout>

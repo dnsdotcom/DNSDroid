@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Copyright (C) 2011, Comodo Group, Inc. & DNS.com, LLC
-	All Rights Reserved
--->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical" android:background="@color/red" android:weightSum="1" android:id="@+id/domain_hosts_activity">

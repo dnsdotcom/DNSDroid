@@ -20,9 +20,9 @@
         <item>TXT</item>
         <item>AAAA</item>
         <item>SRV</item>
-        <item>URL(302)</item>
-        <item>URL(301)</item>
-        <item>URL(FRAME)</item>
+        <item>URL302</item>
+        <item>URL301</item>
+        <item>FRAME</item>
     </string-array>
     <string-array name="nameServers">
     	<item>ns1.dns.com</item>
