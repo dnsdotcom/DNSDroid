@@ -171,6 +171,9 @@ public class CreateNewHostActivity extends Activity {
 						case Type.A:
 							retVal = api.createARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
 							break ;
+						case Type.NS:
+							retVal = api.createNSRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+							break ;
 						case Type.AAAA:
 							retVal = api.createAAAARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
 							break ;
