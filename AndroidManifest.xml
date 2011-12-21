@@ -5,7 +5,7 @@
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="4"
 		android:maxSdkVersion="12"></uses-sdk>
-	<application android:label="@string/dns_app" android:icon="@drawable/dns_launcher_icon">
+	<application android:label="@string/dns_app" android:icon="@drawable/dns_launcher_icon" android:theme="@android:style/Theme.NoTitleBar" android:description="@string/dns_mobile_description">
 
 		<!-- An Activity in the application - this is something the user can launch 
 			and interact with. The "name" attribute is the name of the class within your 
@@ -65,8 +65,14 @@
 		<activity android:name=".activities.domains.DomainDetails"
 			android:theme="@android:style/Theme.NoTitleBar"
 			android:launchMode="singleTask"></activity>
-		<activity android:name=".activities.groups.DomainGroupDetailsActivity" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask"></activity>
-		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.groups.DomainGroupMembersActivity" android:launchMode="singleTask"></activity>
+		<activity android:name=".activities.groups.DomainGroupDetailsActivity" 
+		    android:theme="@android:style/Theme.NoTitleBar" 
+		    android:launchMode="singleTask"></activity>
+		<activity android:theme="@android:style/Theme.NoTitleBar" 
+		    android:name=".activities.groups.DomainGroupMembersActivity" 
+		    android:launchMode="singleTask"></activity>
+		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.groups.GroupedDomainSelectActivity"></activity>
+		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.geo.GeoGroupsListActivity"></activity>
 	</application>
 
 </manifest>

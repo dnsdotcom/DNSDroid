@@ -3,6 +3,8 @@
  */
 package com.dns.mobile.activities.geo;
 
+import com.dns.mobile.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,5 +25,6 @@ public class GeoGroupsListActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "Starting the GeoGroupsListActivity") ;
+		setContentView(R.layout.geo_groups_activity) ;
 	}
 }

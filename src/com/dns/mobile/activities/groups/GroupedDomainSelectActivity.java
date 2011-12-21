@@ -1,4 +1,4 @@
-package com.dns.mobile.activities.domains;
+package com.dns.mobile.activities.groups;
 
 import java.util.ArrayList;
 import org.apache.commons.collections.CollectionUtils;
@@ -11,7 +11,8 @@ import com.dns.mobile.data.Domain;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -36,11 +37,13 @@ import android.widget.TextView;
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
  *
  */
-public class DomainListActivity extends Activity {
+public class GroupedDomainSelectActivity extends Activity {
 
 	private static final String TAG = "GroupedDomainSelectActivity" ;
 	protected ArrayList<Domain> domainList = null ;
 	protected String filter = new String("") ;
+	protected String domainGroup = null ;
+	protected ProgressDialog busyDialog = null ;
 
 	private class DomainListApiTask extends AsyncTask<Void, Void, JSONObject> {
 		/* (non-Javadoc)
@@ -121,6 +124,79 @@ public class DomainListActivity extends Activity {
 		}
 	}
 
+	private class AddDomainToGroupTask extends AsyncTask<Domain, Void, Domain> {
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected Domain doInBackground(Domain... params) {
+
+			Domain selected = params[0] ;
+			selected.setGroupedDomain(true) ;
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
+			} else {
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
+			}
+
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
+			Log.d(TAG, "Sending API request to add '"+selected.getName()+"' to domain group '"+domainGroup+"'") ;
+			JSONObject result = api.assignDomainMode(selected.getName(), "group", domainGroup) ;
+
+			try {
+				if (result.has("meta")) {
+					if (result.getJSONObject("meta").getInt("success")==1) {
+						selected.setGroupedDomain(false) ;
+					}
+				}
+			} catch (JSONException jsone) {
+				Log.e(TAG, "JSONException encountered parsing domain group removal result", jsone) ;
+			}
+
+			return selected ;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(Domain result) {
+			super.onPostExecute(result);
+			busyDialog.dismiss() ;
+			if (result.isGroupedDomain()) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(GroupedDomainSelectActivity.this) ;
+				String message = "'"+result.getName()+"' "+getResources().getString(R.string.add_group_member_fail_message)+" '"+domainGroup+"'" ;
+				builder.setTitle(R.string.add_group_member_fail_title) ;
+				builder.setMessage(message) ;
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(GroupedDomainSelectActivity.this) ;
+				String message = "'"+result.getName()+"' "+getResources().getString(R.string.add_group_member_success_message)+" '"+domainGroup+"'" ;
+				builder.setTitle(R.string.add_group_member_success_title) ;
+				builder.setMessage(message) ;
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+			findViewById(R.id.domainListProgressBar).setVisibility(View.GONE) ;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -130,33 +206,18 @@ public class DomainListActivity extends Activity {
 		setContentView(R.layout.domain_list_activity) ;
 		domainList = new ArrayList<Domain>() ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		domainGroup = this.getIntent().getStringExtra("domainGroup") ;
 
 		ListView domainListView = (ListView) findViewById(R.id.domainListView) ;
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				if (position!=0) {
-					Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
-					if (selected.isGroupedDomain()) {
-						// TODO: Add Intent for showing the members of the associated domain group
-					} else {
-						Intent hostListIntent = new Intent(getApplicationContext(), DomainDetails.class);
-						hostListIntent.putExtra("domainName", ((TextView) selectedView).getText().toString());
-						hostListIntent.putExtra("isDomainGroup", domainList.get(position - 1).isGroupedDomain());
-						startActivity(hostListIntent);
-					}
-				} else {
-					Intent newDomainIntent = new Intent(getApplicationContext(), CreateNewDomainActivity.class) ;
-					startActivity(newDomainIntent) ;
-				}
-			}
-			
-		}) ;
-		domainListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-			public boolean onItemLongClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				
-				return false;
+				busyDialog = new ProgressDialog(GroupedDomainSelectActivity.this) ;
+				Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
+				busyDialog.setTitle(R.string.domain_group_add_busy_title) ;
+				busyDialog.setIndeterminate(true) ;
+				busyDialog.show() ;
+				new AddDomainToGroupTask().execute(selected) ;
 			}
 			
 		}) ;
@@ -183,12 +244,8 @@ public class DomainListActivity extends Activity {
 					}
 				}) ;
 
-				if (position==0) {
-					domainItem.setText("[New Domain]") ;
-				} else {
-					Domain currentDomain = filteredList.get(position-1);
-					domainItem.setText(currentDomain.getName());
-				}
+				Domain currentDomain = filteredList.get(position);
+				domainItem.setText(currentDomain.getName());
 				return domainItem ;
 			}
 
@@ -210,7 +267,7 @@ public class DomainListActivity extends Activity {
 						}
 					}
 				}) ;
-				return filteredList.get(position-1) ;
+				return filteredList.get(position) ;
 			}
 			
 			public int getCount() {
@@ -228,7 +285,7 @@ public class DomainListActivity extends Activity {
 					}
 				}) ;
 
-				return filteredList.size()+1 ;
+				return filteredList.size() ;
 			}
 		}) ;
 

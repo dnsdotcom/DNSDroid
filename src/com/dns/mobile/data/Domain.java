@@ -102,14 +102,7 @@ public class Domain implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Domain other = (Domain) obj;
-		if (domainGroup == null) {
-			if (other.domainGroup != null)
-				return false;
-		} else if (!domainGroup.equals(other.domainGroup))
-			return false;
 		if (domainId != other.domainId)
-			return false;
-		if (isGroupedDomain != other.isGroupedDomain)
 			return false;
 		if (name == null) {
 			if (other.name != null)

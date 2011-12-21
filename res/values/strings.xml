@@ -115,5 +115,16 @@
 	<string name="group_member_api_failed_title">Data error</string>
 	<string name="group_member_api_failed_message">Unable to retrieve the domain group members list from the DNS.com site. Press \'OK\' to go back and try again.</string>
 	<string name="group_member_activity_label">Domain Group:</string>
+	<string name="group_member_delete_dialog_title">Confirm Removal From Group</string>
+	<string name="group_member_delete_dialog_message">will be removed from the group if you press \'OK\'. The records which are associated with this domain will be put back into active service and host/record changes will have to be made on that domain independent of the group.</string>
+	<string name="remove_group_member_fail_title">Member Removal Failed</string>
+	<string name="remove_group_member_fail_message">was not successfully removed from the domain group</string>
+	<string name="add_group_member_fail_title">Member Addition Failed</string>
+	<string name="add_group_member_fail_message">was not added to the domain group</string>
+	<string name="add_group_member_success_title">Member Addition Complete</string>
+	<string name="add_group_member_success_message">was successfully added to the domain group</string>
+	<string name="dns_mobile_app_description">Manage your DNS.com domains, domain groups, and GeoDNS right from your Android device.</string>
+	<string name="domain_group_add_busy_title">Adding</string>
+	<string name="nothing_here_yet">Nothing Here Yet!!</string>
 </resources>
 
