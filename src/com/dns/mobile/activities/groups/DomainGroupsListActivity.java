@@ -41,9 +41,15 @@ public class DomainGroupsListActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
 				Log.d(TAG, "Item at position '"+position+"' pressed.") ;
-				DomainGroup selected = domainGroupList.get(position-1) ;
-				Intent domainGroupDetailsActivity = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class) ;
-				domainGroupDetailsActivity.putExtra("domainGroupName", selected.getName()) ;
+				DomainGroup selected ;
+				Intent domainGroupDetailsActivity ;
+				if (position>0) {
+					selected = domainGroupList.get(position - 1);
+					domainGroupDetailsActivity = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class);
+					domainGroupDetailsActivity.putExtra("domainGroupName", selected.getName()) ;
+				} else {
+					domainGroupDetailsActivity = new Intent(getApplicationContext(), CreateNewDomainGroup.class) ;
+				}
 				startActivity(domainGroupDetailsActivity) ;
 			}
 			

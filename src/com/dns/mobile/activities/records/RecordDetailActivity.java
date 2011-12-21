@@ -13,6 +13,7 @@ import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -38,6 +39,7 @@ public class RecordDetailActivity extends Activity {
 	protected String domainName = null ;
 	protected String hostName = null ;
 	protected boolean isExistingRecord = true ;
+	protected ProgressDialog busyDialog = null ;
 
 	/**
 	 * A class which extends the AsyncTask AbstractClass to perform network operations in the background.
@@ -122,7 +124,7 @@ public class RecordDetailActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 
-			RecordDetailActivity.this.findViewById(R.id.rrSaveProgress).setVisibility(View.GONE) ;
+			busyDialog.dismiss() ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -156,7 +158,9 @@ public class RecordDetailActivity extends Activity {
 		
 		public void onClick(View v) {
 			Log.d(TAG, "User pressed save.") ;
-			RecordDetailActivity.this.findViewById(R.id.rrSaveProgress).setVisibility(View.VISIBLE) ;
+			busyDialog = new ProgressDialog(RecordDetailActivity.this) ;
+			busyDialog.setTitle(R.string.saving) ;
+			busyDialog.show() ;
 			currentRR.setType(Type.value(((Spinner)findViewById(R.id.rrTypeSpinner)).getSelectedItem().toString())) ;
 			currentRR.setActive(true) ;
 			currentRR.setAnswer(((EditText)findViewById(R.id.rrAnswer)).getText().toString()) ;

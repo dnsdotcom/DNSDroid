@@ -73,6 +73,7 @@
 		    android:launchMode="singleTask"></activity>
 		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.groups.GroupedDomainSelectActivity"></activity>
 		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.geo.GeoGroupsListActivity"></activity>
+		<activity android:theme="@android:style/Theme.NoTitleBar" android:name=".activities.groups.CreateNewDomainGroup"></activity>
 	</application>
 
 </manifest>

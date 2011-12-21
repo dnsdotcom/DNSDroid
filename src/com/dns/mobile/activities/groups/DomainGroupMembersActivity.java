@@ -58,27 +58,32 @@ public class DomainGroupMembersActivity extends Activity {
 			JSONObject domainGroups = api.getDomainsInGroup(dgName) ;
 			Log.d(TAG, "Got API response with content: \n"+domainGroups.toString()) ;
 
-			ArrayList<Domain> domainArray = new ArrayList<Domain>() ;
 			try {
 				if (domainGroups.has("meta")) {
-					JSONArray jsonDomains = domainGroups.getJSONArray("data") ;
-					for (int x=0; x<jsonDomains.length(); x++) {
-						JSONObject entry = jsonDomains.getJSONObject(x) ;
-						Domain current = new Domain() ;
-						current.setDomainGroup(dgName) ;
-						current.setDomainId(entry.getInt("id")) ;
-						current.setGroupedDomain(true) ;
-						current.setName(entry.getString("name")) ;
+					if (domainGroups.getJSONObject("meta").getInt("success")==1) {
+						ArrayList<Domain> domainArray = new ArrayList<Domain>() ;
+						if (domainGroups.has("data")) {
+							JSONArray jsonDomains = domainGroups
+									.getJSONArray("data");
+							for (int x = 0; x < jsonDomains.length(); x++) {
+								JSONObject entry = jsonDomains.getJSONObject(x);
+								Domain current = new Domain();
+								current.setDomainGroup(dgName);
+								current.setDomainId(entry.getInt("id"));
+								current.setGroupedDomain(true);
+								current.setName(entry.getString("name"));
 
-						domainArray.add(current) ;
+								domainArray.add(current);
+							}
+						}
+						return domainArray ;
 					}
 				}
 			} catch (JSONException jsone) {
 				Log.e(TAG, "", jsone) ;
-				domainArray = null ;
 			}
 			
-			return domainArray ;
+			return null ;
 		}
 
 		/* (non-Javadoc)

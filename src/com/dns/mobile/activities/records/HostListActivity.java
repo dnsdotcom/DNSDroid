@@ -426,27 +426,29 @@ public class HostListActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem addToGroup = menu.add(Menu.NONE, 0, 0, "Add To Group");
-		addToGroup.setIcon(android.R.drawable.ic_menu_add) ;
-		MenuItem disableDomain = menu.add(Menu.NONE, 1, 1, "Delete Domain");
-		disableDomain.setIcon(android.R.drawable.ic_menu_delete) ;
-		MenuItem refreshHosts = menu.add(Menu.NONE, 2, 2, "Refresh");
+		if (!isDomainGroup) {
+			MenuItem setXfr = menu.add(Menu.NONE, 1, 1, "Zone Transfer");
+			setXfr.setIcon(android.R.drawable.ic_menu_upload) ;
+			MenuItem addToGroup = menu.add(Menu.NONE, 2, 2, "Add To Group");
+			addToGroup.setIcon(android.R.drawable.ic_menu_add);
+			MenuItem disableDomain = menu.add(Menu.NONE, 3, 3, "Delete Domain");
+			disableDomain.setIcon(android.R.drawable.ic_menu_delete);
+		}
+		MenuItem refreshHosts = menu.add(Menu.NONE, 0, 0, "Refresh");
 		refreshHosts.setIcon(R.drawable.ic_menu_refresh) ;
-		MenuItem setXfr = menu.add(Menu.NONE, 3, 3, "Zone Transfer");
-		setXfr.setIcon(android.R.drawable.ic_menu_upload) ;
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case 0:
+			case 2:
 				// TODO: Move to domain group logic
 				return true ;
 			case 1:
-				// TODO: Domain delete logic.
+				// TODO: Zone Transfer Logic
 				return true ;
-			case 2:
+			case 0:
 				findViewById(R.id.hostListView).setVisibility(View.GONE) ;
 				findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
 				hostList.clear() ;

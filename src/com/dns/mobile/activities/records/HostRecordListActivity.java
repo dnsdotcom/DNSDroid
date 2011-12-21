@@ -11,6 +11,7 @@ import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ public class HostRecordListActivity extends Activity {
 	protected String domainName = null ;
 	protected String hostName = null ;
 	protected ListView rrListView = null ;
+	protected ProgressDialog busyDialog = null ;
 
 	private class RRListApiItemDeleteTask extends AsyncTask<ResourceRecord, Void, ResourceRecord> {
 		/* (non-Javadoc)
@@ -101,7 +103,7 @@ public class HostRecordListActivity extends Activity {
 			super.onPostExecute(result);
 
 			Log.d(TAG, "onPostExecute for item delete.") ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
+			busyDialog.dismiss() ;
 			if (result.isActive()) {
 				Log.d(TAG, "result record is marked as active.") ;
 				int itemIndex = rrList.indexOf(result) ;
@@ -149,7 +151,7 @@ public class HostRecordListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.rrListProgressBar).setVisibility(View.GONE) ;
+			busyDialog.dismiss() ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -288,7 +290,9 @@ public class HostRecordListActivity extends Activity {
 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
-					findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+					busyDialog = new ProgressDialog(HostRecordListActivity.this) ;
+					busyDialog.setTitle(R.string.deleting) ;
+					busyDialog.show() ;
 					ResourceRecord selected = (ResourceRecord) ((ListView)findViewById(R.id.rrListView)).getItemAtPosition(itemPosition) ;
 					selected.setActive(true) ;
 					new RRListApiItemDeleteTask().execute(selected) ;
@@ -418,8 +422,10 @@ public class HostRecordListActivity extends Activity {
 
 		rrListView.setAdapter(new RRListAdapter()) ;
 
-		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
-		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+
+		busyDialog = new ProgressDialog(HostRecordListActivity.this) ;
+		busyDialog.setTitle(R.string.loading) ;
+		busyDialog.show() ;
 		new RRListApiTask().execute(domainName, hostName) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
@@ -447,8 +453,9 @@ public class HostRecordListActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case 0:
-				findViewById(R.id.rrListView).setVisibility(View.GONE) ;
-				findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
+				busyDialog = new ProgressDialog(HostRecordListActivity.this) ;
+				busyDialog.setTitle(R.string.loading) ;
+				busyDialog.show() ;
 				rrList.clear() ;
 				new RRListApiTask().execute(domainName, hostName) ;
 				return true;

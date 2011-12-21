@@ -10,6 +10,7 @@ import com.dns.mobile.util.LogoOnClickListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -29,6 +30,7 @@ public class CreateNewHostActivity extends Activity {
 	protected ResourceRecord currentRR = new ResourceRecord() ;
 	protected String domainName = null ;
 	protected boolean isExistingRecord = false ;
+	protected ProgressDialog busyDialog = null ;
 
 	/**
 	 * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -213,6 +215,9 @@ public class CreateNewHostActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 
+			if (busyDialog!=null) {
+				busyDialog.dismiss() ;
+			}
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -246,7 +251,6 @@ public class CreateNewHostActivity extends Activity {
 				builder.setMessage(result.toString()) ;
 			}
 
-			findViewById(R.id.saveProgress).setVisibility(View.GONE) ;
 			findViewById(R.id.rrSaveButton).setClickable(true) ;
 			findViewById(R.id.rrSaveButton).setEnabled(true) ;
 		}
@@ -278,7 +282,10 @@ public class CreateNewHostActivity extends Activity {
 			public void onClick(View v) { // The user clicked the save button.
 				v.setEnabled(false) ;
 				v.setClickable(false) ;
-				findViewById(R.id.saveProgress).setVisibility(View.VISIBLE) ;
+				busyDialog = new ProgressDialog(CreateNewHostActivity.this) ;
+				busyDialog.setTitle(R.string.saving) ;
+				busyDialog.setIndeterminate(true) ;
+				busyDialog.show() ;
 				currentRR.setType(ResourceRecord.getTypeForIdentifier(((Spinner)findViewById(R.id.hostType)).getSelectedItem().toString())) ;
 				currentRR.setHostName(((EditText)findViewById(R.id.newHostName)).getText().toString()) ;
 				currentRR.setActive(true) ;

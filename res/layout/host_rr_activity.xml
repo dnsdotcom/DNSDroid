@@ -21,9 +21,6 @@
     	android:layout_above="@id/helpText">
         <requestFocus></requestFocus>
     </ListView>
-    <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" 
-    	android:id="@+id/rrListProgressBar" android:layout_gravity="center" android:focusable="false" 
-    	android:focusableInTouchMode="false" android:layout_centerInParent="true"></ProgressBar>
     <TextView android:layout_height="wrap_content" android:id="@+id/helpText" 
     	android:text="@string/screen_bottom_help_text" android:layout_width="fill_parent" 
     	android:layout_gravity="center_horizontal" android:background="@color/dark_grey" 

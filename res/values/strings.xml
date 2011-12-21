@@ -31,7 +31,6 @@
 	<string name="configuration_token_dialog_title">Enter the authorization token from the Settings->API Settings page on the DNS.com web site.</string>
 	<string name="configuration_sandbox_summary">Checking this box will cause the application to use the DNS.com sandbox instead of live production data. You can use this to test access to DNS.com from the app without making real changes.</string>
 	<string name="screen_bottom_help_text">Long press to delete items</string>
-	<string name="api_request_failed">API request failed</string>
 	<string name="domain_groups_list_label">My Domain Groups</string>
 	<string name="rr_type_selection_label">Record Type</string>
 	<string name="rr_answer_label">Address</string>
@@ -126,5 +125,18 @@
 	<string name="dns_mobile_app_description">Manage your DNS.com domains, domain groups, and GeoDNS right from your Android device.</string>
 	<string name="domain_group_add_busy_title">Adding</string>
 	<string name="nothing_here_yet">Nothing Here Yet!!</string>
+	<string name="create_domain_group_name_label">New Domain Group Name</string>
+	<string name="create_new_group_button">Create</string>
+	<string name="saving">Saving&#8230;</string>
+	<string name="deleting">Deleting</string>
+	<string name="loading">Loading</string>
+	<string name="domain_group_name_too_short_title">Name Too Short</string>
+	<string name="domain_group_name_too_short_message">Domain group names must be at least 4 characters in length. Press \'OK\' to go back and fix your input.</string>
+	<string name="blank"></string>
+	<string name="group_use_custom_ns_label">Use custom name servers?</string>
+	<string name="api_request_failed">API request failed.</string>
+	<string name="error">Error</string>
+	<string name="domain_group_created_title">Domain Group Created</string>
+	<string name="domain_group_created_message">Your domain group was created successfully.</string>
 </resources>
 
