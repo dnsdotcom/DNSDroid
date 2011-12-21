@@ -83,6 +83,9 @@ public class RecordDetailActivity extends Activity {
 					case Type.A:
 						retVal = api.createARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
 						break ;
+					case Type.NS:
+						retVal = api.createNSRecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
+						break ;
 					case Type.AAAA:
 						retVal = api.createAAAARecord(rr.getDomainName(), rr.isGroup(), rr.getHostName(), rr.getAnswer(), rr.isWildcard(), rr.getGeoGroup(), rr.getCountryId()+"", rr.getRegionId()+"", rr.getCityId()+"", rr.getTtl()) ;
 						break ;
@@ -199,6 +202,8 @@ public class RecordDetailActivity extends Activity {
 		 * @see android.widget.AdapterView.OnItemSelectedListener#onItemSelected(android.widget.AdapterView, android.view.View, int, long)
 		 */
 		public void onItemSelected(AdapterView<?> recordTypeList, View selectedView, int position, long itemId) {
+			String recordType = (String) recordTypeList.getAdapter().getItem(position) ;
+			currentRR.setType(ResourceRecord.getTypeForIdentifier(recordType)) ;
 
 			findViewById(R.id.rrAnswer).setVisibility(View.GONE) ;
 			findViewById(R.id.rrAnswerLabel).setVisibility(View.GONE) ;

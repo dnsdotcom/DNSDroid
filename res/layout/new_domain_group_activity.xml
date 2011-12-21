@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/new_domain_group_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/red"
+    android:orientation="vertical"
+    android:weightSum="1" >
+
+    <ImageView
+        android:id="@+id/dnsLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/dns_logo_description"
+        android:src="@drawable/dns_android_banner" >
+    </ImageView>
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dnsLogo"
+        android:background="@color/dark_grey" >
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/frameLayout1"
+        android:text="@string/create_domain_group_name_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/newGroupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:inputType="textNoSuggestions"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/createNewGroupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/newGroupName"
+        android:text="@string/create_new_group_button" />
+
+</RelativeLayout>
