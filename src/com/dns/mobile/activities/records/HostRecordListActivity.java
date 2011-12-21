@@ -265,9 +265,11 @@ public class HostRecordListActivity extends Activity {
 				clickedRR = (ResourceRecord) rrListView.getAdapter().getItem(position) ;
 			} else {
 				clickedRR = new ResourceRecord() ;
+				clickedRR.setGroup(isDomainGroup) ;
 			}
 			clickedRR.setHostName(hostName) ;
 			clickedRR.setDomainName(domainName) ;
+			clickedRR.setGroup(isDomainGroup) ;
 			rrDetailsActivity.putExtra("rrData", clickedRR) ;
 			startActivity(rrDetailsActivity) ;
 		}
@@ -432,45 +434,6 @@ public class HostRecordListActivity extends Activity {
 				return false;
 			}
 		}) ;
-	}
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onNewIntent(android.content.Intent)
-	 */
-	@Override
-	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
-		super.onNewIntent(intent);
-		domainName = this.getIntent().getExtras().getString("domainName") ;
-		hostName = this.getIntent().getExtras().getString("hostName") ;
-		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
-		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
-		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
-
-		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
-		ListView rrListView = (ListView) findViewById(R.id.rrListView) ;
-		rrListView.setOnItemClickListener(new ListItemOnClickListener()) ;
-		rrListView.setOnItemLongClickListener(new ListItemOnLongClickListener()) ;
-
-		rrListView.setAdapter(new RRListAdapter()) ;
-
-		findViewById(R.id.rrListView).setVisibility(View.GONE) ;
-		findViewById(R.id.rrListProgressBar).setVisibility(View.VISIBLE) ;
-		new RRListApiTask().execute(domainName, hostName) ;
-
-		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
-		// order to have it update the list of displayed hosts.
-		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
-		filterInput.setOnKeyListener(new View.OnKeyListener() {
-			
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				EditText filterInput = (EditText) v ;
-				filter = filterInput.getText().toString() ;
-				((ListView)findViewById(R.id.rrListView)).invalidateViews() ;
-				return false;
-			}
-		}) ;
-
 	}
 
 	@Override
