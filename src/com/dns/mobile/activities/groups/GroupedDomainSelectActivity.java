@@ -75,7 +75,8 @@ public class GroupedDomainSelectActivity extends Activity {
 			super.onPostExecute(result);
 			if (result!=null) {
 				boolean apiRequestSucceeded = false;
-				findViewById(R.id.domainListProgressBar).setVisibility(View.GONE);
+				findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 				if (result.has("meta")) {
 					try {
 						if (result.getJSONObject("meta").getInt("success") == 1) {
@@ -193,7 +194,8 @@ public class GroupedDomainSelectActivity extends Activity {
 				}) ;
 				builder.show() ;
 			}
-			findViewById(R.id.domainListProgressBar).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 		}
 	}
 
@@ -303,7 +305,8 @@ public class GroupedDomainSelectActivity extends Activity {
 		}) ;
 
 		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
-		findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 		new DomainListApiTask().execute() ;
 	}
 
@@ -319,7 +322,8 @@ public class GroupedDomainSelectActivity extends Activity {
 		switch (item.getItemId()) {
 			case 0:
 				findViewById(R.id.domainListView).setVisibility(View.GONE) ;
-				findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 				domainList.clear() ;
 				new DomainListApiTask().execute() ;
 				return true;

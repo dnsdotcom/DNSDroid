@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * An <code>Activity</code> which shows a list of domains for the given user's API token
@@ -33,8 +34,12 @@ public class DomainGroupsListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.domain_groups_activity) ;
-		domainGroupList = new ArrayList<DomainGroup>() ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.create_new_domain_label) ;
+
+		domainGroupList = new ArrayList<DomainGroup>() ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 
 		ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
 		groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,7 +70,7 @@ public class DomainGroupsListActivity extends Activity {
 
 		groupListView.setAdapter(new DomainGroupAdapter(domainGroupList)) ;
 
-		new DomainGroupListTask(this, domainGroupList, findViewById(R.id.groupListProgressBar), groupListView).execute() ;
+		new DomainGroupListTask(this, domainGroupList, groupListView).execute() ;
 	}
 
 	@Override
@@ -81,9 +86,10 @@ public class DomainGroupsListActivity extends Activity {
 			case 0:
 				ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
 				groupListView.setVisibility(View.GONE) ;
-				findViewById(R.id.groupListProgressBar).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 				domainGroupList.clear() ;
-				new DomainGroupListTask(this, domainGroupList, findViewById(R.id.groupListProgressBar), groupListView).execute() ;
+				new DomainGroupListTask(this, domainGroupList, groupListView).execute() ;
 				return true;
 		}
 		return false;

@@ -19,12 +19,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -92,7 +91,8 @@ public class DomainGroupMembersActivity extends Activity {
 		@Override
 		protected void onPostExecute(ArrayList<Domain> result) {
 			super.onPostExecute(result);
-			findViewById(R.id.groupMemberProgress).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			findViewById(R.id.domainGroupMemberList).setVisibility(View.VISIBLE) ;
 			memberDomains = result ;
 			if (memberDomains!=null) {
@@ -227,7 +227,8 @@ public class DomainGroupMembersActivity extends Activity {
 		@Override
 		protected void onPostExecute(Domain result) {
 			super.onPostExecute(result);
-			findViewById(R.id.groupMemberProgress).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			if (result.isGroupedDomain()) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(DomainGroupMembersActivity.this) ;
 				String message = "'"+result.getName()+"' "+getResources().getString(R.string.remove_group_member_fail_message)+" '"+domainGroupName+"'" ;
@@ -277,7 +278,8 @@ public class DomainGroupMembersActivity extends Activity {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					findViewById(R.id.domainGroupMemberList).setVisibility(View.INVISIBLE) ;
-					findViewById(R.id.groupMemberProgress).setVisibility(View.VISIBLE) ;
+					findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+					findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 					new DomainGroupMemberDeleteTask().execute(selectedMember) ;
 				}
 			}) ;
@@ -302,33 +304,24 @@ public class DomainGroupMembersActivity extends Activity {
 
 	    domainGroupName = this.getIntent().getStringExtra("domainGroupName") ;
 	    String groupMembersActivityLabel = getResources().getString(R.string.group_member_activity_label) ;
-	    ((TextView)findViewById(R.id.domainGroupLabel)).setText(groupMembersActivityLabel+" "+domainGroupName) ;
+	    ((TextView)findViewById(R.id.headerLabel)).setText(groupMembersActivityLabel+" "+domainGroupName) ;
 	    Log.d(TAG, "Preparing to display members of domain group '"+domainGroupName+"'") ;
 
 	    new DomainGroupMemberTask().execute(domainGroupName) ;
+
+	    ((ImageView)findViewById(R.id.viewRefreshButton)).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				findViewById(R.id.domainGroupMemberList).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+				new DomainGroupMemberTask().execute(domainGroupName) ;
+			}
+		}) ;
 
 	    ListView dgListView = (ListView) findViewById(R.id.domainGroupMemberList) ; 
 	    dgListView.setAdapter(new GroupMembersListAdapter()) ;
 	    dgListView.setOnItemLongClickListener(new DomainItemLongClickListener()) ;
 	    dgListView.setOnItemClickListener(new DomainItemClickListener()) ;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem refreshDomains = menu.add(Menu.NONE, 0, 0, "Refresh");
-		refreshDomains.setIcon(R.drawable.ic_menu_refresh) ;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 0:
-				findViewById(R.id.domainGroupMemberList).setVisibility(View.GONE) ;
-				findViewById(R.id.groupMemberProgress).setVisibility(View.VISIBLE) ;
-				new DomainGroupMemberTask().execute(domainGroupName) ;
-				return true;
-		}
-		return false;
 	}
 }

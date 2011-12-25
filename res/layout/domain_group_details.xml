@@ -4,36 +4,14 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent" 
     android:orientation="vertical" android:background="@color/red" android:weightSum="1" 
     android:id="@+id/dns_activity_layout">
-
-    <ImageView
-        android:id="@+id/dnsLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/dns_logo_description"
-        android:src="@drawable/dns_android_banner" ></ImageView>
-    <FrameLayout android:layout_height="wrap_content" android:id="@+id/frameLayout1" 
-        android:layout_below="@+id/dnsLogo" android:layout_alignParentLeft="true" 
-        android:layout_width="fill_parent" android:background="@color/grey">
-
-        <TextView
-            android:id="@+id/domainGroupLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:text="@string/group_member_activity_label"
-            android:textColor="@color/white"
-            android:visibility="visible" >
-	</TextView>
-    </FrameLayout>
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
 
     <ListView
         android:id="@+id/domainGroupDetailsList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/frameLayout1"
+        android:layout_below="@+id/headerArea"
         android:entries="@array/domain_group_details_options" >
     </ListView>
 

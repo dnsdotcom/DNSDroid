@@ -77,7 +77,8 @@ public class HostListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.hostListProgressBar).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -166,7 +167,7 @@ public class HostListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.hostListProgressBar).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -331,7 +332,7 @@ public class HostListActivity extends Activity {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss() ;
-					findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+					findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 					new HostDeleteApiTask().execute(domainName, Boolean.toString(isDomainGroup), deleteHost.getName(), "true", itemPosition+"") ;
 				}
 			}) ;
@@ -352,13 +353,13 @@ public class HostListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		hostList = new ArrayList<Host>() ;
 		setContentView(R.layout.domain_hosts_activity) ;
-		domainName = this.getIntent().getExtras().getString("domainName") ;
-		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
-		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
+		hostList = new ArrayList<Host>() ;
+		domainName = this.getIntent().getExtras().getString("domainName") ;
+		isDomainGroup = this.getIntent().getExtras().getBoolean("isDomainGroup") ;
+		((TextView)findViewById(R.id.headerLabel)).setText(domainName) ;
 		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
 
 		hostListView.setOnItemClickListener(new ItemPressListener()) ;
@@ -367,8 +368,19 @@ public class HostListActivity extends Activity {
 
 		hostListView.setAdapter(new HostListBaseAdapter()) ;
 
-		findViewById(R.id.hostListView).setVisibility(View.GONE) ;
-		findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+		findViewById(R.id.viewRefreshButton).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+				hostList.clear() ;
+				new HostListApiTask().execute(domainName) ;
+			}
+		}) ;
+
+		// findViewById(R.id.hostListView).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 		new HostListApiTask().execute(domainName) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
@@ -384,45 +396,6 @@ public class HostListActivity extends Activity {
 			}
 		}) ;
 	}
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onNewIntent(android.content.Intent)
-	 */
-/*	@Override
-	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
-		super.onNewIntent(intent);
-		domainName = intent.getExtras().getString("domainName") ;
-		isDomainGroup = intent.getExtras().getBoolean("isDomainGroup") ;
-		((TextView)findViewById(R.id.hostHeaderLabel)).setText(domainName) ;
-		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
-
-		ListView hostListView = (ListView) findViewById(R.id.hostListView) ;
-
-		hostListView.setOnItemClickListener(new ItemPressListener()) ;
-
-		hostListView.setOnItemLongClickListener(new ItemLongPressListener()) ;
-
-		hostListView.setAdapter(new HostListBaseAdapter()) ;
-
-		findViewById(R.id.hostListView).setVisibility(View.GONE) ;
-		findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
-		new HostListApiTask().execute(domainName) ;
-
-		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
-		// order to have it update the list of displayed hosts.
-		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
-		filterInput.setOnKeyListener(new View.OnKeyListener() {
-			
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				EditText filterInput = (EditText) v ;
-				filter = filterInput.getText().toString() ;
-				((ListView)findViewById(R.id.hostListView)).invalidateViews() ;
-				return false;
-			}
-		}) ;
-
-	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -435,8 +408,8 @@ public class HostListActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case 0:
-				findViewById(R.id.hostListView).setVisibility(View.GONE) ;
-				findViewById(R.id.hostListProgressBar).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 				hostList.clear() ;
 				new HostListApiTask().execute(domainName) ;
 				return true ;

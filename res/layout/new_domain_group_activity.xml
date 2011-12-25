@@ -6,41 +6,15 @@
     android:background="@color/red"
     android:orientation="vertical"
     android:weightSum="1" >
-
-    <ImageView
-        android:id="@+id/dnsLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/dns_logo_description"
-        android:src="@drawable/dns_android_banner" >
-    </ImageView>
-
-    <FrameLayout
-        android:id="@+id/frameLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="24dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/dnsLogo"
-        android:background="@color/dark_grey" >
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/frameLayout1"
-        android:text="@string/create_domain_group_name_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
 
     <EditText
         android:id="@+id/newGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/headerArea"
         android:inputType="textNoSuggestions"
         android:paddingLeft="5dp"
         android:paddingRight="5dp" >

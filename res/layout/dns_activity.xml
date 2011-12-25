@@ -3,9 +3,9 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent" 
     android:orientation="vertical" android:background="@color/red" android:weightSum="1" 
     android:id="@+id/dns_activity_layout">
-    <ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent" android:layout_height="wrap_content" 
-        android:src="@drawable/dns_android_banner" android:contentDescription="@string/dns_logo_description"></ImageView>
-    <FrameLayout android:id="@+id/frameLayout1" android:layout_width="fill_parent" android:layout_height="2dp" android:background="@color/dark_grey"></FrameLayout>
+
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
     <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" 
     	android:dividerHeight="2.0sp" android:layout_height="wrap_content" android:layout_width="fill_parent" 
     	android:id="@+id/mainMenuListView">

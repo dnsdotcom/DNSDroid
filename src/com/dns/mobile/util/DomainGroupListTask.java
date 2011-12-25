@@ -27,19 +27,17 @@ public class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
 
 	private static final String TAG = "DomainGroupListTask" ;
 	private Activity parent = null ;
-	private View busyIndicator = null ;
 	private View listView = null ;
 	private ArrayList<DomainGroup> domainGroups = null ;
 
 	/**
 	 * 
 	 */
-	public DomainGroupListTask(Activity parent, ArrayList<DomainGroup> domainGroups, View busyIndicator, View listView) {
+	public DomainGroupListTask(Activity parent, ArrayList<DomainGroup> domainGroups, View listView) {
 		super() ;
 		this.parent = parent ;
 		this.domainGroups = domainGroups ;
 		this.listView = listView ;
-		this.busyIndicator = busyIndicator ;
 	}
 
 	/* (non-Javadoc)
@@ -47,8 +45,6 @@ public class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
 	 */
 	@Override
 	protected JSONObject doInBackground(Void... params) {
-		parent.findViewById(R.id.groupListView).setVisibility(View.GONE) ;
-		parent.findViewById(R.id.groupListProgressBar).setVisibility(View.VISIBLE) ;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent.getApplicationContext());
 		String apiHost = null ;
 		boolean useSSL = false ;
@@ -72,7 +68,8 @@ public class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
 	protected void onPostExecute(JSONObject result) {
 		super.onPostExecute(result);
 		boolean apiRequestSucceeded = false ;
-		busyIndicator.setVisibility(View.GONE) ;
+		parent.findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
+		parent.findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
 		if (result.has("meta")) {
 			try {
 				if (result.getJSONObject("meta").getInt("success")==1) {
@@ -103,7 +100,7 @@ public class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
 					currentGroup.setMembers(currentData.getLong("num_domains")) ;
 					domainGroups.add(currentGroup) ;
 				}
-				parent.findViewById(R.id.groupListView).setVisibility(View.VISIBLE) ;
+				listView.setEnabled(true) ;
 				listView.invalidate() ;
 				Log.d(TAG, "Finished parsing JSON response into domainList") ;
 			} catch (JSONException jsone) {

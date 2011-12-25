@@ -4,17 +4,10 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent" android:background="@color/red" android:id="@+id/domains_activity_layout">
-    <ImageView android:layout_height="wrap_content" android:src="@drawable/dns_android_banner" 
-        android:contentDescription="@string/dns_logo_description"
-    	android:layout_width="fill_parent" android:id="@+id/dnsLogo" android:focusable="false" 
-    	android:focusableInTouchMode="false" android:layout_alignParentTop="true"></ImageView>
-    <TextView android:id="@+id/textView1" android:layout_height="wrap_content" 
-    	android:text="@string/domains_list_view_label" android:textColor="@color/white" 
-    	android:layout_width="fill_parent" android:background="@color/dark_grey" 
-    	android:padding="4dp" android:gravity="center_vertical|left" android:focusable="false" 
-    	android:focusableInTouchMode="false" android:layout_below="@id/dnsLogo"></TextView>
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
     <EditText android:layout_height="wrap_content" android:layout_width="fill_parent" 
-    	android:id="@+id/filterInput" android:hint="@string/input_label_filter" android:layout_below="@id/textView1">
+    	android:id="@+id/filterInput" android:hint="@string/input_label_filter" android:layout_below="@id/headerArea">
     </EditText>
     <ListView android:layout_gravity="center_vertical" android:cacheColorHint="@color/red" 
     	android:dividerHeight="2.0sp" android:layout_height="fill_parent" 
@@ -24,10 +17,6 @@
     	android:focusableInTouchMode="true" android:layout_above="@id/helpArea">
         <requestFocus></requestFocus>
     </ListView>
-    <ProgressBar android:layout_height="wrap_content" android:layout_width="wrap_content" 
-        style="?android:attr/progressBarStyleLarge"
-    	android:id="@+id/domainListProgressBar" android:layout_gravity="center" android:focusable="false" 
-    	android:focusableInTouchMode="false" android:layout_centerInParent="true"></ProgressBar>
 	<RelativeLayout android:layout_alignParentBottom="true" android:layout_width="fill_parent" 
 	    android:id="@+id/helpArea" android:layout_height="wrap_content">
 	    <TextView android:layout_height="wrap_content" android:id="@+id/helpText" 

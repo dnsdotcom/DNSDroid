@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/red" >
+
+    <ImageView
+        android:id="@+id/viewRefreshButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignBottom="@+id/viewRefreshProgressBar"
+        android:layout_alignLeft="@+id/viewRefreshProgressBar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="false"
+        android:clickable="true"
+        android:contentDescription="@string/refresh_button_description"
+        android:src="@drawable/reload"
+        android:visibility="gone"
+        android:layout_margin="4dp" />
+
+    <ImageView
+        android:id="@+id/dnsLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/dns_logo_description"
+        android:src="@drawable/dns_android_banner" />
+
+    <TextView
+        android:id="@+id/headerLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dnsLogo"
+        android:background="@color/dark_grey"
+        android:gravity="center_vertical|left"
+        android:padding="4dp"
+        android:text="@string/blank"
+        android:textColor="@color/white" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dnsLogo"
+        android:background="@color/dark_grey" >
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/viewRefreshProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dnsLogo"
+        android:layout_alignParentRight="true"
+        android:layout_margin="4dp" />
+
+</RelativeLayout>

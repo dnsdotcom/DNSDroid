@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class CreateNewDomainActivity extends Activity {
 
@@ -100,6 +101,10 @@ public class CreateNewDomainActivity extends Activity {
 
 		setContentView(R.layout.new_domain_layout) ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.create_new_domain_label) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
+
 		((CheckBox)findViewById(R.id.setSlave)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

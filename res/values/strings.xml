@@ -2,6 +2,7 @@
 <resources>
     <!-- Simple strings. -->
     <string name="dns_app">DNS.com Mobile</string>
+    <string name="main_menu">Main Menu</string>
     <string name="back">Back</string>
     <string name="clear">Clear</string>
 	<string name="input_label_filter">Filter</string>
@@ -138,5 +139,9 @@
 	<string name="error">Error</string>
 	<string name="domain_group_created_title">Domain Group Created</string>
 	<string name="domain_group_created_message">Your domain group was created successfully.</string>
+	<string name="refresh_button_description">Refresh</string>
+	<string name="create_new_domain_label">Create New Domain</string>
+	<string name="create_new_group_label">Create New Domain Group</string>
+	<string name="geo_groups_header">Geo-Location Groups</string>
 </resources>
 

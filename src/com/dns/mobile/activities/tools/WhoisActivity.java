@@ -66,6 +66,9 @@ public class WhoisActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_whois_layout) ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.dns_tools_whois) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 		Log.d(TAG, "Entered Whois activity") ;
 

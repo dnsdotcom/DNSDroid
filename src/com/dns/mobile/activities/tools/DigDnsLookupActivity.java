@@ -42,7 +42,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -274,12 +273,10 @@ public class DigDnsLookupActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tool_dig_layout) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.dns_tools_dig) ;
 
-		ImageView dnsLogo = (ImageView) findViewById(R.id.dnsLogo) ;
-		if (dnsLogo==null) {
-			Log.e(TAG, "Unable to retrieve reference to dnsLogo") ;
-		}
-		dnsLogo.setOnClickListener(new LogoOnClickListener(this));
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 		ArrayAdapter<NameServer> nsAdapter = new ArrayAdapter<NameServer>(getBaseContext(), android.R.layout.simple_spinner_item, NameServers.getInstance(getBaseContext()).getNameServers()) ;
 		nsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) ;

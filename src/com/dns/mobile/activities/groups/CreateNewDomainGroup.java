@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.dns.mobile.R;
 import com.dns.mobile.api.compiletime.ManagementAPI;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class CreateNewDomainGroup extends Activity {
 
@@ -99,6 +102,10 @@ public class CreateNewDomainGroup extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.new_domain_group_activity) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.create_new_group_label) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 	    Button createGroup = (Button) findViewById(R.id.createNewGroupButton) ;
 	    createGroup.setOnClickListener(new View.OnClickListener() {

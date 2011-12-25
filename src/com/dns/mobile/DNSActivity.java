@@ -41,7 +41,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -61,15 +60,12 @@ public class DNSActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d("DNSActivity", "Creating DNSActivity") ;
-		super.onCreate(savedInstanceState);
-
-		// Inflate our UI from its XML layout description.
+		super.onCreate(savedInstanceState) ;
 		setContentView(R.layout.dns_activity);
-		ImageView dnsLogo = (ImageView) findViewById(R.id.dnsLogo) ;
-		if (dnsLogo==null) {
-			Log.e(TAG, "Unable to retrieve reference to dnsLogo") ;
-		}
-		dnsLogo.setOnClickListener(new LogoOnClickListener(this));
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.main_menu) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 		ListView mainMenu = (ListView) findViewById(R.id.mainMenuListView) ;
 		mainMenu.setAdapter(new MainMenuListAdapter()) ;

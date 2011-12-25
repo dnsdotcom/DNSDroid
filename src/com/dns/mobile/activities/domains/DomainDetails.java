@@ -25,15 +25,10 @@ public class DomainDetails extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.domain_details_activity);
-
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
-		domainName = this.getIntent().getStringExtra("domainName");
-		isGroupedDomain = this.getIntent().getBooleanExtra("isDomainGroup", false);
-		Log.d(TAG, "domainName: "+domainName) ;
-		Log.d(TAG, "isGroupedDomain: "+(isGroupedDomain?"Y":"N")) ;
+		((TextView)findViewById(R.id.headerLabel)).setText(getDomainNameLabel()) ;
 
-		((TextView) findViewById(R.id.domainNameLabel)).setText(domainName);
-		((TextView) findViewById(R.id.domainNameLabel)).setVisibility(View.VISIBLE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 		ListView domainDetailOptions = (ListView) findViewById(R.id.domainDetailsOptionList);
 		domainDetailOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -68,6 +63,17 @@ public class DomainDetails extends Activity {
 				}
 			}
 		});
+	}
+
+	/**
+	 * 
+	 */
+	private String getDomainNameLabel() {
+		domainName = this.getIntent().getStringExtra("domainName");
+		isGroupedDomain = this.getIntent().getBooleanExtra("isDomainGroup", false);
+		Log.d(TAG, "domainName: "+domainName) ;
+		Log.d(TAG, "isGroupedDomain: "+(isGroupedDomain?"Y":"N")) ;
+		return domainName ;
 	}
 
 }

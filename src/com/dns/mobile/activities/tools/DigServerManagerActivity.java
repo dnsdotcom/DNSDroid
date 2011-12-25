@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * @author <a href="mailto:deven@dns.com">Deven Phillips</a>
@@ -33,6 +35,9 @@ public class DigServerManagerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dns_tools_dig_name_server_config) ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.dig_config_servers_label) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 
 		nameServers = NameServers.getInstance(getBaseContext()) ;
 

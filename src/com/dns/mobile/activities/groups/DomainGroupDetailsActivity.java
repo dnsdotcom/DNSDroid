@@ -2,6 +2,8 @@ package com.dns.mobile.activities.groups;
 
 import com.dns.mobile.R;
 import com.dns.mobile.activities.records.HostListActivity;
+import com.dns.mobile.util.LogoOnClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -23,11 +25,14 @@ public class DomainGroupDetailsActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.domain_group_details) ;
+		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
 	    domainGroupName = this.getIntent().getStringExtra("domainGroupName") ;
 	    Log.d(TAG, "Showing options for domain group '"+domainGroupName+"'") ;
 	    String groupDetailsActivityLabel = getResources().getString(R.string.group_member_activity_label) ;
-	    ((TextView)findViewById(R.id.domainGroupLabel)).setText(groupDetailsActivityLabel+" "+domainGroupName) ;
+	    ((TextView)findViewById(R.id.headerLabel)).setText(groupDetailsActivityLabel+" "+domainGroupName) ;
+
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 	    if (domainGroupName==null) {
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
 	    	builder.setTitle(R.string.domain_group_null_alert_title) ;

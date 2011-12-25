@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.dns.mobile.R;
+import com.dns.mobile.activities.groups.DomainGroupDetailsActivity;
 import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Domain;
 import com.dns.mobile.util.LogoOnClickListener;
@@ -20,14 +21,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -72,7 +72,8 @@ public class DomainListActivity extends Activity {
 			super.onPostExecute(result);
 			if (result!=null) {
 				boolean apiRequestSucceeded = false;
-				findViewById(R.id.domainListProgressBar).setVisibility(View.GONE);
+				findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 				if (result.has("meta")) {
 					try {
 						if (result.getJSONObject("meta").getInt("success") == 1) {
@@ -128,9 +129,10 @@ public class DomainListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.domain_list_activity) ;
-		domainList = new ArrayList<Domain>() ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.create_new_domain_label) ;
 
+		domainList = new ArrayList<Domain>() ;
 		ListView domainListView = (ListView) findViewById(R.id.domainListView) ;
 		domainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -138,7 +140,9 @@ public class DomainListActivity extends Activity {
 				if (position!=0) {
 					Domain selected = (Domain) domainListView.getAdapter().getItem(position) ;
 					if (selected.isGroupedDomain()) {
-						// TODO: Add Intent for showing the members of the associated domain group
+						Intent domainGroupDetails = new Intent(getApplicationContext(), DomainGroupDetailsActivity.class) ;
+						domainGroupDetails.putExtra("domainGroupName", selected.getDomainGroup()) ;
+						startActivity(domainGroupDetails) ;
 					} else {
 						Intent hostListIntent = new Intent(getApplicationContext(), DomainDetails.class);
 						hostListIntent.putExtra("domainName", ((TextView) selectedView).getText().toString());
@@ -236,7 +240,7 @@ public class DomainListActivity extends Activity {
 		// order to have it update the list of displayed domains.
 		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
 		filterInput.setOnKeyListener(new View.OnKeyListener() {
-			
+
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				EditText filterInput = (EditText) v ;
 				filter = filterInput.getText().toString() ;
@@ -245,28 +249,20 @@ public class DomainListActivity extends Activity {
 			}
 		}) ;
 
-		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
-		findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
-		new DomainListApiTask().execute() ;
-	}
+		((ImageView)findViewById(R.id.viewRefreshButton)).setOnClickListener(new View.OnClickListener() {
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem refreshDomains = menu.add(Menu.NONE, 0, 0, "Refresh");
-		refreshDomains.setIcon(R.drawable.ic_menu_refresh) ;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 0:
+			public void onClick(View v) {
 				findViewById(R.id.domainListView).setVisibility(View.GONE) ;
-				findViewById(R.id.domainListProgressBar).setVisibility(View.VISIBLE) ;
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 				domainList.clear() ;
 				new DomainListApiTask().execute() ;
-				return true;
-		}
-		return false;
+			}
+		}) ;
+
+		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		new DomainListApiTask().execute() ;
 	}
 }
