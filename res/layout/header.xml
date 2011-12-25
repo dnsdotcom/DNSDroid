@@ -27,18 +27,6 @@
         android:contentDescription="@string/dns_logo_description"
         android:src="@drawable/dns_android_banner" />
 
-    <TextView
-        android:id="@+id/headerLabel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/dnsLogo"
-        android:background="@color/dark_grey"
-        android:gravity="center_vertical|left"
-        android:padding="4dp"
-        android:text="@string/blank"
-        android:textColor="@color/white" />
-
     <FrameLayout
         android:id="@+id/frameLayout1"
         android:layout_width="fill_parent"
@@ -46,6 +34,18 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/dnsLogo"
         android:background="@color/dark_grey" >
+
+        <TextView
+            android:id="@+id/headerLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_grey"
+            android:gravity="center_vertical|left"
+            android:padding="4dp"
+            android:text="@string/blank"
+            android:textColor="@color/white"
+            android:textSize="13dp" />
+
     </FrameLayout>
 
     <ProgressBar

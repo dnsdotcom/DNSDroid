@@ -45,6 +45,7 @@ public class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
 	 */
 	@Override
 	protected JSONObject doInBackground(Void... params) {
+		domainGroups.clear() ;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parent.getApplicationContext());
 		String apiHost = null ;
 		boolean useSSL = false ;

@@ -37,6 +37,8 @@ public class DomainNameToolsActivity extends Activity {
 		super.onCreate(savedInstanceState) ;
 		Log.d("DomainNameToolsActivity", "Starting DomainNameToolsActivity") ;
 		setContentView(R.layout.dns_tools_layout) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.dns_tools_header_label) ;
 
 		Resources res = getResources() ;
 

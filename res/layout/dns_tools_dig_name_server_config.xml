@@ -3,18 +3,11 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:background="@color/red" android:visibility="visible" 
 	android:id="@+id/digNameServerConfigActivity">
-	<ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent"
-	    android:contentDescription="@string/dns_logo_description"
-		android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
-		android:layout_alignParentTop="true"></ImageView>
-	<TextView android:layout_height="wrap_content"
-		android:textColor="@color/white"
-		android:layout_width="fill_parent" android:background="@color/dark_grey"
-		android:padding="4dp" android:gravity="center_vertical|left"
-		android:layout_below="@id/dnsLogo" android:id="@+id/digNameServerConfigHeader" 
-		android:text="@string/dig_config_servers_label"></TextView>
+
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
 	<ListView android:layout_height="wrap_content" android:layout_width="fill_parent" 
-	    android:layout_below="@+id/digNameServerConfigHeader" 
+	    android:layout_below="@+id/headerArea" 
 	    android:layout_alignParentLeft="true" android:id="@+id/digNameServerListView" 
 	    android:layout_alignParentBottom="true"></ListView>
 </RelativeLayout>

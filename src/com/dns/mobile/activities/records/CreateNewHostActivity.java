@@ -273,7 +273,7 @@ public class CreateNewHostActivity extends Activity {
 		
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 		Log.d(TAG, "domainName: "+domainName) ;
-		TextView newHostHeader = (TextView)findViewById(R.id.newHostHeader) ;
+		TextView newHostHeader = (TextView)findViewById(R.id.headerLabel) ;
 		String hostHeaderContent = newHostHeader.getText().toString()+": "+domainName ;
 		newHostHeader.setText(hostHeaderContent) ;
 

@@ -65,7 +65,7 @@ public class CreateNewDomainActivity extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.groupListProgressBar).setVisibility(View.GONE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {

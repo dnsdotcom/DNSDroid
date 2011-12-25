@@ -283,6 +283,9 @@ public class RecordDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "Initial launch of this view.") ;
 		setContentView(R.layout.rr_details_view) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
+
 		currentRR = (ResourceRecord) this.getIntent().getSerializableExtra("rrData") ;
 		if (currentRR.getAnswer()==null) {
 			Log.d(TAG, "No RR was passed in the calling Intent.") ;
@@ -297,7 +300,7 @@ public class RecordDetailActivity extends Activity {
 
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
-		TextView header = (TextView) findViewById(R.id.rrHeaderLabel) ;
+		TextView header = (TextView) findViewById(R.id.headerLabel) ;
 		StringBuilder sb = new StringBuilder(header.getText()) ;
 		sb.append(" ") ;
 		sb.append(hostName.contentEquals("")?"(root)":hostName) ;

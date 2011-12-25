@@ -24,8 +24,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -151,7 +149,8 @@ public class HostRecordListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			busyDialog.dismiss() ;
+			findViewById(R.id.viewRefreshButton).setVisibility(View.VISIBLE) ;
+			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -415,24 +414,22 @@ public class HostRecordListActivity extends Activity {
 		String fqdn = (hostName.contentEquals("")?"(root).":hostName+".")+domainName ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
 
-		((TextView)findViewById(R.id.rrHeaderLabel)).setText(fqdn) ;
+		((TextView)findViewById(R.id.headerLabel)).setText(fqdn) ;
 		rrListView = (ListView) findViewById(R.id.rrListView) ;
 		rrListView.setOnItemClickListener(new ListItemOnClickListener()) ;
 		rrListView.setOnItemLongClickListener(new ListItemOnLongClickListener()) ;
 
 		rrListView.setAdapter(new RRListAdapter()) ;
 
-
-		busyDialog = new ProgressDialog(HostRecordListActivity.this) ;
-		busyDialog.setTitle(R.string.loading) ;
-		busyDialog.show() ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 		new RRListApiTask().execute(domainName, hostName) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
 		// order to have it update the list of displayed hosts.
 		EditText filterInput = (EditText) findViewById(R.id.filterInput) ;
 		filterInput.setOnKeyListener(new View.OnKeyListener() {
-			
+
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				EditText filterInput = (EditText) v ;
 				filter = filterInput.getText().toString() ;
@@ -440,26 +437,16 @@ public class HostRecordListActivity extends Activity {
 				return false;
 			}
 		}) ;
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem refreshRecords = menu.add(Menu.NONE, 0, 0, "Refresh");
-		refreshRecords.setIcon(R.drawable.ic_menu_refresh) ;
-		return super.onCreateOptionsMenu(menu);
-	}
+		((ImageView)findViewById(R.id.viewRefreshButton)).setOnClickListener(new View.OnClickListener() {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 0:
-				busyDialog = new ProgressDialog(HostRecordListActivity.this) ;
-				busyDialog.setTitle(R.string.loading) ;
-				busyDialog.show() ;
+			public void onClick(View v) {
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 				rrList.clear() ;
+				findViewById(R.id.rrListView).invalidate() ;
 				new RRListApiTask().execute(domainName, hostName) ;
-				return true;
-		}
-		return false;
+			}
+		}) ;
 	}
 }

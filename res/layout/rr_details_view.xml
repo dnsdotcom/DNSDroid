@@ -11,34 +11,15 @@
     android:background="@color/red"
     android:orientation="vertical"
     android:weightSum="1" >
-    <ImageView
-        android:id="@+id/dnsLogo"
-        android:contentDescription="@string/dns_logo_description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/dns_android_banner" >
-    </ImageView>
 
-    <TextView
-        android:id="@+id/rrHeaderLabel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/dnsLogo"
-        android:background="@color/dark_grey"
-        android:gravity="center_vertical|left"
-        android:padding="4dp"
-        android:text="@string/rr_details_header_label"
-        android:textColor="@color/white" >
-    </TextView>
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/rrHeaderLabel" >
+        android:layout_below="@+id/headerArea" >
 
         <LinearLayout
             android:id="@+id/linearLayout2"

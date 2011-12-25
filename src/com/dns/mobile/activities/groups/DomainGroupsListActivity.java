@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,13 +36,13 @@ public class DomainGroupsListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.domain_groups_activity) ;
 		findViewById(R.id.dnsLogo).setOnClickListener(new LogoOnClickListener(this));
-		((TextView)findViewById(R.id.headerLabel)).setText(R.string.create_new_domain_label) ;
+		((TextView)findViewById(R.id.headerLabel)).setText(R.string.domain_groups_list_label) ;
 
 		domainGroupList = new ArrayList<DomainGroup>() ;
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 
-		ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
+		final ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
 		groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
@@ -71,6 +72,15 @@ public class DomainGroupsListActivity extends Activity {
 		groupListView.setAdapter(new DomainGroupAdapter(domainGroupList)) ;
 
 		new DomainGroupListTask(this, domainGroupList, groupListView).execute() ;
+
+		((ImageView)findViewById(R.id.viewRefreshButton)).setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+				new DomainGroupListTask(DomainGroupsListActivity.this, domainGroupList, groupListView).execute() ;
+			}
+		}) ;
 	}
 
 	@Override

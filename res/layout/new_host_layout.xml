@@ -2,18 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:background="@color/red">
-	<ImageView android:id="@+id/dnsLogo" android:layout_width="fill_parent"
-		android:contentDescription="@string/dns_logo_description"
-		android:layout_height="wrap_content" android:src="@drawable/dns_android_banner"
-		android:layout_alignParentTop="true" />
-	<TextView android:layout_height="wrap_content"
-		android:textColor="@color/white" android:layout_width="fill_parent"
-		android:background="@color/dark_grey" android:padding="4dp"
-		android:gravity="center_vertical|left" android:layout_below="@id/dnsLogo"
-		android:id="@+id/newHostHeader" android:text="@string/new_host_name_header" />
+
+    <include android:id="@+id/headerArea" layout="@layout/header" 
+        android:layout_width="fill_parent" android:layout_height="83dp"></include>
 
 	<TextView android:layout_height="wrap_content"
-		android:layout_below="@+id/newHostHeader"
+		android:layout_below="@+id/headerArea"
 		android:layout_alignParentLeft="true" android:layout_width="fill_parent"
 		android:id="@+id/newHostNameLabel" android:text="@string/new_host_name_label"
 		android:textColor="@color/white" android:textSize="16dp" />

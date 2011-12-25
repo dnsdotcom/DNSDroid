@@ -22,8 +22,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -395,25 +393,5 @@ public class HostListActivity extends Activity {
 				return false;
 			}
 		}) ;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem refreshHosts = menu.add(Menu.NONE, 0, 0, "Refresh");
-		refreshHosts.setIcon(R.drawable.ic_menu_refresh) ;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 0:
-				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
-				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
-				hostList.clear() ;
-				new HostListApiTask().execute(domainName) ;
-				return true ;
-		}
-		return false;
 	}
 }
