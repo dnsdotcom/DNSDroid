@@ -324,4 +324,16 @@ public class DomainGroupMembersActivity extends Activity {
 	    dgListView.setOnItemLongClickListener(new DomainItemLongClickListener()) ;
 	    dgListView.setOnItemClickListener(new DomainItemClickListener()) ;
 	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		findViewById(R.id.domainGroupMemberList).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		new DomainGroupMemberTask().execute(domainGroupName) ;
+	}
 }

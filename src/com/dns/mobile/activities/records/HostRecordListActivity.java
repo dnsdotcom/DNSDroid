@@ -449,4 +449,17 @@ public class HostRecordListActivity extends Activity {
 			}
 		}) ;
 	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		rrList.clear() ;
+		findViewById(R.id.rrListView).invalidate() ;
+		new RRListApiTask().execute(domainName, hostName) ;
+	}
 }

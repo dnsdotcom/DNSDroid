@@ -123,6 +123,19 @@ public class DomainListActivity extends Activity {
 	}
 
 	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		new DomainListApiTask().execute() ;
+	}
+
+	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override

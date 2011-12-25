@@ -10,8 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -27,6 +25,7 @@ public class DomainGroupsListActivity extends Activity {
 
 	private static final String TAG = "DomainGroupsListActivity" ;
 	protected ArrayList<DomainGroup> domainGroupList = null ;
+	protected ListView groupListView = null ;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -42,7 +41,7 @@ public class DomainGroupsListActivity extends Activity {
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 
-		final ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
+		groupListView = (ListView) findViewById(R.id.groupListView) ;
 		groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
@@ -83,25 +82,14 @@ public class DomainGroupsListActivity extends Activity {
 		}) ;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem refreshDomains = menu.add(Menu.NONE, 0, 0, "Refresh");
-		refreshDomains.setIcon(R.drawable.ic_menu_refresh) ;
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case 0:
-				ListView groupListView = (ListView) findViewById(R.id.groupListView) ;
-				groupListView.setVisibility(View.GONE) ;
-				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
-				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
-				domainGroupList.clear() ;
-				new DomainGroupListTask(this, domainGroupList, groupListView).execute() ;
-				return true;
-		}
-		return false;
+	protected void onResume() {
+		super.onResume();
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		new DomainGroupListTask(DomainGroupsListActivity.this, domainGroupList, groupListView).execute() ;
 	}
 }

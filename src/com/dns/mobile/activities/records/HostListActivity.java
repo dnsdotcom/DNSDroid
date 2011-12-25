@@ -394,4 +394,16 @@ public class HostListActivity extends Activity {
 			}
 		}) ;
 	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
+		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		hostList.clear() ;
+		new HostListApiTask().execute(domainName) ;
+	}
 }
