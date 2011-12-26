@@ -40,8 +40,10 @@ public class DomainGroupAdapter extends BaseAdapter {
 		if (position==0) {
 			domainItem.setText("[New Group]") ;
 		} else {
-			DomainGroup currentDomain = dgList.get(position-1);
-			domainItem.setText(currentDomain.getName());
+			if (dgList.size()>0) {
+				DomainGroup currentDomain = dgList.get(position - 1);
+				domainItem.setText(currentDomain.getName());
+			}
 		}
 		return domainItem ;
 	}
