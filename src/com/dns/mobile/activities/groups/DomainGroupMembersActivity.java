@@ -1,7 +1,6 @@
 package com.dns.mobile.activities.groups;
 
 import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,6 +38,7 @@ public class DomainGroupMembersActivity extends Activity {
 		 */
 		@Override
 		protected ArrayList<Domain> doInBackground(String... params) {
+			Log.d(TAG, "Updating domain group list") ;
 			String dgName = params[0] ;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			String apiHost = null ;
@@ -161,7 +160,7 @@ public class DomainGroupMembersActivity extends Activity {
 		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Log.d(TAG, "Getting view for position: "+position) ;
-			if (!LinearLayout.class.isInstance(convertView)) {
+			if (!TextView.class.isInstance(convertView)) {
 				convertView = new TextView(DomainGroupMembersActivity.this) ;
 			}
 			String domainLabel ;

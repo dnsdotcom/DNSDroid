@@ -94,6 +94,7 @@ public class DomainListActivity extends Activity {
 				if (apiRequestSucceeded) {
 					try {
 						JSONArray data = result.getJSONArray("data");
+						domainList.clear() ;
 						for (int x = 0; x < data.length(); x++) {
 							JSONObject currentData = data.getJSONObject(x);
 							Log.d(TAG, "JSON: " + currentData.toString());
@@ -132,6 +133,7 @@ public class DomainListActivity extends Activity {
 		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		domainList.clear() ;
 		new DomainListApiTask().execute() ;
 	}
 
@@ -268,7 +270,6 @@ public class DomainListActivity extends Activity {
 				findViewById(R.id.domainListView).setVisibility(View.GONE) ;
 				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
-				domainList.clear() ;
 				new DomainListApiTask().execute() ;
 			}
 		}) ;

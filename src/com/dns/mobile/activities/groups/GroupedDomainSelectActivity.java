@@ -318,6 +318,7 @@ public class GroupedDomainSelectActivity extends Activity {
 		findViewById(R.id.domainListView).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		domainList.clear() ;
 		new DomainListApiTask().execute() ;
 	}
 }

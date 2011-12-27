@@ -90,6 +90,7 @@ public class DomainGroupsListActivity extends Activity {
 		super.onResume();
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+		domainGroupList.clear() ;
 		new DomainGroupListTask(DomainGroupsListActivity.this, domainGroupList, groupListView).execute() ;
 	}
 }

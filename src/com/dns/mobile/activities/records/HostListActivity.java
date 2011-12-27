@@ -100,6 +100,7 @@ public class HostListActivity extends Activity {
 			if (apiRequestSucceeded) {
 				try {
 					JSONArray data = result.getJSONArray("data") ;
+					hostList.clear() ;
 					for (int x=0; x<data.length(); x++) {
 						JSONObject currentData = data.getJSONObject(x) ;
 						Host currentHost = new Host() ;
@@ -371,7 +372,6 @@ public class HostListActivity extends Activity {
 			public void onClick(View v) {
 				findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 				findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
-				hostList.clear() ;
 				new HostListApiTask().execute(domainName) ;
 			}
 		}) ;
@@ -403,7 +403,6 @@ public class HostListActivity extends Activity {
 		super.onResume();
 		findViewById(R.id.viewRefreshButton).setVisibility(View.GONE) ;
 		findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
-		hostList.clear() ;
 		new HostListApiTask().execute(domainName) ;
 	}
 }
