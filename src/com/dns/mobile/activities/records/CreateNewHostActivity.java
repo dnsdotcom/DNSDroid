@@ -3,8 +3,9 @@ package com.dns.mobile.activities.records;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xbill.DNS.Type;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
 
@@ -147,7 +148,10 @@ public class CreateNewHostActivity extends Activity {
 			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
 
 			if (isExistingRecord) {
-				return api.updateRRData(rrId, rr.getAnswer(), rr.getTtl(), rr.getPriority(), rr.isWildcard(), rr.getRetry(), rr.getExpire(), rr.getMinimum(), rr.getWeight(), rr.getPort(), rr.getTitle(), rr.getKeywords(), rr.getDescription()) ;
+				return api.updateRRData(Integer.valueOf(rrId), rr.getAnswer(), rr.getTtl(), 
+						rr.getPriority(), rr.isWildcard(), rr.getRetry(), rr.getExpire(), 
+						rr.getMinimum(), rr.getWeight(), rr.getPort(), rr.getTitle(), 
+						rr.getKeywords(), rr.getDescription(), rr.getGeoGroup(), rr.getCountryId(), rr.getRegionId(), rr.getCityId()) ;
 			} else {
 				JSONObject hostResult = api.createHostname(rr.getDomainName(), rr.isGroup(), rr.getHostName(), (rr.getType()>=80000), null) ;
 				boolean hostCreated = false ;

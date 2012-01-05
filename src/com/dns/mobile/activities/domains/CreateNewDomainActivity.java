@@ -2,15 +2,19 @@ package com.dns.mobile.activities.domains;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
-import com.dns.mobile.data.Domain;
-import com.dns.mobile.util.LogoOnClickListener;
 
+import com.dns.api.compiletime.ManagementAPI;
+import com.dns.mobile.R;
+import com.dns.mobile.data.Domain;
+import com.dns.mobile.data.DomainGroup;
+import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -18,17 +22,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CreateNewDomainActivity extends Activity {
 
 	private static final String TAG = "CreateNewDomainActivity" ;
+	protected boolean domainGroupsLoaded = false ;
+	protected ProgressDialog busyDialog = null ;
+	protected ArrayList<DomainGroup> domainGroups = null ;
+	protected Spinner domainGroupSelect = null ;
 
 	/**
 	 * Handle the API call to create the domain/set up XFR in the background
@@ -92,6 +104,193 @@ public class CreateNewDomainActivity extends Activity {
 		}
 	}
 
+	private class SaveDomainListener implements View.OnClickListener {
+		public void onClick(View v) {
+			Domain newDomain = new Domain() ;
+			newDomain.setName(((EditText)findViewById(R.id.domainName)).getText().toString()) ;
+			boolean informationIsValid = true ;
+			if (!newDomain.getName().matches("[a-zA-Z0-9]*(\\.[a-z]*)?")) {
+				informationIsValid = false ;
+				findViewById(R.id.domainName).requestFocus() ;
+			}
+			newDomain.setrName(((EditText)findViewById(R.id.responsibleParty)).getText().toString()) ;
+			if (!newDomain.getrName().matches("") && informationIsValid) {
+				informationIsValid = false ;
+				findViewById(R.id.responsibleParty).requestFocus() ;
+			}
+			newDomain.setXfr(((CheckBox) findViewById(R.id.setSlave)).isChecked()) ;
+			if (newDomain.isXfr()) {
+				newDomain.setMaster(((EditText)findViewById(R.id.masterAddr)).getText().toString()) ;
+				try {
+					InetAddress.getByName(newDomain.getMaster()) ;
+				} catch (UnknownHostException uhe) {
+					informationIsValid = false ;
+					findViewById(R.id.masterAddr).requestFocus() ;
+				}
+
+				try {
+					newDomain.setRefresh(Integer.parseInt(((EditText)findViewById(R.id.ttlValue)).getText().toString())) ;
+				} catch (NumberFormatException nfe) {
+					informationIsValid = false ;
+					findViewById(R.id.ttlValue).requestFocus() ;
+				}
+			}
+			
+			if (informationIsValid) {
+				new CreateDomainAsyncTask().execute(newDomain) ;
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(CreateNewDomainActivity.this) ;
+				builder.setTitle(R.string.add_domain_input_error_title) ;
+				builder.setMessage(R.string.add_domain_input_error_message) ;
+				builder.setPositiveButton(R.string.string_ok, new DialogInterface.OnClickListener() {
+					/* (non-Javadoc)
+					 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
+					 */
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+		}
+	}
+
+	private class DomainGroupListTask extends AsyncTask<Void, Void, JSONObject> {
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected JSONObject doInBackground(Void... params) {
+			domainGroups.clear() ;
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(CreateNewDomainActivity.this);
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
+			} else {
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
+			}
+
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
+
+			return api.getDomainGroups("") ;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			super.onPostExecute(result);
+			boolean apiRequestSucceeded = false ;
+			Log.d(TAG, "Dismissing busy dialog.") ;
+			busyDialog.dismiss() ;
+			if (result.has("meta")) {
+				try {
+					if (result.getJSONObject("meta").getInt("success")==1) {
+						apiRequestSucceeded = true ;
+					} else {
+						Log.e(TAG, "API Error: "+result.getJSONObject("meta").getString("error")) ;
+						AlertDialog.Builder builder = new AlertDialog.Builder(CreateNewDomainActivity.this) ;
+						builder.setTitle(R.string.api_request_failed) ;
+						builder.setMessage(result.getJSONObject("meta").getString("error")) ;
+					}
+				} catch (JSONException jsone) {
+					Log.e(TAG, "JSONException encountered while trying to parse domain group list.", jsone) ;
+					AlertDialog.Builder builder = new AlertDialog.Builder(CreateNewDomainActivity.this) ;
+					builder.setTitle(R.string.api_request_failed) ;
+					builder.setMessage(jsone.getLocalizedMessage()) ;
+				}
+			}
+
+			if (apiRequestSucceeded) {
+				domainGroupsLoaded = true ;
+				try {
+					JSONArray data = result.getJSONArray("data") ;
+					for (int x=0; x<data.length(); x++) {
+						JSONObject currentData = data.getJSONObject(x) ;
+						DomainGroup currentGroup = new DomainGroup() ;
+						Log.d(TAG, "Adding group '"+currentData.getString("name")+"' to domainGroupList") ;
+						currentGroup.setGroupId(currentData.getLong("id")) ;
+						currentGroup.setName(currentData.getString("name")) ;
+						currentGroup.setMembers(currentData.getLong("num_domains")) ;
+						domainGroups.add(currentGroup) ;
+					}
+					domainGroupSelect.setEnabled(true) ;
+					domainGroupSelect.invalidate() ;
+					Log.d(TAG, "Finished parsing JSON response into domainList") ;
+				} catch (JSONException jsone) {
+					Log.e(TAG, "JSONException encountered while trying to parse domain list.", jsone) ;
+				}
+			} else {
+				// TODO: Create alert dialog to show that domain group list was not loaded.
+			}
+		}
+	}
+
+	//TODO: Implement adapter for the spinner
+	private class DomainGroupListAdapter extends BaseAdapter {
+
+		/* (non-Javadoc)
+		 * @see android.widget.Adapter#getCount()
+		 */
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.widget.Adapter#getItem(int)
+		 */
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.widget.Adapter#getItemId(int)
+		 */
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
+		 */
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+
+	private class OnGroupSelectTouch implements View.OnTouchListener {
+		/* (non-Javadoc)
+		 * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+		 */
+		public boolean onTouch(View v, MotionEvent event) {
+			if (!domainGroupsLoaded) {
+				domainGroups = new ArrayList<DomainGroup>();
+				domainGroupSelect = (Spinner) findViewById(R.id.domainGroupSelect);
+				Log.d(TAG, "Touch event received: "+event.getAction()) ;
+				busyDialog = new ProgressDialog(CreateNewDomainActivity.this);
+				busyDialog.setTitle(R.string.domain_groups_loading_title);
+				busyDialog.show();
+				new DomainGroupListTask().execute();
+			} else {
+				if (busyDialog != null) {
+					if (busyDialog.isShowing()) {
+						busyDialog.dismiss();
+					}
+				}
+			}
+			return true ;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -122,57 +321,9 @@ public class CreateNewDomainActivity extends Activity {
 			}
 		}) ;
 
-		((Button)findViewById(R.id.saveNewDomain)).setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				Domain newDomain = new Domain() ;
-				newDomain.setName(((EditText)findViewById(R.id.domainName)).getText().toString()) ;
-				boolean informationIsValid = true ;
-				if (!newDomain.getName().matches("[a-zA-Z0-9]*(\\.[a-z]*)?")) {
-					informationIsValid = false ;
-					findViewById(R.id.domainName).requestFocus() ;
-				}
-				newDomain.setrName(((EditText)findViewById(R.id.responsibleParty)).getText().toString()) ;
-				if (!newDomain.getrName().matches("") && informationIsValid) {
-					informationIsValid = false ;
-					findViewById(R.id.responsibleParty).requestFocus() ;
-				}
-				newDomain.setXfr(((CheckBox) findViewById(R.id.setSlave)).isChecked()) ;
-				if (newDomain.isXfr()) {
-					newDomain.setMaster(((EditText)findViewById(R.id.masterAddr)).getText().toString()) ;
-					try {
-						InetAddress.getByName(newDomain.getMaster()) ;
-					} catch (UnknownHostException uhe) {
-						informationIsValid = false ;
-						findViewById(R.id.masterAddr).requestFocus() ;
-					}
+		((Spinner)findViewById(R.id.domainGroupSelect)).setOnTouchListener(new OnGroupSelectTouch()) ;
 
-					try {
-						newDomain.setRefresh(Integer.parseInt(((EditText)findViewById(R.id.ttlValue)).getText().toString())) ;
-					} catch (NumberFormatException nfe) {
-						informationIsValid = false ;
-						findViewById(R.id.ttlValue).requestFocus() ;
-					}
-				}
-				
-				if (informationIsValid) {
-					new CreateDomainAsyncTask().execute(newDomain) ;
-				} else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()) ;
-					builder.setTitle(R.string.add_domain_input_error_title) ;
-					builder.setMessage(R.string.add_domain_input_error_message) ;
-					builder.setPositiveButton(R.string.string_ok, new DialogInterface.OnClickListener() {
-						/* (non-Javadoc)
-						 * @see android.content.DialogInterface.OnClickListener#onClick(android.content.DialogInterface, int)
-						 */
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss() ;
-						}
-					}) ;
-					builder.show() ;
-				}
-			}
-		}) ;
+		((Button)findViewById(R.id.saveNewDomain)).setOnClickListener(new SaveDomainListener()) ;
 
 		// When not focused on one of the text fields, hide the keyboard.
 		((EditText)findViewById(R.id.domainName)).setOnFocusChangeListener(new View.OnFocusChangeListener() {

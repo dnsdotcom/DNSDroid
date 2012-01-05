@@ -5,8 +5,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
@@ -172,6 +173,7 @@ public class HostRecordListActivity extends Activity {
 			if (apiRequestSucceeded) {
 				try {
 					JSONArray data = result.getJSONArray("data") ;
+					rrList.clear() ;
 					for (int x=0; x<data.length(); x++) {
 						JSONObject currentData = data.getJSONObject(x) ;
 						ResourceRecord currentRR = new ResourceRecord() ;
@@ -184,9 +186,9 @@ public class HostRecordListActivity extends Activity {
 						if (currentData.getString("country_iso2").length()>0) {
 							currentRR.setCountryId(currentData.getString("country_iso2")) ;
 							if (!currentData.getString("region").contentEquals("None")) {
-								currentRR.setRegionId(currentData.getInt("region")) ;
+								currentRR.setRegionId(currentData.getString("region")) ;
 								if (!currentData.getString("city").contentEquals("None")) {
-									currentRR.setCityId(currentData.getInt("city")) ;
+									currentRR.setCityId(currentData.getString("city")) ;
 								}
 							}
 						}

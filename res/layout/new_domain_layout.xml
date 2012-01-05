@@ -17,7 +17,9 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentRight="true"
-	    android:layout_below="@+id/responsibleParty" >
+	    android:layout_below="@+id/responsibleParty"
+	    android:prompt="@string/domains_group_select_label" >
+
 	</Spinner>
 	<CheckBox android:gravity="right|center_vertical" android:id="@+id/setSlave" android:layout_below="@+id/domainGroupSelect" 
 	    android:layout_centerInParent="true" android:text="@string/slave_zone" android:layout_height="wrap_content" 

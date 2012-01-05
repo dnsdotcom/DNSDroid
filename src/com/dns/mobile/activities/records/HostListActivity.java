@@ -5,12 +5,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Host ;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +40,7 @@ public class HostListActivity extends Activity {
 	protected String filter = new String("") ;
 	protected String domainName = null ;
 	protected boolean isDomainGroup = false ;
+	protected ProgressDialog busyDialog = null ;
 
 	private class HostListApiTask extends AsyncTask<String, Void, JSONObject> {
 
@@ -100,6 +103,7 @@ public class HostListActivity extends Activity {
 			if (apiRequestSucceeded) {
 				try {
 					JSONArray data = result.getJSONArray("data") ;
+					hostList.clear() ;
 					for (int x=0; x<data.length(); x++) {
 						JSONObject currentData = data.getJSONObject(x) ;
 						Host currentHost = new Host() ;
@@ -165,7 +169,6 @@ public class HostListActivity extends Activity {
 			super.onPostExecute(result);
 
 			boolean apiRequestSucceeded = false ;
-			findViewById(R.id.viewRefreshProgressBar).setVisibility(View.GONE) ;
 			if (result.has("meta")) {
 				try {
 					if (result.getJSONObject("meta").getInt("success")==1) {
@@ -202,6 +205,7 @@ public class HostListActivity extends Activity {
 				builder.setMessage("Unknown error experienced while trying to make an API call to DNS.com.") ;
 				builder.show() ;
 			}
+			busyDialog.dismiss() ;
 		}
 	}
 
@@ -330,7 +334,9 @@ public class HostListActivity extends Activity {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss() ;
-					findViewById(R.id.viewRefreshProgressBar).setVisibility(View.VISIBLE) ;
+					busyDialog = new ProgressDialog(HostListActivity.this) ;
+					busyDialog.setTitle(R.string.deleting) ;
+					busyDialog.show() ;
 					new HostDeleteApiTask().execute(domainName, Boolean.toString(isDomainGroup), deleteHost.getName(), "true", itemPosition+"") ;
 				}
 			}) ;

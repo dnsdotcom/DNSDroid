@@ -23,7 +23,7 @@ public class ResourceRecord implements Serializable {
 
 	private String answer = null ;
 
-	private Integer cityId = null ;
+	private String cityId = null ;
 
 	private Integer type = null ;
 
@@ -45,7 +45,7 @@ public class ResourceRecord implements Serializable {
 
 	private boolean isWildcard = false ;
 
-	private Integer regionId = null ;
+	private String regionId = null ;
 
 	private Integer prioExpire = null ;
 
@@ -107,7 +107,7 @@ public class ResourceRecord implements Serializable {
 	 * Returns the City ID for this RR is it is set or NULL if not.
 	 * @return
 	 */
-	public Integer getCityId() {
+	public String getCityId() {
 		return cityId;
 	}
 
@@ -115,7 +115,7 @@ public class ResourceRecord implements Serializable {
 	 * Sets the city ID for this RR
 	 * @param cityId
 	 */
-	public void setCityId(Integer cityId) {
+	public void setCityId(String cityId) {
 		this.cityId = cityId;
 	}
 
@@ -239,11 +239,11 @@ public class ResourceRecord implements Serializable {
 		this.isWildcard = isWildcard;
 	}
 
-	public Integer getRegionId() {
+	public String getRegionId() {
 		return regionId;
 	}
 
-	public void setRegionId(Integer regionId) {
+	public void setRegionId(String regionId) {
 		this.regionId = regionId;
 	}
 

@@ -22,6 +22,16 @@ public class DomainGroup implements Serializable {
 
 	private long groupId ;
 
+	private String errorMessage ;
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
 	public String getName() {
 		return name;
 	}

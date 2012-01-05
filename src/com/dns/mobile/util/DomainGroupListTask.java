@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.DomainGroup;
 import android.app.Activity;
 import android.app.AlertDialog;

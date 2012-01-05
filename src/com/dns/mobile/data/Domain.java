@@ -17,6 +17,7 @@ public class Domain implements Serializable {
 	private boolean isXfr = false ;
 	private String master = null ;
 	private int refresh = 0 ;
+	private String errMsgString = null ;
 
 	public long getDomainId() {
 		return domainId;
@@ -80,6 +81,14 @@ public class Domain implements Serializable {
 
 	public void setRefresh(int refresh) {
 		this.refresh = refresh;
+	}
+
+	public String getErrMsgString() {
+		return errMsgString;
+	}
+
+	public void setErrMsgString(String errMsgString) {
+		this.errMsgString = errMsgString;
 	}
 
 	@Override

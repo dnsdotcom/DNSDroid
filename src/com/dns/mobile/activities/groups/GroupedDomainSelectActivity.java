@@ -5,8 +5,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Domain;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;

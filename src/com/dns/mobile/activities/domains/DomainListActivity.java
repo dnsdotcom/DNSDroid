@@ -5,13 +5,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
 import com.dns.mobile.activities.groups.DomainGroupDetailsActivity;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.Domain;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -38,9 +41,93 @@ import android.widget.TextView;
  */
 public class DomainListActivity extends Activity {
 
-	private static final String TAG = "GroupedDomainSelectActivity" ;
+	private static final String TAG = "DomainListActivity" ;
 	protected ArrayList<Domain> domainList = null ;
 	protected String filter = new String("") ;
+	protected ProgressDialog busyDialog = null ;
+
+	private class DomainDeleteApiTask extends AsyncTask<Domain, Void, Domain> {
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
+		@Override
+		protected Domain doInBackground(Domain... params) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			String apiHost = null ;
+			boolean useSSL = false ;
+			if (settings.getBoolean("use.sandbox", true)) {
+				apiHost = "sandbox.dns.com" ;
+				useSSL = false ;
+			} else {
+				useSSL = true ;
+				apiHost = "www.dns.com" ;
+			}
+
+			Domain target = params[0] ;
+
+			ManagementAPI api = new ManagementAPI(apiHost, useSSL, settings.getString("auth.token", "")) ;
+			
+			JSONObject result = api.deleteDomain(target.getName(), true) ;
+
+			Domain failure = new Domain() ;
+			failure.setName(target.getName()) ;
+			failure.setDomainId(-1) ;
+			if (result.has("meta")) {
+				try {
+					if (result.getJSONObject("meta").has("success")) {
+						if (result.getJSONObject("meta").getInt("success")==1) {
+							return target ;
+						} else {
+							Log.e(TAG, "API Delete request failed."+result.getJSONObject("meta").getString("error")) ;
+							failure.setErrMsgString(result.getJSONObject("meta").getString("error")) ;
+						}
+					} else {
+						Log.e(TAG, "result JSON does not have a 'success' object: "+result.toString()) ;
+						failure.setErrMsgString(getResources().getString(R.string.api_result_invalid)) ;
+					}
+				} catch (JSONException e) {
+					Log.e(TAG, "JSONException while trying to read the 'meta' JSONObject: "+result.toString(), e) ;
+					failure.setErrMsgString(getResources().getString(R.string.api_result_invalid)) ;
+				}
+			} else {
+				Log.e(TAG, "result JSON does not have a 'meta' object: "+result.toString()) ;
+				failure.setErrMsgString(getResources().getString(R.string.api_result_invalid)) ;
+			}
+			return failure ;
+		}
+		
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(Domain result) {
+			super.onPostExecute(result);
+
+			if (result.getDomainId()>0) {
+				// API call succeeded
+				Log.d(TAG, "Domain list count before: "+domainList.size()) ;
+				domainList.remove(result) ;
+				Log.d(TAG, "Domain list count after: "+domainList.size()) ;
+				((ListView)findViewById(R.id.domainListView)).invalidateViews() ;
+				busyDialog.dismiss() ;
+			} else {
+				// API call failed
+
+				busyDialog.dismiss() ;
+				AlertDialog.Builder builder = new AlertDialog.Builder(DomainListActivity.this) ;
+				builder.setTitle(R.string.api_request_failed) ;
+				builder.setMessage(result.getErrMsgString()) ;
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				builder.show() ;
+			}
+
+		}
+	}
 
 	private class DomainListApiTask extends AsyncTask<Void, Void, JSONObject> {
 		/* (non-Javadoc)
@@ -94,6 +181,7 @@ public class DomainListActivity extends Activity {
 				if (apiRequestSucceeded) {
 					try {
 						JSONArray data = result.getJSONArray("data");
+						domainList.clear() ;
 						for (int x = 0; x < data.length(); x++) {
 							JSONObject currentData = data.getJSONObject(x);
 							Log.d(TAG, "JSON: " + currentData.toString());
@@ -135,6 +223,85 @@ public class DomainListActivity extends Activity {
 		new DomainListApiTask().execute() ;
 	}
 
+	private class DomainListViewAdapter extends BaseAdapter {
+
+		
+		public View getView(int position, View convertView, ViewGroup parent) {
+			TextView domainItem = new TextView(parent.getContext()) ;
+			domainItem.setTextColor(Color.WHITE) ;
+			domainItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
+			domainItem.setBackgroundColor(Color.TRANSPARENT) ;
+			domainItem.setWidth(LayoutParams.FILL_PARENT) ;
+
+			@SuppressWarnings("unchecked")
+			ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
+				
+				public boolean evaluate(Object object) {
+					Domain current = (Domain) object ;
+					if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+						return true ;
+					} else {
+						return false;
+					}
+				}
+			}) ;
+
+			if (position==0) {
+				domainItem.setText("[New Domain]") ;
+			} else {
+				Domain currentDomain = filteredList.get(position-1);
+				domainItem.setText(currentDomain.getName());
+			}
+			return domainItem ;
+		}
+
+		public long getItemId(int position) {
+			return position+100 ;
+		}
+		
+		public Object getItem(int position) {
+
+			if (position>0) {
+				@SuppressWarnings("unchecked")
+				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils
+						.select(domainList,
+								new org.apache.commons.collections.Predicate() {
+
+									public boolean evaluate(Object object) {
+										Domain current = (Domain) object;
+										if (current.getName().toLowerCase()
+												.contains(filter.toLowerCase())) {
+											return true;
+										} else {
+											return false;
+										}
+									}
+								});
+				return filteredList.get(position - 1);
+			} else {
+				return null ;
+			}
+		}
+		
+		public int getCount() {
+
+			@SuppressWarnings("unchecked")
+			ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
+				
+				public boolean evaluate(Object object) {
+					Domain current = (Domain) object ;
+					if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
+						return true ;
+					} else {
+						return false;
+					}
+				}
+			}) ;
+
+			return filteredList.size()+1 ;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -172,82 +339,34 @@ public class DomainListActivity extends Activity {
 		domainListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			public boolean onItemLongClick(AdapterView<?> domainListView, View selectedView, int position, long itemId) {
-				
-				return false;
+				AlertDialog.Builder confirm = new AlertDialog.Builder(DomainListActivity.this) ;
+				confirm.setTitle(R.string.rr_list_delete_dialog_title) ;
+				final Domain target = (Domain) domainListView.getItemAtPosition(position) ;
+				String confirmationMsg = getResources().getString(R.string.domain_delete_confirmation_message).replace("DOMAINNAME", "'"+target.getName()+"'") ;
+				confirm.setMessage(confirmationMsg) ;
+				confirm.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+						busyDialog = new ProgressDialog(DomainListActivity.this) ;
+						busyDialog.setTitle(R.string.deleting) ;
+						busyDialog.show() ;
+						new DomainDeleteApiTask().execute(target) ;
+					}
+				}) ;
+				confirm.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
+				confirm.show() ;
+				return true;
 			}
 			
 		}) ;
 
-		domainListView.setAdapter(new BaseAdapter() {
-			
-			public View getView(int position, View convertView, ViewGroup parent) {
-				TextView domainItem = new TextView(parent.getContext()) ;
-				domainItem.setTextColor(Color.WHITE) ;
-				domainItem.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25) ;
-				domainItem.setBackgroundColor(Color.TRANSPARENT) ;
-				domainItem.setWidth(LayoutParams.FILL_PARENT) ;
-
-				@SuppressWarnings("unchecked")
-				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						Domain current = (Domain) object ;
-						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-
-				if (position==0) {
-					domainItem.setText("[New Domain]") ;
-				} else {
-					Domain currentDomain = filteredList.get(position-1);
-					domainItem.setText(currentDomain.getName());
-				}
-				return domainItem ;
-			}
-
-			public long getItemId(int position) {
-				return position+100 ;
-			}
-			
-			public Object getItem(int position) {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						Domain current = (Domain) object ;
-						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-				return filteredList.get(position-1) ;
-			}
-			
-			public int getCount() {
-
-				@SuppressWarnings("unchecked")
-				ArrayList<Domain> filteredList = (ArrayList<Domain>) CollectionUtils.select(domainList, new org.apache.commons.collections.Predicate() {
-					
-					public boolean evaluate(Object object) {
-						Domain current = (Domain) object ;
-						if (current.getName().toLowerCase().contains(filter.toLowerCase())) {
-							return true ;
-						} else {
-							return false;
-						}
-					}
-				}) ;
-
-				return filteredList.size()+1 ;
-			}
-		}) ;
+		domainListView.setAdapter(new DomainListViewAdapter()) ;
 
 		// Catch inputs on the filter input and update the filter value. Then invalidate the ListView in 
 		// order to have it update the list of displayed domains.

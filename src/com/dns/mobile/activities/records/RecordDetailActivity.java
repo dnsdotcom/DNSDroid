@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xbill.DNS.Type;
+
+import com.dns.api.compiletime.ManagementAPI;
 import com.dns.mobile.R;
-import com.dns.mobile.api.compiletime.ManagementAPI;
 import com.dns.mobile.data.ResourceRecord;
 import com.dns.mobile.util.LogoOnClickListener;
 import android.app.Activity;
@@ -76,7 +77,7 @@ public class RecordDetailActivity extends Activity {
 
 			// Replace this call with updateRRData
 			if (isExistingRecord) {
-				return api.updateRRData(rrId, rr.getAnswer(), rr.getTtl(), rr.getPriority(), rr.isWildcard(), rr.getRetry(), rr.getExpire(), rr.getMinimum(), rr.getWeight(), rr.getPort(), rr.getTitle(), rr.getKeywords(), rr.getDescription()) ;
+				return api.updateRRData(rrId, rr.getAnswer(), rr.getTtl(), rr.getPriority(), rr.isWildcard(), rr.getRetry(), rr.getExpire(), rr.getMinimum(), rr.getWeight(), rr.getPort(), rr.getTitle(), rr.getKeywords(), rr.getDescription(), rr.getGeoGroup(), rr.getCountryId(), rr.getRegionId(), rr.getCityId()) ;
 			} else {
 				JSONObject retVal = null ;
 				switch (rr.getType()) {

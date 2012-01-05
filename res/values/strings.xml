@@ -143,5 +143,14 @@
 	<string name="create_new_domain_label">Create New Domain</string>
 	<string name="create_new_group_label">Create New Domain Group</string>
 	<string name="geo_groups_header">Geo-Location Groups</string>
+	<string name="delete">Delete</string>
+	<string name="domain_group_delete_confirmation">By pressing OK, the selected domain group will be deleted if it is empty. If it is not empty, the delete will fail.</string>
+	<string name="dg_delete_failed_title">Failed to delete domain group</string>
+	<string name="dg_delete_failed_message">The domain group was not deleted for the following reason</string>
+	<string name="unk_api_error">Unknown API error</string>
+	<string name="api_result_invalid">Invalid API response format.</string>
+	<string name="domain_delete_confirmation_message">Pressing \'OK\' will delete the domain DOMAINNAME from the system and make all records for that domain inactive. There is no way to reverse this change without re-entering all domain data.</string>
+	<string name="domains_group_select_label">Domain Group</string>
+	<string name="domain_groups_loading_title">Loading domain groups list</string>
 </resources>
 
