@@ -3,6 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/token_retrieve_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/token_retrieve_message_content"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/usernameInputLabel"
@@ -10,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/token_dialog_username"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/usernameInput"
@@ -28,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/token_dialog_password"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/passwordInput"

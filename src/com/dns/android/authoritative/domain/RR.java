@@ -3,8 +3,6 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.xbill.DNS.Type;
-
 public class RR implements Serializable {
 
 	/**
@@ -16,7 +14,7 @@ public class RR implements Serializable {
 
 	String answer ;
 
-	Integer type ;
+	String type ;
 
 	Date date_created ;
 
@@ -71,11 +69,11 @@ public class RR implements Serializable {
 	}
 
 	public String getType() {
-		return Type.string(this.type) ;
+		return this.type ;
 	}
 
 	public void setType(String type) {
-		this.type = org.xbill.DNS.Type.value(type) ;
+		this.type = type ;
 	}
 
 	public Date getDate_created() {

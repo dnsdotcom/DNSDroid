@@ -78,6 +78,7 @@ public class HostsFragment extends SherlockFragment {
 	protected int offset = 0 ;
 	protected HostListAdapter baseAdapter ;
 	protected HostListEndlessAdapter endlessHostAdapter;
+	protected String path ;
 	protected OnHostSelectedListener mListener ;
 
 	public interface OnHostSelectedListener {
@@ -103,6 +104,7 @@ public class HostsFragment extends SherlockFragment {
 		Log.d(TAG, "Fragment loaded and now setting up UI.") ;
 		String fragmentLabel = getActivity().getResources().getString(R.string.hosts_fragment_label)+" "+parent.getName() ;
 		hostsFragmentLabel.setText(fragmentLabel) ;
+		path = "/hosts/domain/"+parent.getId()+"/" ;
 		loadInitialHosts() ;
 	}
 
@@ -178,6 +180,87 @@ public class HostsFragment extends SherlockFragment {
 		builder.show();
 	}
 
+	@Background
+	protected void loadInitialHosts() {
+		HashMap<String, String> params = new HashMap<String, String>() ;
+		params.put("limit", limit+"") ;
+		params.put("offset", offset+"") ;
+		HostList results = client.getObject(HostList.class, path, params) ;
+		if (results.getMeta()!=null) {
+			totalCount = results.getMeta().getTotal_count();
+		} else {
+			totalCount = results.getHosts().length ; // This may be obsolete cruft left over from an ancient bug in the API
+		}
+		hostList = new ArrayList<Host>() ;
+		for (Host item: results.getHosts()) {
+			hostList.add(item) ;
+		}
+		setListViewAdapter() ;
+	}
+
+	@UiThread
+	protected void setListViewAdapter() {
+		baseAdapter = new HostListAdapter(getActivity()) ;
+		baseAdapter.setHostList(hostList) ;
+		if (hostsListView==null) {
+			hostsListView = (ListView) getActivity().findViewById(R.id.domainListView) ;
+		}
+		endlessHostAdapter = new HostListEndlessAdapter(baseAdapter) ;
+		endlessHostAdapter.setRunInBackground(true) ;
+		hostsListView.setAdapter(endlessHostAdapter) ;
+		hostsLoadingIndicator.setVisibility(View.GONE) ;
+		if (hostFilter!=null) {
+			hostFilter.clearFocus() ;
+		}
+	}
+
+	@Click(R.id.hostFilterApply)
+	public void onSearchApply() {
+		Log.d(TAG, "Filter button pressed.") ;
+		hostFilterValue = hostFilter.getText().toString() ;
+		hostsLoadingIndicator.setVisibility(View.VISIBLE) ;
+		limit = 0 ;
+		offset = 0 ;
+		loadFilteredHosts() ;
+	}
+
+	@Background
+	protected void loadFilteredHosts() {
+		Log.d(TAG, "Repopulating the domainList for the list view.") ;
+		HashMap<String, String> params = new HashMap<String, String>() ;
+		if ((hostFilterValue!=null) && (hostFilterValue.length()>0)) {
+			params.put("name__icontains", hostFilterValue) ;
+		}
+		params.put("limit", limit+"") ;
+		params.put("offset", offset+"") ;
+		HostList results = client.getObject(HostList.class, path, params) ;
+		if (results.getMeta()!=null) {
+			totalCount = results.getMeta().getTotal_count();
+		} else {
+			totalCount = results.getHosts().length ; // This may be obsolete cruft left over from an ancient bug in the API
+		}
+		hostList = new ArrayList<Host>() ;
+		for (Host item: results.getHosts()) {
+			hostList.add(item) ;
+		}
+		updateListAdapter() ;
+	}
+
+	@UiThread
+	protected void updateListAdapter() {
+		Log.d(TAG, "Resetting the list view adapter to display a new list.") ;
+		baseAdapter = new HostListAdapter(getActivity()) ;
+		baseAdapter.setHostList(hostList) ;
+		baseAdapter.getFilter().filter(hostFilterValue) ;
+		if (hostsListView==null) {
+			hostsListView = (ListView) getActivity().findViewById(R.id.hostListView) ;
+		}
+		endlessHostAdapter = new HostListEndlessAdapter(baseAdapter) ;
+		endlessHostAdapter.setRunInBackground(true) ;
+		hostsListView.setAdapter(endlessHostAdapter) ;
+		hostsLoadingIndicator.setVisibility(View.GONE) ;
+	}
+
 	public class HostListAdapter extends ArrayAdapter<Host> {
 
 		protected ArrayList<Host> hostList = null ;
@@ -230,18 +313,18 @@ public class HostsFragment extends SherlockFragment {
 					ArrayList<Host> filteredHostNames = new ArrayList<Host>() ;
 
 					if (constraint==null || constraint.length()==0) {
-						Log.d("DomainListAdapter Filter", "No filter value") ;
+						Log.d("HostListAdapter Filter", "No filter value") ;
 						results.count = hostList.size() ;
 						results.values = hostList ;
 					} else {
-						Log.d("DomainListAdapter Filter", "Filtering for: "+constraint) ;
+						Log.d("HostListAdapter Filter", "Filtering for: "+constraint) ;
 						constraint = constraint.toString().toLowerCase() ;
 						filteredHostNames = new ArrayList<Host>(Collections2.filter(hostList, new HostPredicate(constraint.toString()))) ;
 						results.count = filteredHostNames.size() ;
 						results.values = filteredHostNames ;
 					}
 
-					Log.d("DomainListAdapter Filter", "Count: "+results.count) ;
+					Log.d("HostListAdapter Filter", "Count: "+results.count) ;
 					return results ;
 				}
 
@@ -267,87 +350,6 @@ public class HostsFragment extends SherlockFragment {
 			domainLabel.setText(filteredHostList.get(position).getName().trim().length()==0?"(root)":filteredHostList.get(position).getName());
 			return row;
 		}
-	}
-
-	@Background
-	protected void loadInitialHosts() {
-		HashMap<String, String> params = new HashMap<String, String>() ;
-		params.put("limit", limit+"") ;
-		params.put("offset", offset+"") ;
-		HostList results = client.getObject(HostList.class, "/hosts/domain/"+parent.getId()+"/", params) ;
-		if (results.getMeta()!=null) {
-			totalCount = results.getMeta().getTotal_count();
-		} else {
-			totalCount = results.getHosts().length ;
-		}
-		hostList = new ArrayList<Host>() ;
-		for (Host item: results.getHosts()) {
-			hostList.add(item) ;
-		}
-		setListViewAdapter() ;
-	}
-
-	@UiThread
-	protected void setListViewAdapter() {
-		baseAdapter = new HostListAdapter(getActivity()) ;
-		baseAdapter.setHostList(hostList) ;
-		if (hostsListView==null) {
-			hostsListView = (ListView) getActivity().findViewById(R.id.domainListView) ;
-		}
-		endlessHostAdapter = new HostListEndlessAdapter(baseAdapter) ;
-		endlessHostAdapter.setRunInBackground(true) ;
-		hostsListView.setAdapter(endlessHostAdapter) ;
-		hostsLoadingIndicator.setVisibility(View.GONE) ;
-		if (hostFilter!=null) {
-			hostFilter.clearFocus() ;
-		}
-	}
-
-	@Click(R.id.hostFilterApply)
-	public void onSearchApply() {
-		Log.d(TAG, "Filter button pressed.") ;
-		hostFilterValue = hostFilter.getText().toString() ;
-		hostsLoadingIndicator.setVisibility(View.VISIBLE) ;
-		limit = 0 ;
-		offset = 0 ;
-		loadFilteredHosts() ;
-	}
-
-	@Background
-	protected void loadFilteredHosts() {
-		Log.d(TAG, "Repopulating the domainList for the list view.") ;
-		HashMap<String, String> params = new HashMap<String, String>() ;
-		if ((hostFilterValue!=null) && (hostFilterValue.length()>0)) {
-			params.put("name__icontains", hostFilterValue) ;
-		}
-		params.put("limit", limit+"") ;
-		params.put("offset", offset+"") ;
-		HostList results = client.getObject(HostList.class, "/hosts/domain/"+parent.getId()+"/", params) ;
-		if (results.getMeta()!=null) {
-			totalCount = results.getMeta().getTotal_count();
-		} else {
-			totalCount = results.getHosts().length ;
-		}
-		hostList = new ArrayList<Host>() ;
-		for (Host item: results.getHosts()) {
-			hostList.add(item) ;
-		}
-		updateListAdapter() ;
-	}
-
-	@UiThread
-	protected void updateListAdapter() {
-		Log.d(TAG, "Resetting the list view adapter to display a new list.") ;
-		baseAdapter = new HostListAdapter(getActivity()) ;
-		baseAdapter.setHostList(hostList) ;
-		baseAdapter.getFilter().filter(hostFilterValue) ;
-		if (hostsListView==null) {
-			hostsListView = (ListView) getActivity().findViewById(R.id.hostListView) ;
-		}
-		endlessHostAdapter = new HostListEndlessAdapter(baseAdapter) ;
-		endlessHostAdapter.setRunInBackground(true) ;
-		hostsListView.setAdapter(endlessHostAdapter) ;
-		hostsLoadingIndicator.setVisibility(View.GONE) ;
 	}
 
 	private class HostListEndlessAdapter extends EndlessAdapter {
@@ -423,8 +425,7 @@ public class HostsFragment extends SherlockFragment {
 				if (filterString != null) {
 					params.put("name__icontains", filterString);
 				}
-				HostList results = client.getObject(HostList.class,
-						"/hosts/domain/"+parent.getId()+"/", params);
+				HostList results = client.getObject(HostList.class, path, params);
 				if (newHosts == null) {
 					newHosts = new ArrayList<Host>();
 				} else {
