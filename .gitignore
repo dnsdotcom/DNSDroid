@@ -4,3 +4,5 @@ bin/
 gen/
 bin/*
 gen/*
+.apt_generated
+.apt_generated/*
