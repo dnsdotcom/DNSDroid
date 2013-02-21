@@ -41,6 +41,11 @@ import com.dns.android.authoritative.domain.DomainList;
 import com.dns.android.authoritative.rest.RestClient;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 
+/**
+ * A fragment which displays a {@link ListView} of domains for the configured account.
+ * @author <a href="mailto: deven@dns.com">Deven Phillips</a>
+ *
+ */
 @EFragment(R.layout.domains_fragment)
 public class DomainsFragment extends SherlockFragment {
 

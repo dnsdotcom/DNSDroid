@@ -1,8 +1,8 @@
 DNS.com Mobile Application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This application provides basic access to the capabilities of the DNS.com web
-site from a simplified Android application. The app provides access to all
+This application will be able to manage domains/hosts/groups/geo 
+for DNS.com accounts. The app provides access to all
 functions which are currently available via the DNS.com API.
 
 https://github.com/dnsdotcom/API_DOC
@@ -19,8 +19,7 @@ in troubleshooting DNS issues. The tools will allow you to perform:
 
 * WHOIS lookups
 * DNS queries against specific DNS servers
-* Geo-Location testing (By implementing the EDNS0 extension and specifying a
-  source IP address)
+* Geo-Location testing (By implementing the EDNS0 extension and specifying a source IP address)
 * Perform traceroutes to a given IP address
 
 The results of all tests can be sent via e-mail in case you want to send a support

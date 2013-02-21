@@ -44,7 +44,8 @@ import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 /**
- * @author dphillips
+ * A fragment which displays a {@link ListView} of hosts for the selected domain.
+ * @author <a href="mailto: deven@dns.com">Deven Phillips</a>
  *
  */
 @EFragment(R.layout.hosts_fragment)

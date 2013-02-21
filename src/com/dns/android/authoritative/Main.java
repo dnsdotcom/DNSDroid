@@ -16,11 +16,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dns.android.authoritative.activities.SettingsActivity_;
 import com.dns.android.authoritative.domain.Domain;
 import com.dns.android.authoritative.domain.Host;
+import com.dns.android.authoritative.domain.RR;
 import com.dns.android.authoritative.fragments.DomainGroupsFragment_;
 import com.dns.android.authoritative.fragments.DomainsFragment_;
 import com.dns.android.authoritative.fragments.DomainsFragment;
 import com.dns.android.authoritative.fragments.GeoGroupsFragment_;
 import com.dns.android.authoritative.fragments.HostsFragment_;
+import com.dns.android.authoritative.fragments.RRDetailFragment_;
 import com.dns.android.authoritative.fragments.RRListFragment_;
 import com.dns.android.authoritative.fragments.ToolsFragment_;
 import com.dns.android.authoritative.utils.DNSPrefs_;
@@ -28,8 +30,15 @@ import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
+/**
+ * Main activity which manages all fragments and transitions to other activities
+ * @author <a href="mailto: deven@dns.com">Deven Phillips</a>
+ *
+ */
 @EActivity(R.layout.activity_main)
-public class Main extends SherlockFragmentActivity implements DomainsFragment.OnDomainSelectedListener, HostsFragment_.OnHostSelectedListener {
+public class Main 
+	extends SherlockFragmentActivity 
+	implements DomainsFragment.OnDomainSelectedListener, HostsFragment_.OnHostSelectedListener, RRListFragment_.OnRRSelectedListener {
 
 //	private final static String TAG = "Main";
 
@@ -227,15 +236,28 @@ public class Main extends SherlockFragmentActivity implements DomainsFragment.On
 	}
 
 	@Override
-		public void onBackPressed() {
-			if (!breadCrumbs.isEmpty()) {
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ft.disallowAddToBackStack();
-				current = null;
-				current = breadCrumbs.pop() ;
-				ft.replace(R.id.realtabcontent, current);
-				ft.setCustomAnimations(R.anim.slide_out_right, R.anim.slide_in_right);
-				ft.commit();
-			}
+	public void onRRSelected(RR record) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
+		ft.addToBackStack(null) ;
+		breadCrumbs.push(current) ;
+		Fragment frag = Fragment.instantiate(getApplicationContext(), RRDetailFragment_.class.getName()) ;
+		((RRDetailFragment_)frag).setTargetRR(record) ;
+		ft.replace(R.id.realtabcontent, frag) ;
+		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
+		current = frag ;
+		ft.commit() ;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!breadCrumbs.isEmpty()) {
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.disallowAddToBackStack();
+			current = null;
+			current = breadCrumbs.pop() ;
+			ft.replace(R.id.realtabcontent, current);
+			ft.setCustomAnimations(R.anim.slide_out_right, R.anim.slide_in_right);
+			ft.commit();
 		}
+	}
 }
