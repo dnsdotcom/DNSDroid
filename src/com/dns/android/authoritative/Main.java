@@ -132,6 +132,10 @@ public class Main
             public Fragment getFragment() {
             	return fragment ;
             }
+
+            public String getTag() {
+            	return tag ;
+            }
         }
 
         public Fragment getCurrentTabFragment() {
@@ -190,16 +194,13 @@ public class Main
                     if (mLastTab.fragment != null) {
                         breadCrumbs.push(mLastTab.fragment) ;
                         ft.addToBackStack(null) ;
-                        ft.detach(mLastTab.fragment);
                     }
                 }
                 if (newTab != null) {
                     if (newTab.fragment == null) {
                         newTab.fragment = Fragment.instantiate(mActivity, newTab.clss.getName(), newTab.args);
-                        ft.add(mContainerId, newTab.fragment, newTab.tag);
-                    } else {
-                        ft.attach(newTab.fragment);
                     }
+                    ft.replace(mContainerId, newTab.fragment) ;
                 }
                 mLastTab = newTab;
                 current = mLastTab.fragment ;
