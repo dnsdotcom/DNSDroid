@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/domainListBusy"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@+id/domainListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/filterArea"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarSize="12dip" >
+        <requestFocus />
+    </ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/filterArea"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/dns_red"
+        android:orientation="horizontal"
+        android:descendantFocusability="beforeDescendants"
+		android:focusableInTouchMode="true" >
+
+        <EditText
+            android:id="@+id/domainFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/domFilterApply"
+            android:hint="@android:string/search_go"
+            android:inputType="textNoSuggestions"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/domFilterApply"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/apply"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:src="@drawable/filter" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/domainListBusyIndicator"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

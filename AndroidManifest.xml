@@ -1,69 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.dns.mobile">
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4"
-		android:maxSdkVersion="12"></uses-sdk>
-	<application android:label="@string/dns_app" android:icon="@drawable/dns_launcher_icon">
+	package="com.dns.android.authoritative"
+	android:versionCode="1"
+	android:versionName="1.0" >
 
-		<!-- An Activity in the application - this is something the user can launch 
-			and interact with. The "name" attribute is the name of the class within your 
-			package that implements this activity. -->
-		<activity android:name=".DNSActivity" android:theme="@android:style/Theme.NoTitleBar">
+	<uses-sdk
+		android:minSdkVersion="11"
+		android:targetSdkVersion="17" />
+	
+		<uses-permission android:name="android.permission.INTERNET" />
+		
 
-			<!-- An IntentFilter tells the system when it should use your activity. 
-				This allows the user to get to your activity without someone having to explicitly 
-				know to launch your class "com.examplel.android.skeletonapp.SkeletonActivity". -->
+	<application
+	    android:allowBackup="true"
+		android:icon="@drawable/ic_launcher"
+        android:theme="@style/Theme.dns" 
+		android:label="@string/icon_app_name" >
+		<activity
+			android:name="Main_"
+			android:label="@string/app_name" >
 			<intent-filter>
-				<!-- The MAIN action describes a main entry point into an activity, without 
-					any associated data. -->
 				<action android:name="android.intent.action.MAIN" />
-
-				<!-- This places this activity into the main app list. -->
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-
 		</activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.ConfigurationActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.tools.DomainNameToolsActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.tools.WhoisActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.tools.DigDnsLookupActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.tools.DigServerManagerActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.groups.DomainGroupsListActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.groups.DigServerManagerActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.domains.DomainListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.domains.CreateNewDomainActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.records.HostListActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.records.HostRecordListActivityActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.records.CreateNewHostActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.records.HostRecordListActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:launchMode="singleTask"
-			android:name=".activities.records.RecordDetailActivity"
-			android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name=".activities.domains.DomainDetails"
-			android:launchMode="singleTask"></activity>
+		<activity android:name=".activities.SettingsActivity_"></activity>
+		<activity android:name=".fragments.GetAuthTokenDialogFragment" android:theme="@style/Sherlock.__Theme.Dialog"></activity>
 	</application>
 
 </manifest>

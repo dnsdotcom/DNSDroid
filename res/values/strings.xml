@@ -1,113 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
-<!-- This file contains resource definitions for displayed strings, allowing
-     them to be changed based on the locale and options. -->
-
 <resources>
-    <!-- Simple strings. -->
-    <string name="dns_app">DNS.com Mobile</string>
-    <string name="back">Back</string>
-    <string name="clear">Clear</string>
 
-    <!-- This is a complex string containing style runs. -->
-    <string name="main_label">DNS.com Mobile</string>
-    <string name="domainViewLabel">Domain List</string>
-    <string name="domainGroupListLabel">Domain Group List</string>
-    <string name="geoGroupLabel">Geo-Group List</string>
-    <string name="domain_selection_button">Domains</string>
-    <string name="domain_groups_button_text">Domain Groups</string>
-    <string name="geo_groups_button_text">Geo-Groups</string>
-    <string name="record_type_label">Type</string>
-    <string name="name_servers_button_text">Name Servers</string>
-    <string name="tools_button_text">Tools</string>
-    <string name="dns_mobile_description">Manage your DNS.com domain settings from your mobile device.</string>
-    <string name="new_entry">[New]</string>
-    <string name="domains_list_view_label">My Domains</string>
-    <string name="open_web_confirmation_title">Confirmation...</string>
-    <string name="open_web_confirmation_msg">Visit DNS.com on the web?</string>
-	<string name="open_web_confirmation_yes">Yes</string>
-	<string name="open_web_confirmation_no">No</string>
-	<string name="dns_configuration_label">DNS.com Configuration</string>
-	<string name="auth_token_label">Auth Token</string>
-	<string name="auth_token_input_hint">Auth Token</string>
-	<string name="use_sandbox_config_label">Use Sandbox</string>
-	<string name="configuration_save_button_label">Save</string>
-	<string name="configuration_token_dialog_message">Enter Account Token</string>
-	<string name="configuration_token_dialog_title">Enter the authorization token from the Settings->API Settings page on the DNS.com web site.</string>
-	<string name="configuration_sandbox_summary">Checking this box will cause the application to use the DNS.com sandbox instead of live production data. You can use this to test access to DNS.com from the app without making real changes.</string>
-	<string name="screen_bottom_help_text">Long press to delete items</string>
-	<string name="api_request_failed">API request failed</string>
-	<string name="domain_groups_list_label">My Domain Groups</string>
-	<string name="rr_type_selection_label">Record Type</string>
-	<string name="rr_answer_label">Address</string>
-	<string name="rr_rname_label">Contact Address</string>
-	<string name="rr_ttl_label">TTL (in seconds)</string>
-	<string name="rr_details_header_label">Details For: </string>
-	<string name="rr_srv_weight_label">Weight</string>
-	<string name="rr_srv_port_label">Port Number (0 - 65535)</string>
-	<string name="priority_label">Priority</string>
-	<string name="rr_retry_label">Retry Interval (in seconds)</string>
-	<string name="rr_expire_label">Expire</string>
-	<string name="rr_min_label">Minimum TTL (in seconds)</string>
-	<string name="rr_details_save">Save</string>
-	<string name="main_menu_my_domains">My Domains</string>
-	<string name="main_menu_my_domain_groups">My Domain Groups</string>
-	<string name="main_menu_my_geogroups">My Geo-Groups</string>
-	<string name="main_menu_my_nameservers">My Nameservers</string>
-	<string name="main_menu_dns_tools">DNS Tools</string>
-	<string name="dns_tools_whois">WHOIS Lookup</string>
-	<string name="dns_tools_dig">DIG Lookup</string>
-	<string name="dns_tools_header_label">DNS Tools</string>
-	<string name="dns_tool_whois_label">WHOIS</string>
-	<string name="whois_domain_name_label">Enter Domain Name</string>
-	<string name="whois_lookup_button">Lookup</string>
-	<string name="whois_domain_input_hint">domain.tld</string>
-	<string name="dig_fqdn_label">Enter Host Name</string>
-	<string name="dig_lookup_button">Lookup</string>
-	<string name="dig_fqdn_input_hint">host.domain.tld</string>
-	<string name="dig_activity_header">DNS DIG</string>
-	<string name="dig_name_server_select_label">Name Server</string>
-	<string name="dig_use_custom_ns_button_label">Use</string>
-	<string name="dig_config_servers_label">Manage Name Servers</string>
-	<string name="dig_config_delete_title">Delete Confirmation</string>
-	<string name="dig_config_delete_message">Are you sure you want to delete NAMESERVER from the name server list?</string>
-	<string name="dig_config_delete_positive">Yes</string>
-	<string name="dig_config_delete_negative">No</string>
-	<string name="dig_edit_server_dialog_title">Add Server</string>
-	<string name="dig_add_server_name_label">Name</string>
-	<string name="dig_add_server_addr_label">Address</string>
-	<string name="string_save">Save</string>
-	<string name="string_cancel">Cancel</string>
-	<string name="string_ok">OK</string>
-	<string name="rrRefreshLabel">Refresh Interval</string>
-	<string name="rr_update_saved_title">Record Saved</string>
-	<string name="rr_update_saved_body">Changes for this record were saved successfully.</string>
-	<string name="add_domain_header">New Domain</string>
-	<string name="domain_name">Domain Name</string>
-	<string name="example_host_name">host.example.tld</string>
-	<string name="example_domain_name">domain.tld</string>
-	<string name="example_rname">user@example.tld</string>
-	<string name="slave_zone">Set As Slave?</string>
-	<string name="master_label">Master Server Address</string>
-	<string name="example_ip_address">192.168.123.112</string>
-	<string name="add_domain_input_error_title">Domain Form Incomplete</string>
-	<string name="add_domain_input_error_message">One or more of the required fields are not correct.</string>
-	<string name="view_records_button_label">Records</string>
-	<string name="new_host_name_header">New Host</string>
-	<string name="new_host_name_label">"New Host's Name"</string>
+	<string name="app_name">Authoritative</string>
+	<string name="menu_settings">Settings</string>
+	<string name="logo_alt_text">DNS.com by Comodo</string>
+	<string name="icon_app_name">DNS.com Authoritative DNS</string>
+	<string name="domains_fragment_label">Domains Fragment</string>
+	<string name="domain_groups_fragment_label">Domain Groups Fragment</string>
+	<string name="geo_groups_fragment_label">GeoGroups Fragment</string>
+	<string name="tools_fragment_label">Tools Fragment</string>
+	<string name="default_web_url">https://www.dns.com/</string>
+	<string name="web_address_setting_label">Web Application Address</string>
+	<string name="auth_token_input_label">Authentication Token</string>
+	<string name="auth_token_hint"><![CDATA[abcdef12-3456-7890-abcd-ef1234567890]]></string>
+	<string name="menu_settings">Settings</string>
+	<string name="token_retrieve_button_label">Get Token</string>
+	<string name="token_dialog_username">Username</string>
+	<string name="token_dialog_password">Password</string>
+	<string name="reset">Reset</string>
+	<string name="apply">Apply</string>
+	<string name="record_delete_confirmation_message">Deleting \'[[DOMAINNAME]]\' cannot be undone, are you sure you wish to permanently delete it?</string>
+	<string name="loading">Loading</string>
+	<string name="edit">Edit</string>
+	<string name="data_changed_title">Data Changed On The Server</string>
+	<string name="data_changed_message">The list of domains on the server has changed in size. Would you like to reload the displayed data from the server?</string>
+	<string name="record_delete_failed_title">Failed to delete \'[[RECORDNAME]]\'</string>
+	<string name="record_delete_failed_message">Unable to delete \'[[RECORDNAME]]\'. Please try again later or contact support for additional assistance.</string>
+	<string name="filter">Filter</string>
+	<string name="auth_token_failure_title">Token Retrieval Failed</string>
+	<string name="auth_token_failure_message">Failed to retrieve the auth token for the given username and password. Please check your credentials and contact support if you think you have reached this message in error.</string>
+	<string name="hosts_fragment_label">Hosts for: </string>
+	<string name="rr_list_fragment_label">RRs for: </string>
+<!-- <string name=""></string>  -->	
 </resources>
-

@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp" >
+
+    <TextView
+        android:id="@+id/appUrlLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/web_address_setting_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/appUrlInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/appUrlLabel"
+        android:ems="10"
+        android:inputType="textNoSuggestions|textUri"
+        android:text="@string/default_web_url" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/authTokenInputLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/appUrlInput"
+        android:layout_marginTop="55dp"
+        android:text="@string/auth_token_input_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/tokenInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/authTokenInputLabel"
+        android:ems="10"
+        android:hint="@string/auth_token_hint"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/tokenRetrieveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/authTokenInputLabel"
+        android:layout_alignParentRight="true"
+        android:text="@string/token_retrieve_button_label" />
+
+    <ProgressBar
+        android:id="@+id/loadingAuthTokenIndicator"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
