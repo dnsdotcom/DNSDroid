@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class City implements Serializable {
+public class City implements Serializable, GenericEntity {
 
 	/**
 	 * 
@@ -25,6 +25,7 @@ public class City implements Serializable {
 
 	String postal_code ;
 
+	@Override
 	public Integer getId() {
 		return id;
 	}

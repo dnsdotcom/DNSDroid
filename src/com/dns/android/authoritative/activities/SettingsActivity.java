@@ -67,14 +67,18 @@ public class SettingsActivity extends SherlockActivity {
 
 	@AfterTextChange(R.id.appUrlInput)
 	protected void saveChangedAppURL() {
-		prefs.edit().getBaseAddress().put(webAppURL.getText().toString()).apply() ;
-		Log.d(TAG, "Saved URL.") ;
+		if (webAppURL.getText().toString().length()>0) {
+			prefs.edit().getBaseAddress().put(webAppURL.getText().toString()).apply() ;
+			Log.d(TAG, "Saved URL.") ;
+		}
 	}
 
 	@AfterTextChange(R.id.tokenInput)
 	protected void saveChangedAuthToken() {
-		prefs.edit().getAuthToken().put(tokenInput.getText().toString()).apply() ;
-		Log.d(TAG, "Saved token.") ;
+		if (tokenInput.getText().toString().length()>0) {
+			prefs.edit().getAuthToken().put(tokenInput.getText().toString()).apply() ;
+			Log.d(TAG, "Saved token.") ;
+		}
 	}
 
 	@AfterViews

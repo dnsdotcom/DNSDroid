@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class Region implements Serializable {
+public class Region implements Serializable, GenericEntity {
 
 	/**
 	 * 

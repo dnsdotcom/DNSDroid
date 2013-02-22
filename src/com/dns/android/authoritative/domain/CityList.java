@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class CityList implements Serializable {
+public class CityList implements Serializable, GenericEntityList<City> {
 
 	/**
 	 * 
@@ -13,11 +13,11 @@ public class CityList implements Serializable {
 
 	Meta meta ;
 
-	public City[] getCities() {
+	public City[] getItems() {
 		return cities;
 	}
 
-	public void setCities(City[] cities) {
+	public void setItems(City[] cities) {
 		this.cities = cities;
 	}
 

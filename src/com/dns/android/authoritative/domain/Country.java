@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class Country implements Serializable {
+public class Country implements Serializable, GenericEntity {
 
 	/**
 	 * 
@@ -21,6 +21,7 @@ public class Country implements Serializable {
 
 	String name ;
 
+	@Override
 	public Integer getId() {
 		return id;
 	}

@@ -3,6 +3,8 @@ package com.dns.android.authoritative.rest;
 import java.util.HashMap;
 import java.util.Iterator;
 import android.util.Log;
+
+import com.dns.android.authoritative.domain.EntityList;
 import com.dns.android.authoritative.domain.Token;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.google.gson.GsonBuilder;
@@ -24,6 +26,37 @@ public class RestClient {
 
 	@Pref
 	DNSPrefs_ prefs ;
+
+	@SuppressWarnings("unchecked")
+	public <T> EntityList<T> getObjectList(Class<T> type, String path, HashMap<String, String> parameters) throws RestClientException {
+		RestTemplate template = new RestTemplate() ;
+		GsonBuilder builder = new GsonBuilder() ;
+		builder.setDateFormat("E, d MMM yyyy HH:mm:ss Z") ;
+		template.getMessageConverters().add(new GsonHttpMessageConverter(builder.create())) ;
+		HttpHeaders hdrs = new HttpHeaders() ;
+		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
+		Log.d(TAG, "Using AUTH_TOKEN: "+prefs.getAuthToken().get()) ;
+		hdrs.add("Accept", "application/json") ;
+		HttpEntity<?> requestEntity = new HttpEntity<T>(hdrs) ;
+		StringBuilder queryBuilder = new StringBuilder("?") ;
+		Iterator<String> keyIterator = parameters.keySet().iterator() ;
+		while (keyIterator.hasNext()) {
+			String key = keyIterator.next() ;
+			String value = parameters.get(key) ;
+			queryBuilder.append(key+"="+value) ;
+			if (keyIterator.hasNext()) {
+				queryBuilder.append("&") ;
+			}
+		}
+		String url = prefs.getBaseAddress().get()+path+queryBuilder.toString() ;
+		Log.d(TAG, "GET: "+url) ;
+		EntityList<T> results = new EntityList<T>() ;
+
+		ResponseEntity<T> response = (ResponseEntity<T>) template.exchange(url, HttpMethod.GET, requestEntity, results.getClass()) ;
+		results = (EntityList<T>) response.getBody() ;
+
+		return results ;
+	}
 
 	public <T> T getObject(Class<T> type, String path, HashMap<String, String> parameters) throws RestClientException {
 		RestTemplate template = new RestTemplate() ;

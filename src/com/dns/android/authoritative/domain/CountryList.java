@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class CountryList implements Serializable {
+public class CountryList implements Serializable, GenericEntityList<Country> {
 
 	/**
 	 * 
@@ -13,11 +13,11 @@ public class CountryList implements Serializable {
 
 	Meta meta ;
 
-	public Country[] getCountries() {
+	public Country[] getItems() {
 		return countries;
 	}
 
-	public void setCountries(Country[] countries) {
+	public void setItems(Country[] countries) {
 		this.countries = countries;
 	}
 

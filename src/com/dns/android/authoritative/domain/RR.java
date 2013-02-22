@@ -3,7 +3,7 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class RR implements Serializable {
+public class RR implements Serializable, GenericEntity {
 
 	/**
 	 * 
@@ -218,5 +218,13 @@ public class RR implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.dns.android.authoritative.domain.GenericEntity#getName()
+	 */
+	@Override
+	public String getName() {
+		return answer;
 	}
 }

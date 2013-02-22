@@ -3,7 +3,7 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Domain implements Serializable {
+public class Domain implements Serializable, GenericEntity {
 
 	/**
 	 * 

@@ -2,7 +2,7 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class DomainGroupList implements Serializable {
+public class DomainGroupList implements Serializable, GenericEntityList<DomainGroup> {
 
 	/**
 	 * 
@@ -13,11 +13,11 @@ public class DomainGroupList implements Serializable {
 
 	Meta meta ;
 
-	public DomainGroup[] getDomain_groups() {
+	public DomainGroup[] getItems() {
 		return domain_groups;
 	}
 
-	public void setDomain_groups(DomainGroup[] domain_groups) {
+	public void setItems(DomainGroup[] domain_groups) {
 		this.domain_groups = domain_groups;
 	}
 

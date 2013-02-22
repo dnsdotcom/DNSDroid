@@ -17,6 +17,7 @@ import com.dns.android.authoritative.activities.SettingsActivity_;
 import com.dns.android.authoritative.domain.Domain;
 import com.dns.android.authoritative.domain.Host;
 import com.dns.android.authoritative.domain.RR;
+import com.dns.android.authoritative.fragments.DNSListFragment;
 import com.dns.android.authoritative.fragments.DomainGroupsFragment_;
 import com.dns.android.authoritative.fragments.DomainsFragment_;
 import com.dns.android.authoritative.fragments.DomainsFragment;
@@ -40,12 +41,30 @@ public class Main
 	extends SherlockFragmentActivity 
 	implements DomainsFragment.OnDomainSelectedListener, HostsFragment_.OnHostSelectedListener, RRListFragment_.OnRRSelectedListener {
 
+	public static class BackState {
+		Fragment fragment ;
+		String tabId ;
+
+		public BackState(Fragment fragment, String tabId) {
+			super() ;
+			this.fragment = fragment ;
+			this.tabId = tabId ;
+		}
+
+		public String getTabId() {
+			return tabId ;
+		}
+
+		public Fragment getFragment() {
+			return fragment ;
+		}
+	}
+
 //	private final static String TAG = "Main";
 
 	protected TabHost mTabHost;
 	protected TabManager mTabsAdapter;
-	protected static Fragment current ;
-	protected static Stack<Fragment> breadCrumbs = new Stack<Fragment>() ;
+	protected static Stack<BackState> breadCrumbs = new Stack<BackState>() ;
 
 	@Pref
 	protected DNSPrefs_ prefs ;
@@ -65,6 +84,12 @@ public class Main
 			settingsIntent.setClass(getApplicationContext(), SettingsActivity_.class) ;
 			startActivity(settingsIntent) ;
 		}
+		if (prefs.getAuthToken().get().length()<=0) {
+			Intent settingsIntent = new Intent() ;
+			settingsIntent.setClass(getApplicationContext(), SettingsActivity_.class) ;
+			startActivity(settingsIntent) ;
+		}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mTabHost = (TabHost)findViewById(android.R.id.tabhost) ;
 		mTabHost.setup() ;
@@ -93,10 +118,16 @@ public class Main
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent() ;
-		intent.setClass(this.getApplicationContext(), SettingsActivity_.class) ;
-		startActivity(intent) ;
-		return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed() ;
+				return true ;
+			default:
+				Intent intent = new Intent() ;
+				intent.setClass(this.getApplicationContext(), SettingsActivity_.class) ;
+				startActivity(intent) ;
+				return true ;
+		}
 	}
 
 	/**
@@ -138,8 +169,12 @@ public class Main
             }
         }
 
-        public Fragment getCurrentTabFragment() {
-        	return mLastTab.getFragment() ;
+        public BackState getCurrentState() {
+        	return new BackState(mLastTab.fragment, mLastTab.getTag()) ;
+        }
+
+        public void saveCurrentState() {
+        	breadCrumbs.push(new BackState(mLastTab.fragment, mLastTab.getTag())) ;
         }
 
         static class DummyTabFactory implements TabHost.TabContentFactory {
@@ -192,7 +227,6 @@ public class Main
                 FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
                 if (mLastTab != null) {
                     if (mLastTab.fragment != null) {
-                        breadCrumbs.push(mLastTab.fragment) ;
                         ft.addToBackStack(null) ;
                     }
                 }
@@ -203,23 +237,32 @@ public class Main
                     ft.replace(mContainerId, newTab.fragment) ;
                 }
                 mLastTab = newTab;
-                current = mLastTab.fragment ;
                 ft.commit();
                 mActivity.getSupportFragmentManager().executePendingTransactions();
             }
         }
     }
 
+    public void onItemSelected(int id, Class type) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
+		ft.addToBackStack(null) ;
+		mTabsAdapter.saveCurrentState() ;
+		DNSListFragment<?> frag = (DNSListFragment<?>) Fragment.instantiate(getApplicationContext(), HostsFragment_.class.getName()) ;
+		((DNSListFragment<?>)frag).setParentId(id) ;
+		ft.replace(R.id.realtabcontent, frag) ;
+		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
+		ft.commit() ;
+    }
+
 	@Override
 	public void onDomainSelected(Domain domain) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
 		ft.addToBackStack(null) ;
-		breadCrumbs.push(current) ;
+		mTabsAdapter.saveCurrentState() ;
 		Fragment frag = Fragment.instantiate(getApplicationContext(), HostsFragment_.class.getName()) ;
 		((HostsFragment_)frag).setParentDomain(domain) ;
 		ft.replace(R.id.realtabcontent, frag) ;
 		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		current = frag ;
 		ft.commit() ;
 	}
 
@@ -227,12 +270,11 @@ public class Main
 	public void onHostSelected(Host host) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
 		ft.addToBackStack(null) ;
-		breadCrumbs.push(current) ;
+		mTabsAdapter.saveCurrentState() ;
 		Fragment frag = Fragment.instantiate(getApplicationContext(), RRListFragment_.class.getName()) ;
 		((RRListFragment_)frag).setParentHost(host) ;
 		ft.replace(R.id.realtabcontent, frag) ;
 		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		current = frag ;
 		ft.commit() ;
 	}
 
@@ -240,12 +282,11 @@ public class Main
 	public void onRRSelected(RR record) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
 		ft.addToBackStack(null) ;
-		breadCrumbs.push(current) ;
+		mTabsAdapter.saveCurrentState() ;
 		Fragment frag = Fragment.instantiate(getApplicationContext(), RRDetailFragment_.class.getName()) ;
 		((RRDetailFragment_)frag).setTargetRR(record) ;
 		ft.replace(R.id.realtabcontent, frag) ;
 		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		current = frag ;
 		ft.commit() ;
 	}
 
@@ -254,11 +295,16 @@ public class Main
 		if (!breadCrumbs.isEmpty()) {
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			ft.disallowAddToBackStack();
-			current = null;
-			current = breadCrumbs.pop() ;
-			ft.replace(R.id.realtabcontent, current);
+			BackState previousState = breadCrumbs.pop() ;
+			ft.replace(R.id.realtabcontent, previousState.getFragment());
+			if (mTabHost.getCurrentTabTag()!=previousState.getTabId()) {
+				mTabHost.setCurrentTabByTag(previousState.getTabId()) ;
+			}
+			mTabHost.setCurrentTabByTag(previousState.getTabId()) ;
 			ft.setCustomAnimations(R.anim.slide_out_right, R.anim.slide_in_right);
 			ft.commit();
+		} else {
+			this.finish() ;
 		}
 	}
 }

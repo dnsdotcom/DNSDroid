@@ -2,22 +2,22 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
-public class GeoMatchList implements Serializable {
+public class GeoMatchList implements Serializable, GenericEntityList<GeoMatch> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4043154436705213589L;
 
-	GeoMatch matches ;
+	GeoMatch[] matches ;
 
 	Meta meta ;
 
-	public GeoMatch getMatches() {
+	public GeoMatch[] getItems() {
 		return matches;
 	}
 
-	public void setMatches(GeoMatch matches) {
+	public void setItems(GeoMatch[] matches) {
 		this.matches = matches;
 	}
 
