@@ -3,7 +3,6 @@
 	<name>AuthDNS</name>
 	<comment></comment>
 	<projects>
-		<project>FormEditText</project>
 		<project>library</project>
 	</projects>
 	<buildSpec>

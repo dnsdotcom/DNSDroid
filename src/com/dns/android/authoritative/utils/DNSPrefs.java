@@ -1,8 +1,6 @@
 package com.dns.android.authoritative.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;

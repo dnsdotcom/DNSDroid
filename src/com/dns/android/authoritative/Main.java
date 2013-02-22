@@ -14,17 +14,12 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dns.android.authoritative.activities.SettingsActivity_;
-import com.dns.android.authoritative.domain.Domain;
-import com.dns.android.authoritative.domain.Host;
-import com.dns.android.authoritative.domain.RR;
+import com.dns.android.authoritative.callbacks.OnItemSelectedListener;
 import com.dns.android.authoritative.fragments.DNSListFragment;
 import com.dns.android.authoritative.fragments.DomainGroupsFragment_;
-import com.dns.android.authoritative.fragments.DomainsFragment_;
 import com.dns.android.authoritative.fragments.DomainsFragment;
 import com.dns.android.authoritative.fragments.GeoGroupsFragment_;
 import com.dns.android.authoritative.fragments.HostsFragment_;
-import com.dns.android.authoritative.fragments.RRDetailFragment_;
-import com.dns.android.authoritative.fragments.RRListFragment_;
 import com.dns.android.authoritative.fragments.ToolsFragment_;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -37,9 +32,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
  *
  */
 @EActivity(R.layout.activity_main)
-public class Main 
-	extends SherlockFragmentActivity 
-	implements DomainsFragment.OnDomainSelectedListener, HostsFragment_.OnHostSelectedListener, RRListFragment_.OnRRSelectedListener {
+public class Main extends SherlockFragmentActivity implements OnItemSelectedListener {
 
 	public static class BackState {
 		Fragment fragment ;
@@ -97,7 +90,7 @@ public class Main
 
 		mTabsAdapter = new TabManager(this, mTabHost, R.id.realtabcontent) ;
 
-		mTabsAdapter.addTab(mTabHost.newTabSpec("domains").setIndicator("Domains"), DomainsFragment_.class, null) ;
+		mTabsAdapter.addTab(mTabHost.newTabSpec("domains").setIndicator("Domains"), DomainsFragment.class, null) ;
 		mTabsAdapter.addTab(mTabHost.newTabSpec("domain_groups").setIndicator("Domain Groups"), DomainGroupsFragment_.class, null) ;
 		mTabsAdapter.addTab(mTabHost.newTabSpec("geo_groups").setIndicator("Geo Groups"), GeoGroupsFragment_.class, null) ;
 		mTabsAdapter.addTab(mTabHost.newTabSpec("tools").setIndicator("Tools"), ToolsFragment_.class, null) ;
@@ -243,54 +236,19 @@ public class Main
         }
     }
 
-    public void onItemSelected(int id, Class type) {
+    @SuppressWarnings("rawtypes")
+	public void onItemSelected(int id, Class type) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
 		ft.addToBackStack(null) ;
 		mTabsAdapter.saveCurrentState() ;
-		DNSListFragment<?> frag = (DNSListFragment<?>) Fragment.instantiate(getApplicationContext(), HostsFragment_.class.getName()) ;
-		((DNSListFragment<?>)frag).setParentId(id) ;
+		DNSListFragment frag = (DNSListFragment) Fragment.instantiate(getApplicationContext(), HostsFragment_.class.getName()) ;
+		((DNSListFragment)frag).setParentId(id) ;
 		ft.replace(R.id.realtabcontent, frag) ;
 		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
 		ft.commit() ;
     }
 
-	@Override
-	public void onDomainSelected(Domain domain) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
-		ft.addToBackStack(null) ;
-		mTabsAdapter.saveCurrentState() ;
-		Fragment frag = Fragment.instantiate(getApplicationContext(), HostsFragment_.class.getName()) ;
-		((HostsFragment_)frag).setParentDomain(domain) ;
-		ft.replace(R.id.realtabcontent, frag) ;
-		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		ft.commit() ;
-	}
-
-	@Override
-	public void onHostSelected(Host host) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
-		ft.addToBackStack(null) ;
-		mTabsAdapter.saveCurrentState() ;
-		Fragment frag = Fragment.instantiate(getApplicationContext(), RRListFragment_.class.getName()) ;
-		((RRListFragment_)frag).setParentHost(host) ;
-		ft.replace(R.id.realtabcontent, frag) ;
-		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		ft.commit() ;
-	}
-
-	@Override
-	public void onRRSelected(RR record) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction() ;
-		ft.addToBackStack(null) ;
-		mTabsAdapter.saveCurrentState() ;
-		Fragment frag = Fragment.instantiate(getApplicationContext(), RRDetailFragment_.class.getName()) ;
-		((RRDetailFragment_)frag).setTargetRR(record) ;
-		ft.replace(R.id.realtabcontent, frag) ;
-		ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_left) ;
-		ft.commit() ;
-	}
-
-	@Override
+    @Override
 	public void onBackPressed() {
 		if (!breadCrumbs.isEmpty()) {
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
