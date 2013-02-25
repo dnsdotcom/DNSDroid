@@ -11,8 +11,6 @@ public class Country implements Serializable, GenericEntity {
 
 	Integer id ;
 
-	String[] regions ;
-
 	String continent_code ;
 
 	String iso_code ;
@@ -28,14 +26,6 @@ public class Country implements Serializable, GenericEntity {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String[] getRegions() {
-		return regions;
-	}
-
-	public void setRegions(String[] regions) {
-		this.regions = regions;
 	}
 
 	public String getContinent_code() {

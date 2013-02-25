@@ -31,5 +31,16 @@
 	<string name="auth_token_failure_message">Failed to retrieve the auth token for the given username and password. Please check your credentials and contact support if you think you have reached this message in error.</string>
 	<string name="hosts_fragment_label">Hosts for: </string>
 	<string name="rr_list_fragment_label">RRs for: </string>
+	<string name="name">Name:</string>
+	<string name="inDomainGroup">In Domain Group?:</string>
+	<string name="hasVanityNS">Has Vanity Name Servers?:</string>
+	<string name="created">Created:</string>
+	<string name="lastModified">Modified:</string>
+	<string name="saveChanges">Save Changes</string>
+	<string name="viewHosts">View Hosts</string>
+	<string name="viewDomainGroup">View Domain Group</string>
+	<string name="no">No</string>
+	<string name="datePlaceHolder">2013-02-22 13:18:03</string>
+	<string name="namePlaceHolder">zanclus.com</string>
 <!-- <string name=""></string>  -->	
 </resources>

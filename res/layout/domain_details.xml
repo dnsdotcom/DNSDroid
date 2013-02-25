@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp" >
+
+	<RelativeLayout
+	    android:id="@+id/nameArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentTop="true"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/name" />
+
+		<TextView
+		    android:id="@+id/domainName"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/namePlaceHolder"
+		    android:textIsSelectable="true" />
+
+	</RelativeLayout>
+
+	<RelativeLayout
+	    android:id="@+id/dgArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:layout_below="@+id/nameArea"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/inDomainGroup" />
+
+		<ToggleButton
+		    android:id="@+id/inDomainGroupToggle"
+		    android:layout_width="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerInParent="true"
+		    android:layout_height="wrap_content"
+		    android:textOn="@android:string/yes"
+		    android:textOff="@string/no"
+		    android:enabled="false" />
+
+	</RelativeLayout>
+
+	<RelativeLayout
+	    android:id="@+id/vanityArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:layout_below="@+id/dgArea"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/hasVanityNS" />
+
+		<ToggleButton
+		    android:id="@+id/hasVanityNSCheckbox"
+		    android:layout_width="wrap_content"
+		    android:textOn="@android:string/yes"
+		    android:textOff="@string/no"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerInParent="true"
+		    android:layout_height="wrap_content" />
+
+	</RelativeLayout>
+
+	<RelativeLayout
+	    android:id="@+id/createdArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:layout_below="@+id/vanityArea"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/created" />
+
+		<TextView
+		    android:id="@+id/dateCreated"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/datePlaceHolder"
+		    android:textIsSelectable="true" />
+
+	</RelativeLayout>
+
+	<RelativeLayout
+	    android:id="@+id/modifiedArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="30dp"
+	    android:layout_below="@+id/createdArea"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/lastModified" />
+
+		<TextView
+		    android:id="@+id/dateLastModified"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerInParent="true"
+		    android:text="@string/datePlaceHolder"
+		    android:textIsSelectable="true" />
+
+	</RelativeLayout>
+
+	<Button
+	    android:id="@+id/domainDetailsSaveButton"
+	    style="@style/Theme.dns"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/viewDomainHostsButton"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/saveChanges" />
+
+	<Button
+	    android:id="@+id/viewDomainHostsButton"
+	    style="@style/Theme.dns"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/viewDomainGroupButton"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/viewHosts" />
+
+	<Button
+	    android:id="@+id/viewDomainGroupButton"
+	    style="@style/Theme.dns"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/viewDomainGroup"
+	    android:visibility="invisible" />
+
+</RelativeLayout>

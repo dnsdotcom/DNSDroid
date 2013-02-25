@@ -20,7 +20,7 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.domain.EntityList;
 import com.dns.android.authoritative.domain.GenericEntity;
-import com.dns.android.authoritative.fragments.DNSListFragment_;
+import com.dns.android.authoritative.fragments.DNSListFragment;
 import com.dns.android.authoritative.rest.RestClient;
 
 /**
@@ -36,13 +36,13 @@ public class ItemListEndlessAdapter extends EndlessAdapter {
 	private ItemListAdapter wrapped = null ;
 	protected int newTotalCount = 0 ;
 	protected Activity mActivity ;
-	protected DNSListFragment_ parentFragment ;
+	protected DNSListFragment parentFragment ;
 
 	protected int limit = 20 ;
 	protected int offset = 0 ;
 	protected int totalCount = 0 ;
 	protected RestClient client = null ;
-	protected Class<GenericEntity> type = null ;
+	protected Class<? extends GenericEntity> type = null ;
 	protected String basePath ;
 
 	public ItemListEndlessAdapter(ItemListAdapter wrapped) {
@@ -56,8 +56,8 @@ public class ItemListEndlessAdapter extends EndlessAdapter {
 		return this ;
 	}
 
-	public ItemListEndlessAdapter setType(Class<GenericEntity> type) {
-		this.type = type ;
+	public ItemListEndlessAdapter setType(Class<? extends GenericEntity> type2) {
+		this.type = type2 ;
 		return this ;
 	}
 
@@ -126,7 +126,7 @@ public class ItemListEndlessAdapter extends EndlessAdapter {
 			if (filterString != null) {
 				params.put("name__icontains", filterString);
 			}
-			EntityList<GenericEntity> results = client.getObjectList(type, basePath, params) ;
+			EntityList<? extends GenericEntity> results = client.getObjectList(type, basePath, params) ;
 			if (newItems == null) {
 				newItems = new ArrayList<GenericEntity>();
 			} else {

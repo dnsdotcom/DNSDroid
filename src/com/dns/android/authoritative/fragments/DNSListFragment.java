@@ -9,6 +9,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,45 +24,51 @@ import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.adapters.ItemListAdapter;
 import com.dns.android.authoritative.adapters.ItemListEndlessAdapter;
 import com.dns.android.authoritative.callbacks.OnItemSelectedListener;
+import com.dns.android.authoritative.callbacks.ParentedListView;
 import com.dns.android.authoritative.domain.EntityList;
 import com.dns.android.authoritative.domain.GenericEntity;
 import com.dns.android.authoritative.rest.RestClient;
 import com.dns.android.authoritative.utils.DNSPrefs_;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Background;
-import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
-import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.ItemLongClick;
-import com.googlecode.androidannotations.annotations.UiThread;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 /**
+ * A generic implementation of {@link SherlockFragment} which allows for display of lists of items which implement {@link GenericEntity}
  * @author <a href="mailto: deven@dns.com">Deven Phillips</a>
  *
  */
-@EFragment(R.layout.generic_list_fragment)
-public class DNSListFragment extends SherlockFragment {
+public class DNSListFragment extends SherlockFragment implements ParentedListView {
 	protected final String TAG = "" ;
 
-	@Pref
+	/**
+	 * An instance of this application's {@link SharedPreferences} object
+	 */
 	protected DNSPrefs_ prefs ;
 
-	@Bean
+	/**
+	 * A ReST API client for accessing the DNS.com API
+	 */
 	protected static RestClient client ;
 
-	@ViewById(R.id.itemListView)
+	/**
+	 * The {@link ListView} instance which is displayed in this fragment.
+	 */
 	protected ListView itemListView ;
 
-	@ViewById(R.id.itemFilter)
+	/**
+	 * An instance of {@link EditText} where the user can input a filter string to filter the {@link ListView}
+	 */
 	protected EditText itemFilter ;
 
-	@ViewById(R.id.itemFilterApply)
-	protected ImageView domFilterApply ;
+	/**
+	 * An {@link ImageView} which looks like a funnel and when clicked on caused the filter to be applied.
+	 */
+	protected ImageView itemFilterApply ;
 
-	@ViewById(R.id.itemListBusyIndicator)
+	/**
+	 * And instance of {@link ProgressBar} which is displayed when the {@link ItemListAdapter} and {@link ItemListEndlessAdapter} are being updated
+	 */
 	protected ProgressBar itemsLoadingIndicator ;
 
 	protected String itemFilterValue ;
@@ -75,10 +82,11 @@ public class DNSListFragment extends SherlockFragment {
 	protected OnItemSelectedListener mListener ;
 	protected Integer parentId = null ;
 
-	protected Class<GenericEntity> childType ;
+	protected Class<? extends GenericEntity> childType ;
 
-	protected Class<GenericEntity> type ;
+	protected Class<? extends GenericEntity> type ;
 	protected String basePath = "" ;
+	protected String deletePath = "" ;
 	protected int rowLayout ;
 
 	public void setParentId(Integer id) {
@@ -110,10 +118,14 @@ public class DNSListFragment extends SherlockFragment {
 		}
 	}
 
-	@Background
+	/**
+	 * Sends a ReSTful request to the server to delete the specified {@link GenericEntity}. If it is successful, it will call itemDeleteSuceeded to
+	 * remove the item from the {@link ItemListAdapter}. On failure, itemDeleteFailed is called to let the user know that the call failed.
+	 * @param item An object which implements {@link GenericEntity} and is to be deleted.
+	 */
 	protected void deleteItem(GenericEntity item) {
 		try {
-			if (client.deleteObject(basePath+item.getId()+"/")) {
+			if (client.deleteObject(deletePath+item.getId()+"/")) {
 				itemList.remove(item) ;
 				totalCount-- ;
 				itemDeleteSuceeded(item) ;
@@ -125,7 +137,10 @@ public class DNSListFragment extends SherlockFragment {
 		}
 	}
 
-	@UiThread
+	/**
+	 * Lets the user know that the call to deleteItem failed.
+	 * @param item The {@link GenericEntity} item which the application attempted to delete via ReSTful call
+	 */
 	protected void itemDeleteFailed(GenericEntity item) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()) ;
 		builder.setMessage(getActivity().getResources().getString(R.string.record_delete_failed_title)) ;
@@ -141,17 +156,26 @@ public class DNSListFragment extends SherlockFragment {
 		builder.show() ;
 	}
 
-	@UiThread
+	/**
+	 * Removes the specified {@link GenericEntity} from the {@link ItemListAdapter} and notifies the adapter that the data changed.
+	 * @param item The item which was successfully removed by a call to deleteItem({@link GenericEntity})
+	 */
 	protected void itemDeleteSuceeded(GenericEntity item) {
 		baseAdapter.notifyDataSetChanged() ;
 	}
 
-	@ItemClick(R.id.itemListView)
+	/**
+	 * Handles an {@link ItemClick} event for the {@link ListView}
+	 * @param clickedItem The {@link GenericEntity} item which was clicked on in the {@link ListView}
+	 */
 	protected void handleItemClick(final GenericEntity clickedItem) {
 		mListener.onItemSelected(clickedItem.getId(), childType) ;
 	}
 
-	@ItemLongClick(R.id.itemListView)
+	/**
+	 * Handles an {@link ItemLongClick} event for the {@link ListView}
+	 * @param clickedItem The {@link GenericEntity} item which was clicked on in the {@link ListView}
+	 */
 	protected void handleItemLongClick(final GenericEntity longClickItem) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		String message = getActivity()
@@ -182,7 +206,9 @@ public class DNSListFragment extends SherlockFragment {
 		builder.show();
 	}
 
-	@AfterViews
+	/**
+	 * Sets up the user interface and starts the ball rolling for populating the {@link ListView}
+	 */
 	protected void uiSetup() {
 		if (itemListView==null) {
 			itemListView = (ListView) getActivity().findViewById(R.id.itemListView) ;
@@ -195,7 +221,9 @@ public class DNSListFragment extends SherlockFragment {
 		}
 	}
 
-	@Background
+	/**
+	 * Performs a ReST request to load the initial list of {@link GenericEntity} objects.
+	 */
 	protected void loadInitialItems() {
 		HashMap<String, String> params = new HashMap<String, String>() ;
 		if ((itemFilterValue!=null) && (itemFilterValue.length()>0)) {
@@ -203,7 +231,7 @@ public class DNSListFragment extends SherlockFragment {
 		}
 		params.put("limit", limit+"") ;
 		params.put("offset", offset+"") ;
-		EntityList<GenericEntity> results = client.getObjectList(type, basePath, params) ;
+		EntityList<? extends GenericEntity> results = client.getObjectList(type, basePath, params) ;
 		if (results.getMeta()!=null) {
 			totalCount = results.getMeta().getTotal_count();
 		} else {
@@ -216,7 +244,9 @@ public class DNSListFragment extends SherlockFragment {
 		setListViewAdapter() ;
 	}
 
-	@UiThread
+	/**
+	 * Creates the {@link ItemListAdapter} and {@link ItemListEndlessAdapter} objects and then assigns them accordingly
+	 */
 	protected void setListViewAdapter() {
 		baseAdapter = new ItemListAdapter(getActivity()).setFilterString("").setmActivity(getActivity()).setRowLayout(rowLayout) ;
 		baseAdapter.setItemList(itemList) ;
@@ -232,7 +262,9 @@ public class DNSListFragment extends SherlockFragment {
 		}
 	}
 
-	@Click(R.id.domFilterApply)
+	/**
+	 * Handles the {@link Click} event for the {@link ImageView} itemFilterApply
+	 */
 	public void onSearchApply() {
 		Log.d(TAG, "Filter button pressed.") ;
 		itemFilterValue = itemFilter.getText().toString() ;
@@ -242,8 +274,10 @@ public class DNSListFragment extends SherlockFragment {
 		loadFilteredItems() ;
 	}
 
-	@Background
-	protected void loadFilteredItems() {
+	/**
+	 * Performs a ReST request in the background in order to load a filtered list of {@link GenericEntity} objects 
+	 */
+	public void loadFilteredItems() {
 		Log.d(TAG, "Repopulating the itemList for the list view.") ;
 		HashMap<String, String> params = new HashMap<String, String>() ;
 		if ((itemFilterValue!=null) && (itemFilterValue.length()>0)) {
@@ -251,7 +285,7 @@ public class DNSListFragment extends SherlockFragment {
 		}
 		params.put("limit", limit+"") ;
 		params.put("offset", offset+"") ;
-		EntityList<GenericEntity> results = client.getObjectList(type, basePath, params) ;
+		EntityList<? extends GenericEntity> results = client.getObjectList(type, basePath, params) ;
 		if (results.getMeta()!=null) {
 			totalCount = results.getMeta().getTotal_count();
 		} else {
@@ -264,7 +298,9 @@ public class DNSListFragment extends SherlockFragment {
 		updateListAdapter() ;
 	}
 
-	@UiThread
+	/**
+	 * Once the loadFilteredItem() call has completed, it calls this method inside of the UI thread to update the {@link ItemListAdapter}
+	 */
 	protected void updateListAdapter() {
 		Log.d(TAG, "Resetting the list view adapter to display a new list.") ;
 		baseAdapter = new ItemListAdapter(getActivity()).setFilterString(itemFilterValue).setmActivity(getActivity()).setRowLayout(rowLayout) ;
@@ -277,5 +313,13 @@ public class DNSListFragment extends SherlockFragment {
 		endlessTAdapter.setRunInBackground(true) ;
 		itemListView.setAdapter(endlessTAdapter) ;
 		itemsLoadingIndicator.setVisibility(View.GONE) ;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.dns.android.authoritative.callbacks.ParentedListView#getParentId()
+	 */
+	@Override
+	public Integer getParentId() {
+		return parentId ;
 	}
 }

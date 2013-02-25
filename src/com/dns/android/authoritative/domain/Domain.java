@@ -12,8 +12,6 @@ public class Domain implements Serializable, GenericEntity {
 
 	Integer id ;
 
-	String[] hosts ;
-
 	String domainGroup ;
 
 	Boolean has_ns ;
@@ -34,14 +32,6 @@ public class Domain implements Serializable, GenericEntity {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String[] getHosts() {
-		return hosts;
-	}
-
-	public void setHosts(String[] hosts) {
-		this.hosts = hosts;
 	}
 
 	public String getDomainGroup() {

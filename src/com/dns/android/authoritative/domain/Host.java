@@ -26,8 +26,6 @@ public class Host implements Serializable, GenericEntity {
 
 	Boolean is_urlforward ;
 
-	String[] rrs ;
-
 	public Integer getId() {
 		return id;
 	}
@@ -90,13 +88,5 @@ public class Host implements Serializable, GenericEntity {
 
 	public void setIs_urlforward(Boolean is_urlforward) {
 		this.is_urlforward = is_urlforward;
-	}
-
-	public String[] getRrs() {
-		return rrs;
-	}
-
-	public void setRrs(String[] rrs) {
-		this.rrs = rrs;
 	}
 }

@@ -12,8 +12,6 @@ public class DomainGroup implements Serializable, GenericEntity {
 
 	Integer id ;
 
-	String[] hosts ;
-
 	Date date_created ;
 
 	Date date_last_modified ;
@@ -32,14 +30,6 @@ public class DomainGroup implements Serializable, GenericEntity {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String[] getHosts() {
-		return hosts;
-	}
-
-	public void setHosts(String[] hosts) {
-		this.hosts = hosts;
 	}
 
 	public Date getDate_created() {
