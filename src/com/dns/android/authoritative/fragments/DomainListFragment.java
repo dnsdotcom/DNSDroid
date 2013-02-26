@@ -141,8 +141,8 @@ public class DomainListFragment extends SherlockFragment {
 	@ItemClick(R.id.domainListView)
 	protected void handleDomainClick(final Domain clickedDomain) {
 		// create a new fragment
-		HostListFragment_ f = new HostListFragment_();
-		f.setParentDomain(clickedDomain) ;
+		DomainDetailFragment_ f = new DomainDetailFragment_();
+		f.setDomain(clickedDomain) ;
 
 		// get the activity and add the new fragment after this one!
 		Activity a = getActivity();

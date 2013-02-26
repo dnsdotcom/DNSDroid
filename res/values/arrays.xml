@@ -8,4 +8,46 @@
 		<item>Tools</item>
 	</string-array>
 
+	<string-array name="record_types">
+		<item>A</item>
+		<item>NS</item>
+		<item>CNAME</item>
+		<item>SOA</item>
+		<item>PTR</item>
+		<item>MX</item>
+		<item>TXT</item>
+		<item>AAAA</item>
+		<item>SRV</item>
+		<item>SPF</item>
+		<item>URL302</item>
+		<item>URL301</item>
+		<item>URLFrame</item>
+
+<!-- These values are for future additions to the DNS.com supported record types.
+		<item>AFSDB</item>
+		<item>SIG</item>
+		<item>KEY</item>
+		<item>NAPTR</item>
+		<item>CERT</item>
+		<item>DNAME</item>
+		<item>OPT</item>
+		<item>SSHFP</item>
+		<item>IPSECKEY</item>
+		<item>RRSIG</item>
+		<item>NSEC</item>
+		<item>DNSKEY</item>
+		<item>DHCID</item>
+		<item>NSEC3</item>
+		<item>NSEC3PARAM</item>
+		<item>HIP</item>
+		<item>LOC</item>
+		<item>TKEY</item>
+		<item>TSIG</item>
+		<item>IXFR</item>
+		<item>AXFR</item>
+		<item>TA</item>
+		<item>DLV</item>
+		<item>ANY</item> -->
+	</string-array>
+
 </resources>

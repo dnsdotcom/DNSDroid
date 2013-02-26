@@ -97,8 +97,8 @@ public class HostListFragment extends SherlockFragment {
 	@ItemClick(R.id.hostListView)
 	protected void handleHostClick(Host clickHost) {
 		// create a new fragment
-		RRListFragment_ f = new RRListFragment_();
-		f.setParentHost(clickHost) ;
+		HostDetailFragment_ f = new HostDetailFragment_();
+		f.setHost(clickHost) ;
 
 		// get the activity and add the new fragment after this one!
 		Activity a = getActivity();

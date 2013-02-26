@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,9 +35,11 @@ import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EFragment;
+import com.googlecode.androidannotations.annotations.ItemClick;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
+import com.mapsaurus.paneslayout.FragmentLauncher;
 
 /**
  * A fragment which displays a {@link ListView} of resource records for the selected host.
@@ -78,6 +81,17 @@ public class RRListFragment extends SherlockFragment {
 
 	public void setParentHost(Host host) {
 		this.parent = host ;
+	}
+
+	@ItemClick(R.id.rrListView)
+	protected void handleItemClicked(RR record) {
+		RRDetailFragment_ f = new RRDetailFragment_() ;
+		f.setTargetRR(record) ;
+
+		// get the activity and add the new fragment after this one!
+		Activity a = getActivity();
+		if (a != null && a instanceof FragmentLauncher)
+			((FragmentLauncher) a).addFragment(this, f) ;
 	}
 
 	@AfterViews

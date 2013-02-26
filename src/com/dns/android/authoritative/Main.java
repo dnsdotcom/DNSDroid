@@ -23,6 +23,8 @@ import com.mapsaurus.paneslayout.PanesSizer.PaneSizer;
 public class Main extends PanesActivity {
 
 	protected final String TAG = "Main" ;
+	protected Fragment menuFragment = null ;
+	protected Fragment splashFragment = null ;
 
 	private class FragmentPaneSizer implements PaneSizer {
 
@@ -43,7 +45,7 @@ public class Main extends PanesActivity {
 				else if (type == LIST_VIEW_PANE_TYPE)
 					return (int) (0.375 * parentWidth);
 				else if (type == DETAILS_VIEW_PANE_TYPE)
-					return parentWidth ;
+					return (int) (0.625 * parentWidth) ;
 				else throw new IllegalStateException("Pane has unknown type");
 			} else {
 				if (type == DEFAULT_PANE_TYPE && index == 0)
@@ -98,9 +100,13 @@ public class Main extends PanesActivity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(TAG, "Menu Item: "+item.getTitle().toString()) ;
 		if (item.getTitle().toString().contentEquals("Settings")) {
 			Intent settingsIntent = new Intent(this, SettingsActivity_.class) ;
 			startActivity(settingsIntent) ;
+		}
+		if (item.getTitle().toString().contentEquals("Authoritative")) {
+			onBackPressed() ;
 		}
 		return false ;
 	}
@@ -116,8 +122,8 @@ public class Main extends PanesActivity {
 		setPaneSizer(new FragmentPaneSizer()) ;
 
 		if (savedInstanceState==null) {
-			Fragment menuFragment = new MenuFragment_() ;
-			Fragment splashFragment = new SplashFragment_() ;
+			menuFragment = new MenuFragment_() ;
+			splashFragment = new SplashFragment_() ;
 			setMenuFragment(menuFragment) ;
 			addFragment(menuFragment, splashFragment) ;
 		}
