@@ -112,6 +112,7 @@ public class MenuFragment extends SherlockFragment {
 
 	@AfterViews
 	protected void setupUi() {
+		menuListView.setSelector(R.drawable.selectable_background_dns);
 		menuListView.setAdapter(new MenuListAdapter()) ;
 	}
 

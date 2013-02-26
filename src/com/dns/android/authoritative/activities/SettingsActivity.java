@@ -80,6 +80,7 @@ public class SettingsActivity extends SherlockActivity {
 	@AfterViews
 	public void configureListeners() {
 		webAppURL.setText(prefs.getBaseAddress().get()) ;
+		tokenInput.setText(prefs.getAuthToken().get()) ;
 	}
 
 	@Background

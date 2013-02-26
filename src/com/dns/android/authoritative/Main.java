@@ -1,9 +1,13 @@
 package com.dns.android.authoritative;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.dns.android.authoritative.activities.SettingsActivity_;
 import com.dns.android.authoritative.fragments.MenuFragment_;
 import com.dns.android.authoritative.fragments.SplashFragment_;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -77,7 +81,28 @@ public class Main extends PanesActivity {
 		public boolean getFocused(Object o) {
 			return false;
 		}
-		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onCreateOptionsMenu(com.actionbarsherlock.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater() ;
+		inflater.inflate(R.menu.main_menu, menu) ;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.mapsaurus.paneslayout.PanesActivity#onOptionsItemSelected(com.actionbarsherlock.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getTitle().toString().contentEquals("Settings")) {
+			Intent settingsIntent = new Intent(this, SettingsActivity_.class) ;
+			startActivity(settingsIntent) ;
+		}
+		return false ;
 	}
 
 	/* (non-Javadoc)

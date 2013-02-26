@@ -20,7 +20,7 @@
 	<string name="token_retrieve_message_content">Enter your username and password below and they will be used to retrieve your token. Your username and password will not be stored, intead the token will be used to authenticate this device to the DNS.com web site. If you should ever need to disable this device\'s access to your account, simple change your token from the DNS.com web site.</string>
 	<string name="reset">Reset</string>
 	<string name="apply">Apply</string>
-	<string name="record_delete_confirmation_message">Deleting \'[[DOMAINNAME]]\' cannot be undone, are you sure you wish to permanently delete it?</string>
+	<string name="record_delete_confirmation_message">Deleting \'[[RECORDNAME]]\' cannot be undone, are you sure you wish to permanently delete it?</string>
 	<string name="loading">Loading</string>
 	<string name="edit">Edit</string>
 	<string name="data_changed_title">Data Changed On The Server</string>
@@ -32,5 +32,7 @@
 	<string name="auth_token_failure_message">Failed to retrieve the auth token for the given username and password. Please check your credentials and contact support if you think you have reached this message in error.</string>
 	<string name="hosts_fragment_label">Hosts for: </string>
 	<string name="rr_list_fragment_label">RRs for: </string>
+	<string name="rest_client_error_title">Communication Error</string>
+	<string name="rest_client_error_message">An error occurred trying to communicate with the DNS.com web site. Please check to ensure that your token is valid by going into settings and checking the values.</string>
 <!-- <string name=""></string>  -->	
 </resources>

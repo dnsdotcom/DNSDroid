@@ -2,6 +2,9 @@ package com.dns.android.authoritative.fragments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.springframework.web.client.RestClientException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -153,7 +156,7 @@ public class DomainListFragment extends SherlockFragment {
 		String message = getActivity()
 				.getResources()
 				.getString(R.string.record_delete_confirmation_message)
-				.replace("[[DOMAINNAME]]", longClickedDomain.getName());
+				.replace("[[RECORDNAME]]", longClickedDomain.getName());
 		builder.setMessage(message);
 		builder.setPositiveButton(android.R.string.yes,
 				new DialogInterface.OnClickListener() {
@@ -199,17 +202,40 @@ public class DomainListFragment extends SherlockFragment {
 		}
 		params.put("limit", limit+"") ;
 		params.put("offset", offset+"") ;
-		DomainList results = client.getObject(DomainList.class, "/domains/", params) ;
-		if (results.getMeta()!=null) {
-			totalCount = results.getMeta().getTotal_count();
-		} else {
-			totalCount = results.getDomains().length ;
+		DomainList results;
+		try {
+			results = client.getObject(DomainList.class, "/domains/", params);
+			if (results.getMeta()!=null) {
+				totalCount = results.getMeta().getTotal_count();
+			} else {
+				totalCount = results.getDomains().length ;
+			}
+			domainList = new ArrayList<Domain>() ;
+			for (Domain item: results.getDomains()) {
+				domainList.add(item) ;
+			}
+			setListViewAdapter() ;
+		} catch (RestClientException e) {
+			handleApiError(
+				getResources().getString(R.string.rest_client_error_title), 
+				getResources().getString(R.string.rest_client_error_message)+"\n\n"+e.getLocalizedMessage()
+			) ;
 		}
-		domainList = new ArrayList<Domain>() ;
-		for (Domain item: results.getDomains()) {
-			domainList.add(item) ;
-		}
-		setListViewAdapter() ;
+	}
+
+	@UiThread
+	protected void handleApiError(String title, String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()) ;
+		builder.setTitle(title) ;
+		builder.setMessage(message) ;
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss() ;
+			}
+		}) ;
+		builder.show() ;
 	}
 
 	@UiThread
