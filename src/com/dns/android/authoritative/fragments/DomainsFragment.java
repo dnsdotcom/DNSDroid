@@ -8,7 +8,6 @@ import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.callbacks.SizedFragmentPage;
 import com.dns.android.authoritative.domain.Domain;
 import com.dns.android.authoritative.domain.GenericEntity;
-import com.dns.android.authoritative.domain.Host;
 import com.dns.android.authoritative.rest.RestClient;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -116,13 +115,21 @@ public class DomainsFragment extends DNSListFragment implements SizedFragmentPag
 	@Override
 	@AfterViews
 	protected void uiSetup() {
-		super.uiSetup();
-
-		childType = Host.class ;
+		childType = DomainDetailFragment_.class ;
 		type = Domain.class ;
 		basePath = "/domains/" ;
 		deletePath = "/domains/" ;
 		rowLayout = R.layout.domain_row ;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.dns.android.authoritative.fragments.DNSListFragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		super.uiSetup();
 	}
 
 	/* (non-Javadoc)

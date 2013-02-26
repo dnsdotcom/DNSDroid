@@ -40,7 +40,11 @@
 	<string name="viewHosts">View Hosts</string>
 	<string name="viewDomainGroup">View Domain Group</string>
 	<string name="no">No</string>
-	<string name="datePlaceHolder">2013-02-22 13:18:03</string>
+	<string name="datePlaceHolder">2013&#8211;02&#8211;22 13:18:03</string>
 	<string name="namePlaceHolder">zanclus.com</string>
+	<string name="vanityNsToggleErrorTitle">Error modifying domain settings</string>
+	<string name="unexpectedError">Unexpected Error</string>
+	<string name="isUrlForward">Is URL Forward?</string>
+	<string name="viewRRs">View RRs</string>
 <!-- <string name=""></string>  -->	
 </resources>

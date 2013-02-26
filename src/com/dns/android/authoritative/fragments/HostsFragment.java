@@ -11,7 +11,6 @@ import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.callbacks.SizedFragmentPage;
 import com.dns.android.authoritative.domain.Domain;
 import com.dns.android.authoritative.domain.GenericEntity;
-import com.dns.android.authoritative.domain.Host;
 import com.dns.android.authoritative.rest.RestClient;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -121,9 +120,9 @@ public class HostsFragment extends DNSListFragment implements SizedFragmentPage 
 	protected void uiSetup() {
 		super.uiSetup();
 
-		childType = Host.class ;
+		childType = RRListFragment_.class ;
 		type = Domain.class ;
-		basePath = "/hosts/domain/" + parentId + "/" ;
+		basePath = "/hosts/domain/" + parent.getId() + "/" ;
 		deletePath = "/hosts/" ;
 		rowLayout = R.layout.host_row ;
 	}

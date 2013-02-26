@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dns.android.authoritative.callbacks.OnItemSelectedListener;
 import com.dns.android.authoritative.domain.GenericEntity;
@@ -23,6 +22,7 @@ public abstract class AbstractDetailsFragment extends SherlockFragment {
 	protected Bundle savedInstanceState = null ;
 	protected GenericEntity parent ;
 	protected OnItemSelectedListener mListener ;
+	protected String basePath = "" ;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -46,7 +46,11 @@ public abstract class AbstractDetailsFragment extends SherlockFragment {
 
 	public abstract void onViewsCreated() ;
 
-	public void setParent(GenericEntity parent) {
+	public void setTarget(GenericEntity parent) {
 		this.parent = parent ;
+	}
+
+	public GenericEntity getTarget() {
+		return this.parent ;
 	}
 }

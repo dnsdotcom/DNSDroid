@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ import com.googlecode.androidannotations.annotations.ItemLongClick;
  *
  */
 public class DNSListFragment extends SherlockFragment implements ParentedListView {
-	protected final String TAG = "" ;
+	protected final String TAG = "DNSListFragment" ;
 
 	/**
 	 * An instance of this application's {@link SharedPreferences} object
@@ -72,26 +73,21 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	protected ProgressBar itemsLoadingIndicator ;
 
 	protected String itemFilterValue ;
-	protected String filterType ;
 	protected static int limit = 20 ;
 	protected static int offset = 0 ;
 	protected static int totalCount = 0 ;
 	protected ArrayList<GenericEntity> itemList ;
 	protected ItemListAdapter baseAdapter ;
-	protected ItemListEndlessAdapter endlessTAdapter ;
+	protected ItemListEndlessAdapter endlessItemAdapter ;
 	protected OnItemSelectedListener mListener ;
-	protected Integer parentId = null ;
+	protected GenericEntity parent = null ;
 
-	protected Class<? extends GenericEntity> childType ;
+	protected Class<? extends Fragment> childType ;
 
 	protected Class<? extends GenericEntity> type ;
 	protected String basePath = "" ;
 	protected String deletePath = "" ;
 	protected int rowLayout ;
-
-	public void setParentId(Integer id) {
-		this.parentId = id ;
-	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -103,8 +99,16 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		if (savedInstanceState!=null) {
+			itemFilterValue = savedInstanceState.getString("itemFilterValue");
+			offset = savedInstanceState.getInt("offset", 0);
+			totalCount = savedInstanceState.getInt("totalCount", 0);
+			itemList = (ArrayList<GenericEntity>) savedInstanceState
+					.getSerializable("itemList");
+		}
 		return null ;
 	}
 
@@ -115,6 +119,8 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 			onSearchApply();
 		} else if (itemList.size()==0) {
 			onSearchApply();
+		} else {
+			setListViewAdapter() ;
 		}
 	}
 
@@ -168,8 +174,8 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	 * Handles an {@link ItemClick} event for the {@link ListView}
 	 * @param clickedItem The {@link GenericEntity} item which was clicked on in the {@link ListView}
 	 */
-	protected void handleItemClick(final GenericEntity clickedItem) {
-		mListener.onItemSelected(clickedItem.getId(), childType) ;
+	protected void handleItemClick(GenericEntity clickedItem) {
+		mListener.onItemSelected(clickedItem, childType) ;
 	}
 
 	/**
@@ -210,14 +216,8 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	 * Sets up the user interface and starts the ball rolling for populating the {@link ListView}
 	 */
 	protected void uiSetup() {
-		if (itemListView==null) {
-			itemListView = (ListView) getActivity().findViewById(R.id.itemListView) ;
-		}
-		if (itemListView.getAdapter()==null) {
-			offset=0;
+		if (itemList==null) {
 			loadInitialItems() ;
-		} else {
-			itemsLoadingIndicator.setVisibility(View.GONE) ;
 		}
 	}
 
@@ -227,10 +227,19 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	protected void loadInitialItems() {
 		HashMap<String, String> params = new HashMap<String, String>() ;
 		if ((itemFilterValue!=null) && (itemFilterValue.length()>0)) {
-			params.put(filterType, itemFilterValue) ;
+			params.put("name_icontains", itemFilterValue) ;
 		}
 		params.put("limit", limit+"") ;
 		params.put("offset", offset+"") ;
+		if (client==null) {
+			Log.e(TAG, "RestClient is NULL") ;
+		}
+		if (basePath==null) {
+			Log.e(TAG, "basePath is NULL") ;
+		}
+		if (type==null) {
+			Log.e(TAG, "type is NULL") ;
+		}
 		EntityList<? extends GenericEntity> results = client.getObjectList(type, basePath, params) ;
 		if (results.getMeta()!=null) {
 			totalCount = results.getMeta().getTotal_count();
@@ -248,14 +257,18 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	 * Creates the {@link ItemListAdapter} and {@link ItemListEndlessAdapter} objects and then assigns them accordingly
 	 */
 	protected void setListViewAdapter() {
-		baseAdapter = new ItemListAdapter(getActivity()).setFilterString("").setmActivity(getActivity()).setRowLayout(rowLayout) ;
-		baseAdapter.setItemList(itemList) ;
-		if (itemListView==null) {
-			itemListView = (ListView) getActivity().findViewById(R.id.itemListView) ;
+		if (baseAdapter==null) {
+			baseAdapter = new ItemListAdapter(getActivity()).setFilterString("").setmActivity(getActivity()).setRowLayout(rowLayout);
 		}
-		endlessTAdapter = new ItemListEndlessAdapter(baseAdapter).setBasePath(basePath).setRestClient(client).setType(type) ;
-		endlessTAdapter.setRunInBackground(true) ;
-		itemListView.setAdapter(endlessTAdapter) ;
+		baseAdapter.setItemList(itemList);
+		if (itemListView == null) {
+			itemListView = (ListView) getView().findViewById(R.id.itemListView);
+		}
+		if (endlessItemAdapter==null) {
+			endlessItemAdapter = new ItemListEndlessAdapter(baseAdapter).setBasePath(basePath).setRestClient(client).setType(type);
+		}
+		endlessItemAdapter.setRunInBackground(true) ;
+		itemListView.setAdapter(endlessItemAdapter) ;
 		itemsLoadingIndicator.setVisibility(View.GONE) ;
 		if (itemFilter!=null) {
 			itemFilter.clearFocus() ;
@@ -267,11 +280,21 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 	 */
 	public void onSearchApply() {
 		Log.d(TAG, "Filter button pressed.") ;
-		itemFilterValue = itemFilter.getText().toString() ;
-		itemsLoadingIndicator.setVisibility(View.VISIBLE) ;
-		limit = 0 ;
-		offset = 0 ;
-		loadFilteredItems() ;
+		if (itemFilter==null) {
+			itemFilter = (EditText) getView().findViewById(R.id.itemFilter) ;
+		}
+		if (itemFilter!=null) {
+			itemFilterValue = itemFilter.getText().toString() ;
+		}
+		if (itemFilterValue!=null) {
+			Log.d(TAG, "Filter button pressed.") ;
+			if (itemsLoadingIndicator!=null) {
+				itemsLoadingIndicator.setVisibility(View.VISIBLE);
+			}
+			limit = 0;
+			offset = 0;
+			loadFilteredItems();
+		}
 	}
 
 	/**
@@ -285,6 +308,15 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 		}
 		params.put("limit", limit+"") ;
 		params.put("offset", offset+"") ;
+		if (client==null) {
+			Log.e(TAG, "RestClient is NULL") ;
+		}
+		if (basePath==null) {
+			Log.e(TAG, "basePath is NULL") ;
+		}
+		if (type==null) {
+			Log.e(TAG, "type is NULL") ;
+		}
 		EntityList<? extends GenericEntity> results = client.getObjectList(type, basePath, params) ;
 		if (results.getMeta()!=null) {
 			totalCount = results.getMeta().getTotal_count();
@@ -307,19 +339,26 @@ public class DNSListFragment extends SherlockFragment implements ParentedListVie
 		baseAdapter.setItemList(itemList) ;
 		baseAdapter.getFilter().filter(itemFilterValue) ;
 		if (itemListView==null) {
-			itemListView = (ListView) getActivity().findViewById(R.id.itemListView) ;
+			itemListView = (ListView) getView().findViewById(R.id.itemListView) ;
 		}
-		endlessTAdapter = new ItemListEndlessAdapter(baseAdapter).setBasePath(basePath).setRestClient(client).setType(type) ;
-		endlessTAdapter.setRunInBackground(true) ;
-		itemListView.setAdapter(endlessTAdapter) ;
+		endlessItemAdapter = new ItemListEndlessAdapter(baseAdapter).setBasePath(basePath).setRestClient(client).setType(type) ;
+		endlessItemAdapter.setRunInBackground(true) ;
+		itemListView.setAdapter(endlessItemAdapter) ;
 		itemsLoadingIndicator.setVisibility(View.GONE) ;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.dns.android.authoritative.callbacks.ParentedListView#setParentId()
+	 */
+	public void setParent(GenericEntity parent) {
+		this.parent = parent ;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.dns.android.authoritative.callbacks.ParentedListView#getParentId()
 	 */
 	@Override
-	public Integer getParentId() {
-		return parentId ;
+	public GenericEntity getParent() {
+		return parent ;
 	}
 }

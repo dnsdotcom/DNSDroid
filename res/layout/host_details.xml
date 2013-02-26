@@ -4,13 +4,12 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
-    android:visibility="gone" >
+    android:layout_marginTop="5dp" >
 
 	<RelativeLayout
 	    android:id="@+id/nameArea"
 	    android:layout_width="match_parent"
-	    android:layout_height="30dp"
+	    android:layout_height="40dp"
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentTop="true"
 	    android:orientation="horizontal" >
@@ -22,8 +21,9 @@
 		    android:layout_centerInParent="true"
 		    android:text="@string/name" />
 
-		<TextView
-		    android:id="@+id/domainName"
+		<EditText
+		    android:id="@+id/hostName"
+		    android:inputType="textNoSuggestions"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentRight="true"
@@ -34,7 +34,7 @@
 	</RelativeLayout>
 
 	<RelativeLayout
-	    android:id="@+id/dgArea"
+	    android:id="@+id/urlForwardArea"
 	    android:layout_width="match_parent"
 	    android:layout_height="30dp"
 	    android:layout_below="@+id/nameArea"
@@ -45,50 +45,24 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
 		    android:layout_centerInParent="true"
-		    android:text="@string/inDomainGroup" />
+		    android:text="@string/isUrlForward" />
 
 		<ToggleButton
-		    android:id="@+id/inDomainGroupToggle"
+		    android:id="@+id/isUrlForward"
 		    android:layout_width="wrap_content"
 		    android:layout_alignParentRight="true"
 		    android:layout_centerInParent="true"
 		    android:layout_height="wrap_content"
 		    android:textOn="@android:string/yes"
-		    android:textOff="@string/no"
-		    android:enabled="false" />
+		    android:textOff="@string/no" />
 
 	</RelativeLayout>
 
 	<RelativeLayout
-	    android:id="@+id/vanityArea"
+	    android:id="@+id/hostCreatedArea"
 	    android:layout_width="match_parent"
 	    android:layout_height="30dp"
-	    android:layout_below="@+id/dgArea"
-	    android:orientation="horizontal" >
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentLeft="true"
-		    android:layout_centerInParent="true"
-		    android:text="@string/hasVanityNS" />
-
-		<ToggleButton
-		    android:id="@+id/hasVanityNSCheckbox"
-		    android:layout_width="wrap_content"
-		    android:textOn="@android:string/yes"
-		    android:textOff="@string/no"
-		    android:layout_alignParentRight="true"
-		    android:layout_centerInParent="true"
-		    android:layout_height="wrap_content" />
-
-	</RelativeLayout>
-
-	<RelativeLayout
-	    android:id="@+id/createdArea"
-	    android:layout_width="match_parent"
-	    android:layout_height="30dp"
-	    android:layout_below="@+id/vanityArea"
+	    android:layout_below="@+id/urlForwardArea"
 	    android:orientation="horizontal" >
 
 		<TextView
@@ -99,7 +73,7 @@
 		    android:text="@string/created" />
 
 		<TextView
-		    android:id="@+id/domainDateCreated"
+		    android:id="@+id/hostDateCreated"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentRight="true"
@@ -110,10 +84,10 @@
 	</RelativeLayout>
 
 	<RelativeLayout
-	    android:id="@+id/modifiedArea"
+	    android:id="@+id/hostModifiedArea"
 	    android:layout_width="match_parent"
 	    android:layout_height="30dp"
-	    android:layout_below="@+id/createdArea"
+	    android:layout_below="@+id/hostCreatedArea"
 	    android:orientation="horizontal" >
 
 		<TextView
@@ -124,7 +98,7 @@
 		    android:text="@string/lastModified" />
 
 		<TextView
-		    android:id="@+id/domainDateLastModified"
+		    android:id="@+id/hostDateLastModified"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentRight="true"
@@ -135,31 +109,22 @@
 	</RelativeLayout>
 
 	<Button
-	    android:id="@+id/viewDomainHostsButton"
-	    style="@style/Theme.dns"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_above="@+id/viewDomainGroupButton"
-	    android:layout_centerHorizontal="true"
-	    android:text="@string/viewHosts" />
-
-	<Button
-	    android:id="@+id/viewDomainGroupButton"
+	    android:id="@+id/viewHostRRListButton"
 	    style="@style/Theme.dns"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentBottom="true"
 	    android:layout_alignParentLeft="true"
 	    android:layout_centerHorizontal="true"
-	    android:text="@string/viewDomainGroup"
-	    android:visibility="invisible" />
+	    android:text="@string/viewRRs" />
 
 	<ProgressBar
-	    android:id="@+id/domainUpdateBusyIndicator"
+	    android:id="@+id/hostUpdateBusyIndicator"
 	    style="?android:attr/progressBarStyleLarge"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true" />
+	    android:layout_centerVertical="true"
+	    android:visibility="gone" />
 
 </RelativeLayout>
