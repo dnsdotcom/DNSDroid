@@ -10,7 +10,7 @@ import com.dns.android.authoritative.R;
 import com.googlecode.androidannotations.annotations.EFragment;
 
 @EFragment(R.layout.domain_groups_fragment)
-public class DomainGroupsFragment extends SherlockFragment {
+public class DomainGroupListFragment extends SherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.domain_groups_fragment, container, false);
         return view;

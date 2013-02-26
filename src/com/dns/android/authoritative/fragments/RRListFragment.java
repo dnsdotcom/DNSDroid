@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,22 +72,7 @@ public class RRListFragment extends SherlockFragment {
 	protected int offset = 0 ;
 	protected RRListAdapter baseAdapter ;
 	protected RRListEndlessAdapter endlessRRAdapter;
-	protected OnRRSelectedListener mListener ;
 	protected String path ;
-
-	public interface OnRRSelectedListener {
-		public void onRRSelected(RR record) ;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnRRSelectedListener) activity ;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()+" must implement OnRRSelectedListener") ;
-		}
-	}
 
 	protected Host parent ;
 

@@ -1,5 +1,9 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-			<style name="AppTheme" parent="@style/Theme.Sherlock.Light" />
 			<color name="dns_red">#ca0000</color>
+			<style name="Theme.Menu" parent="@style/Theme.dns">
+			    <item name="android:textColor">@android:color/white</item>
+			    <item name="android:background">@color/dns_red</item>
+			    <item name="android:colorBackgroundCacheHint">@color/dns_red</item>
+			</style>
 </resources>

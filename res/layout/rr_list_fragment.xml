@@ -12,6 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/rrsFragmentLabel"
         android:scrollbarSize="12dip"
+        android:paddingLeft="5dp"
         android:scrollbarStyle="outsideOverlay" >
 
         <requestFocus />

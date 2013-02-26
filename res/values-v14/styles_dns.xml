@@ -26,6 +26,7 @@
         <item name="actionDropDownStyle">@style/dns_DropDownNav</item>
         <item name="actionBarStyle">@style/dns_solid_ActionBar</item>
 
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_dns</item>
         <item name="android:popupMenuStyle">@style/dns_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/dns_DropDownListView</item>
         <item name="android:actionBarTabStyle">@style/dns_ActionBarTabStyle</item>
@@ -35,6 +36,7 @@
         
                 <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.dns.widget</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.dns.widget</item>
 
     </style>
 
@@ -45,6 +47,8 @@
         <item name="progressBarStyle">@style/dns_ProgressBar</item>
 
         <item name="android:background">@drawable/ab_solid_dns</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_dns</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_dns</item>
         <item name="android:progressBarStyle">@style/dns_ProgressBar</item>
     </style>
 

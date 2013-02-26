@@ -11,7 +11,7 @@ import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 
 @EFragment(R.layout.geo_groups_fragment)
-public class GeoGroupsFragment extends SherlockFragment {
+public class GeoGroupListFragment extends SherlockFragment {
 
 	@Pref
 	DNSPrefs_ prefs ;

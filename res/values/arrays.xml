@@ -2,7 +2,6 @@
 <resources>
 
 	<string-array name="locations">
-	    <item>Home</item>
 		<item>Domains</item>
 		<item>Domain Groups</item>
 		<item>GeoGroups</item>

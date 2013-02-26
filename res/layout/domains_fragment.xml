@@ -10,9 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/filterArea"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbarSize="12dip" >
+        android:layout_below="@+id/domainsFragmentLabel"
+        android:paddingLeft="5dp"
+        android:scrollbarSize="12dip"
+        android:scrollbarStyle="outsideOverlay" >
+
         <requestFocus />
     </ListView>
 
@@ -56,5 +58,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/domainsFragmentLabel"
+        android:textIsSelectable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+		android:textColor="@android:color/white"
+		android:background="@color/dns_red"
+		android:text="@string/domains"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

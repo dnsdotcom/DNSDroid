@@ -42,6 +42,7 @@ import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
+import com.mapsaurus.paneslayout.FragmentLauncher;
 
 /**
  * A fragment which displays a {@link ListView} of hosts for the selected domain.
@@ -49,7 +50,7 @@ import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
  *
  */
 @EFragment(R.layout.hosts_fragment)
-public class HostsFragment extends SherlockFragment {
+public class HostListFragment extends SherlockFragment {
 
 	@ViewById(R.id.hostsFragmentLabel)
 	protected TextView hostsFragmentLabel ;
@@ -79,21 +80,6 @@ public class HostsFragment extends SherlockFragment {
 	protected HostListAdapter baseAdapter ;
 	protected HostListEndlessAdapter endlessHostAdapter;
 	protected String path ;
-	protected OnHostSelectedListener mListener ;
-
-	public interface OnHostSelectedListener {
-		public void onHostSelected(Host host) ;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnHostSelectedListener) activity ;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()+" must implement OnHostSelectedListener") ;
-		}
-	}
 
 	public void setParentDomain(Domain domain) {
 		this.parent = domain ;
@@ -110,7 +96,14 @@ public class HostsFragment extends SherlockFragment {
 
 	@ItemClick(R.id.hostListView)
 	protected void handleHostClick(Host clickHost) {
-		mListener.onHostSelected(clickHost) ;
+		// create a new fragment
+		RRListFragment_ f = new RRListFragment_();
+		f.setParentHost(clickHost) ;
+
+		// get the activity and add the new fragment after this one!
+		Activity a = getActivity();
+		if (a != null && a instanceof FragmentLauncher)
+			((FragmentLauncher) a).addFragment(this, f) ;
 	}
 
 	@Background

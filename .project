@@ -3,8 +3,9 @@
 	<name>AuthDNS</name>
 	<comment></comment>
 	<projects>
-		<project>FormEditText</project>
 		<project>library</project>
+		<project>PanesLibrary</project>
+		<project>SlidingMenu</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

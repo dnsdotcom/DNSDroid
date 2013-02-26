@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/filterArea"
         android:layout_alignParentLeft="true"
+        android:paddingLeft="5dp"
         android:layout_below="@+id/hostsFragmentLabel"
         android:scrollbarSize="12dip"
         android:scrollbarStyle="outsideOverlay" >

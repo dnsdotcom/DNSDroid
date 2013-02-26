@@ -1,6 +1,7 @@
 <resources>
 
 	<string name="app_name">Authoritative</string>
+	<string name="domains">Domains</string>
 	<string name="menu_settings">Settings</string>
 	<string name="logo_alt_text">DNS.com by Comodo</string>
 	<string name="icon_app_name">DNS.com Authoritative DNS</string>

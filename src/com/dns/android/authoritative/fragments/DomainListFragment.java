@@ -34,6 +34,7 @@ import com.googlecode.androidannotations.annotations.ItemLongClick;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
+import com.mapsaurus.paneslayout.FragmentLauncher;
 import com.commonsware.cwac.endless.EndlessAdapter;
 import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.domain.Domain;
@@ -47,7 +48,7 @@ import com.dns.android.authoritative.utils.DNSPrefs_;
  *
  */
 @EFragment(R.layout.domains_fragment)
-public class DomainsFragment extends SherlockFragment {
+public class DomainListFragment extends SherlockFragment {
 
 	protected final String TAG = "DomainsFragment" ;
 
@@ -77,21 +78,6 @@ public class DomainsFragment extends SherlockFragment {
 	protected ArrayList<Domain> domainList ;
 	protected DomainListAdapter baseAdapter ;
 	protected DomainListEndlessAdapter endlessDomainAdapter ;
-	protected OnDomainSelectedListener mListener ;
-
-	public interface OnDomainSelectedListener {
-		public void onDomainSelected(Domain domain) ;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnDomainSelectedListener) activity ;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()+" must implement OnDomainSelectedListener") ;
-		}
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,7 +137,14 @@ public class DomainsFragment extends SherlockFragment {
 
 	@ItemClick(R.id.domainListView)
 	protected void handleDomainClick(final Domain clickedDomain) {
-		mListener.onDomainSelected(clickedDomain) ;
+		// create a new fragment
+		HostListFragment_ f = new HostListFragment_();
+		f.setParentDomain(clickedDomain) ;
+
+		// get the activity and add the new fragment after this one!
+		Activity a = getActivity();
+		if (a != null && a instanceof FragmentLauncher)
+			((FragmentLauncher) a).addFragment(this, f) ;
 	}
 
 	@ItemLongClick(R.id.domainListView)
