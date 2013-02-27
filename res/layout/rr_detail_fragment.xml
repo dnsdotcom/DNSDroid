@@ -62,6 +62,8 @@
 		            android:layout_height="match_parent"
 		            android:layout_alignParentRight="true"
 		            android:layout_alignParentBottom="true"
+		            android:textOn="@string/yes"
+		            android:textOff="@android:string/no"
 		        	android:tag="is_wildcard_input" />
 		
 		    </RelativeLayout>

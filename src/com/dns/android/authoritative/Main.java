@@ -10,7 +10,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dns.android.authoritative.activities.SettingsActivity_;
 import com.dns.android.authoritative.fragments.MenuFragment_;
 import com.dns.android.authoritative.fragments.SplashFragment_;
+import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.mapsaurus.paneslayout.PanesActivity;
 import com.mapsaurus.paneslayout.PanesSizer.PaneSizer;
 
@@ -25,6 +27,9 @@ public class Main extends PanesActivity {
 	protected final String TAG = "Main" ;
 	protected Fragment menuFragment = null ;
 	protected Fragment splashFragment = null ;
+
+	@Pref
+	protected DNSPrefs_ prefs ;
 
 	private class FragmentPaneSizer implements PaneSizer {
 
@@ -124,13 +129,36 @@ public class Main extends PanesActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_dns) ;
 
-		setPaneSizer(new FragmentPaneSizer()) ;
+		if (prefs.getAuthToken().get()==null) {
+			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity_.class) ;
+			startActivity(settingsIntent) ;
+		} else if (prefs.getAuthToken().get().length()==0) {
+			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity_.class) ;
+			startActivity(settingsIntent) ;
+		} else {
+			setPaneSizer(new FragmentPaneSizer());
+			if (savedInstanceState == null) {
+				menuFragment = new MenuFragment_();
+				splashFragment = new SplashFragment_();
+				setMenuFragment(menuFragment);
+				addFragment(menuFragment, splashFragment);
+			}
+		}
+	}
 
-		if (savedInstanceState==null) {
-			menuFragment = new MenuFragment_() ;
-			splashFragment = new SplashFragment_() ;
-			setMenuFragment(menuFragment) ;
-			addFragment(menuFragment, splashFragment) ;
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		setPaneSizer(new FragmentPaneSizer());
+		if (menuFragment == null) {
+			menuFragment = new MenuFragment_();
+			splashFragment = new SplashFragment_();
+			setMenuFragment(menuFragment);
+			addFragment(menuFragment, splashFragment);
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.dns.android.authoritative.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -116,5 +117,33 @@ public class SettingsActivity extends SherlockActivity {
 		editor.getBaseAddress().put(webAppURL.getText().toString()) ;
 		editor.apply() ;
 		Log.d(TAG, "Saved preferences.") ;
+	}
+
+	protected void showTokenError() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+		builder.setTitle(getResources().getString(R.string.settings_incomplete_title)) ;
+		builder.setMessage(getResources().getString(R.string.settings_incomplete_message)) ;
+		builder.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss() ;
+			}
+		}) ;
+		builder.show() ;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		if (prefs.getAuthToken().get()==null) {
+			showTokenError() ;
+		} else if (prefs.getAuthToken().get().length()==0) {
+			showTokenError() ;
+		} else {
+			super.onBackPressed();
+		}
 	}
 }

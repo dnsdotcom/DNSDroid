@@ -43,6 +43,7 @@
  	<string name="viewHosts">View Hosts</string>
  	<string name="viewDomainGroup">View Domain Group</string>
  	<string name="no">No</string>
+ 	<string name="yes">Yes</string>
  	<string name="datePlaceHolder">2013&#8211;02&#8211;22 13:18:03</string>
  	<string name="namePlaceHolder">zanclus.com</string>
  	<string name="vanityNsToggleErrorTitle">Error modifying domain settings</string>
@@ -66,5 +67,7 @@
  	<string name="description">Description</string>
  	<string name="keywords">Keywords</string>
  	<string name="title">Title</string>
+ 	<string name="settings_incomplete_title">Missing Required Settings</string>
+ 	<string name="settings_incomplete_message">The required setting \'Auth Token\' is not currently set. For this application to work, you must have a value for this field.</string>
 <!-- <string name=""></string>  -->	
 </resources>

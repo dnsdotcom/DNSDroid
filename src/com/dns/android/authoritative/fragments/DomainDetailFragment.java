@@ -7,9 +7,7 @@ package com.dns.android.authoritative.fragments;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
 import org.springframework.web.client.RestClientException;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.domain.Domain;
@@ -22,12 +20,12 @@ import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.mapsaurus.paneslayout.FragmentLauncher;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,6 +38,8 @@ import android.widget.ToggleButton;
  */
 @EFragment(R.layout.domain_details)
 public class DomainDetailFragment extends SherlockFragment {
+
+	protected final String TAG = "DomainDetailFragment" ;
 
 	@Bean
 	protected RestClient client ;
@@ -122,12 +122,21 @@ public class DomainDetailFragment extends SherlockFragment {
 		requested.setMode(parentDomain.getMode()) ;
 		requested.setName(parentDomain.getName()) ;
 		try {
-			Domain result = client.postObject(Domain.class, requested, basePath+parent.getId()+"/") ;
+			Domain result = client.putObject(Domain.class, requested, basePath+parent.getId()+"/") ;
 			((Domain)parent).setHas_ns(result.getHas_ns()) ;
 			handleDomainUpdateSuccess() ;
 		} catch (RestClientException rce) {
-			String errMsg = rce.getLocalizedMessage().split("Response body contained: ")[1] ;
-			handleDomainUpdateFailure(getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), errMsg) ;
+			String errMsg = client.getLastError() ;
+			Log.e(TAG, errMsg) ;
+			if (errMsg.contains("VANITY_NS")) {
+				handleDomainUpdateFailure(
+					getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), 
+					"You must create the vanity name server records before enabling vanity name servers for a domain.") ;
+			} else {
+				handleDomainUpdateFailure(
+						getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), 
+						"An error occurred while attempting to update the domain. Please try again later.") ;
+			}
 		} catch (Throwable t) {
 			String errMsg = t.getLocalizedMessage() ;
 			handleDomainUpdateFailure(getActivity().getResources().getString(R.string.unexpectedError), errMsg) ;

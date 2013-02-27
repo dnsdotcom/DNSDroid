@@ -104,6 +104,7 @@ public class HostDetailFragment extends SherlockFragment {
 	protected void sendHostUpdateRequest() {
 		Host host = (Host) parent ;
 		Host request = new Host() ;
+		request.setName(host.getName()) ;
 		request.setDate_created(host.getDate_created()) ;
 		request.setDate_last_modified(host.getDate_last_modified()) ;
 		request.setDomain(host.getDomain()) ;
@@ -115,7 +116,13 @@ public class HostDetailFragment extends SherlockFragment {
 			host.setIs_urlforward(response.getIs_urlforward()) ;
 		} catch (RestClientException rce) {
 			String errMsg = rce.getLocalizedMessage() ;
-			handleHostUpdateFailed(getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), errMsg) ;
+			String msg = null ;
+			if (errMsg.contains("INVALID")) {
+				msg = errMsg.split("\"")[5] ;
+			} else {
+				msg = errMsg ;
+			}
+			handleHostUpdateFailed(getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), msg) ;
 		} catch (Throwable t) {
 			String errMsg = t.getLocalizedMessage() ;
 			handleHostUpdateFailed(getActivity().getResources().getString(R.string.unexpectedError), errMsg) ;

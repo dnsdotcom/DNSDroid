@@ -54,7 +54,7 @@
 		    android:layout_alignParentRight="true"
 		    android:layout_centerInParent="true"
 		    android:layout_height="wrap_content"
-		    android:textOn="@android:string/yes"
+		    android:textOn="@string/yes"
 		    android:textOff="@string/no" />
 
 	</RelativeLayout>
