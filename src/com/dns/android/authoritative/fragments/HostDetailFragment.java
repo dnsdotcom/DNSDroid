@@ -114,7 +114,7 @@ public class HostDetailFragment extends SherlockFragment {
 			Host response = client.putObject(Host.class, request, "/hosts/"+host.getId()+"/") ;
 			host.setIs_urlforward(response.getIs_urlforward()) ;
 		} catch (RestClientException rce) {
-			String errMsg = rce.getLocalizedMessage().split("Response body contained: /")[1] ;
+			String errMsg = rce.getLocalizedMessage() ;
 			handleHostUpdateFailed(getActivity().getResources().getString(R.string.vanityNsToggleErrorTitle), errMsg) ;
 		} catch (Throwable t) {
 			String errMsg = t.getLocalizedMessage() ;

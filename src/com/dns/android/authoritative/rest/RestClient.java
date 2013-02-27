@@ -63,7 +63,9 @@ public class RestClient {
 		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
 		hdrs.add("Accept", "application/json") ;
 		HttpEntity<?> requestEntity = new HttpEntity<T>(value, hdrs) ;
-		ResponseEntity<T> response = template.exchange(prefs.getBaseAddress()+path, HttpMethod.POST, requestEntity, type) ;
+		String url = prefs.getBaseAddress().get()+path ;
+		Log.d(TAG, "POST: "+url) ;
+		ResponseEntity<T> response = template.exchange(url, HttpMethod.POST, requestEntity, type) ;
 		if (response.getStatusCode()==HttpStatus.CREATED) {
 			return response.getBody() ;
 		} else {
@@ -80,7 +82,9 @@ public class RestClient {
 		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
 		hdrs.add("Accept", "application/json") ;
 		HttpEntity<?> requestEntity = new HttpEntity<T>(value, hdrs) ;
-		ResponseEntity<T> response = template.exchange(prefs.getBaseAddress()+path, HttpMethod.PUT, requestEntity, type) ;
+		String url = prefs.getBaseAddress().get()+path ;
+		Log.d(TAG, "PUT: "+url) ;
+		ResponseEntity<T> response = template.exchange(url, HttpMethod.PUT, requestEntity, type) ;
 		if (response.getStatusCode()==HttpStatus.ACCEPTED) {
 			return response.getBody() ;
 		} else {
