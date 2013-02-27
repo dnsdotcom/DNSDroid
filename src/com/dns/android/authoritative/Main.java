@@ -31,7 +31,8 @@ public class Main extends PanesActivity {
 		public static final int DEFAULT_PANE_TYPE = 0 ;
 		public static final int LIST_VIEW_PANE_TYPE = 1 ;
 		public static final int DETAILS_VIEW_PANE_TYPE = 2 ;
-
+		public static final int SPLASH_PANE_TYPE = 3 ;
+		
 		/* (non-Javadoc)
 		 * @see com.mapsaurus.paneslayout.PanesSizer.PaneSizer#getWidth(int, int, int, int)
 		 */
@@ -44,6 +45,8 @@ public class Main extends PanesActivity {
 					return (int) (0.375 * parentWidth);
 				else if (type == LIST_VIEW_PANE_TYPE)
 					return (int) (0.375 * parentWidth);
+				else if (type == SPLASH_PANE_TYPE)
+					return (int) parentWidth ;
 				else if (type == DETAILS_VIEW_PANE_TYPE)
 					return (int) (0.625 * parentWidth) ;
 				else throw new IllegalStateException("Pane has unknown type");
@@ -52,6 +55,8 @@ public class Main extends PanesActivity {
 					return (int) (0.4 * parentWidth);
 				else if (type == DEFAULT_PANE_TYPE)
 					return (int) (0.6 * parentWidth);
+				else if (type == SPLASH_PANE_TYPE)
+					return (int) parentWidth ;
 				else if (type == LIST_VIEW_PANE_TYPE)
 					return (int) (0.6 * parentWidth);
 				else if (type == DETAILS_VIEW_PANE_TYPE)
@@ -71,7 +76,7 @@ public class Main extends PanesActivity {
 			} else if (o.getClass().getSimpleName().contains("Detail")) {
 				return DETAILS_VIEW_PANE_TYPE ;
 			} else if (o.getClass().getSimpleName().contains("Splash")) {
-				return DETAILS_VIEW_PANE_TYPE ;
+				return SPLASH_PANE_TYPE ;
 			}
 			return DEFAULT_PANE_TYPE ;
 		}

@@ -139,7 +139,10 @@ public class DomainListFragment extends SherlockFragment {
 	}
 
 	@ItemClick(R.id.domainListView)
-	protected void handleDomainClick(final Domain clickedDomain) {
+	protected void handleDomainClick(int position) {
+		final Domain clickedDomain = (Domain) domainListView.getAdapter().getItem(position) ;
+		domainListView.setSelected(true) ;
+		domainListView.setSelection(position) ;
 		// create a new fragment
 		DomainDetailFragment_ f = new DomainDetailFragment_();
 		f.setDomain(clickedDomain) ;
@@ -382,17 +385,7 @@ public class DomainListFragment extends SherlockFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final RelativeLayout row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.domain_row, null) ;
-			ImageView domainConfigButton = (ImageView) row.getChildAt(0) ;
-			domainConfigButton.setImageResource(android.R.drawable.ic_menu_edit);
-			domainConfigButton.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							// TODO: Handle 
-						}
-					});
-			domainConfigButton.setPadding(0, 0, 10, 0) ;
-			TextView domainLabel = (TextView) row.getChildAt(1) ;
+			TextView domainLabel = (TextView) row.getChildAt(0) ;
 			domainLabel.setText(filteredDomainList.get(position).getName());
 			return row;
 		}

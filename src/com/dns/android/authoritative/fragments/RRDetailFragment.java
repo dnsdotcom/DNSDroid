@@ -1,12 +1,17 @@
 package com.dns.android.authoritative.fragments;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.springframework.util.StringUtils;
 
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
@@ -23,7 +28,7 @@ import com.googlecode.androidannotations.annotations.EFragment;
  * @author <a href="mailto: deven@dns.com">Deven Phillips</a>
  *
  */
-@EFragment(R.layout.rr_detail_fragment)
+@EFragment
 public class RRDetailFragment extends SherlockFragment {
 
 	protected final String TAG = "RRDetailFragment" ;
@@ -32,12 +37,24 @@ public class RRDetailFragment extends SherlockFragment {
 
 	protected RR record ;
 
+	protected View root = null ;
+
 	public void setTargetRR(RR target) {
 		this.record = target ;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			root = inflater.inflate(R.layout.rr_detail_fragment, null) ;
+			return root ;
+	}
+
 	@AfterInject
 	protected void configureValues() {
+		fieldMappings = new HashMap<String, String[]>() ;
 		fieldMappings.put("SOA", StringUtils.tokenizeToStringArray("answer,type,id,geo_group,country,region,city,expire,minimum,retry,ttl", ",")) ;
 		fieldMappings.put("MX", StringUtils.tokenizeToStringArray("priority,answer,type,id,geo_group,country,region,city,ttl", ",")) ;
 		fieldMappings.put("URLFrame", StringUtils.tokenizeToStringArray("title,keywords,description,answer,type,id,geo_group,country,region,city,ttl", ",")) ;
@@ -51,13 +68,15 @@ public class RRDetailFragment extends SherlockFragment {
 		if (fields==null) {
 			fields = fieldMappings.get("default") ;
 		}
-
+		if (root==null) {
+			Log.e(TAG, "root view is NULL") ;
+		}
 		for (String field: fields) {
-			View temp = getView().findViewWithTag(field+"_layout") ;
+			View temp = root.findViewWithTag(field+"_layout") ;
 			if (temp!=null) {
 				temp.setVisibility(View.VISIBLE) ;
 			}
-			temp = getView().findViewWithTag(field+"_input") ;
+			temp = root.findViewWithTag(field+"_input") ;
 			if (temp instanceof EditText) {
 				Field f = null ;
 				
@@ -66,17 +85,28 @@ public class RRDetailFragment extends SherlockFragment {
 					f.setAccessible(true) ;
 					if (field.contentEquals("type")) {
 						Spinner input = (Spinner) temp ;
-						String typeVal = (String)f.get(record) ;
-						// TODO: Find and set the correct type as selected.
+						String[] typeArray = getActivity().getResources().getStringArray(R.array.record_types) ;
+						ArrayList<String> typeList = (ArrayList<String>) Arrays.asList(typeArray) ;
+						int index = typeList.indexOf(record.getType()) ;
+						input.setSelection(index) ;
 					} else if (f.getType().getSimpleName().contentEquals("String")) {
 						EditText input = (EditText) temp ;
-						input.setText((String)f.get(record)) ;
+						String value = (String)f.get(record) ;
+						if (value!=null) {
+							input.setText(value) ;
+						}
 					} else if (f.getType().getSimpleName().contentEquals("Integer")) {
 						EditText input = (EditText) temp ;
-						input.setText(f.getInt(record)+"") ;
+						Integer value = ((Integer)f.get(record)) ;
+						if (value!=null) {
+							input.setText(value.intValue()+"") ;
+						}
 					} else if (f.getType().getSimpleName().contentEquals("Boolean")) {
 						ToggleButton input = (ToggleButton) temp ;
-						input.setChecked(f.getBoolean(record)) ;
+						Boolean value = f.getBoolean(record) ;
+						if (value!=null) {
+							input.setChecked(f.getBoolean(record)) ;
+						}
 					}
 				} catch (NoSuchFieldException e) {
 					Log.e(TAG, "Field '"+field+"' does not exist") ;

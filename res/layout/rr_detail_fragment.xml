@@ -1,388 +1,426 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="vertical" >
-	<LinearLayout 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-	    android:paddingLeft="10dp"
-	    android:paddingRight="10dp"
-	    android:paddingTop="5dp"
-	    android:orientation="vertical"
-	    android:background="@color/abs__background_holo_light" >
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" >
+
+	<ScrollView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/buttonArea"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:background="@color/abs__background_holo_light"
+	    android:scrollbars="vertical" >
 	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="type_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/rr_type"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-			<Spinner
-			    android:layout_width="wrap_content"
-			    android:layout_height="match_parent"
-			    android:entries="@array/record_types"
-			    android:spinnerMode="dropdown"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	            android:tag="type_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="is_wildcard_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/is_wildcard"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <ToggleButton
-	            android:id="@+id/rrIsWildcard"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="is_wildcard_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-        	android:tag="answer_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/answer"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrAnswerInput"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="textNoSuggestions"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="answer_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="expire_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/expire"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrExpire"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="expire_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="retry_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/retry"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrRetry"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="retry_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="minimum_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/minimum"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrMinimum"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="minimum_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="ttl_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/ttl"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrTtl"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="ttl_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="priority_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/priority"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrPriority"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="priority_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="weight_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/weight"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrWeight"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="weight_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="port_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/port"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrPort"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="number"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="port_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="title_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/title"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrTitle"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="textNoSuggestions"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="title_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="keywords_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/keywords"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrKeywords"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="textNoSuggestions"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="keywords_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="description_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/description"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <EditText
-	            android:id="@+id/rrDescription"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:inputType="textMultiLine"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="description_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="country_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/country"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <TextView
-	            android:id="@+id/rrCountry"
-	            android:layout_width="wrap_content"
-	            android:textIsSelectable="true"
-	            android:layout_height="match_parent"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="country_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="region_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/region"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <TextView
-	            android:id="@+id/rrRegion"
-	            android:layout_width="wrap_content"
-	            android:textIsSelectable="true"
-	            android:layout_height="match_parent"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="region_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="city_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/city"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <TextView
-	            android:id="@+id/rrCity"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:textIsSelectable="true"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="city_input" />
-	
-	    </RelativeLayout>
-	
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="30dp"
-	        android:tag="geo_group_layout"
-	        android:visibility="gone" >
-	        <TextView android:text="@string/geo_group"
-	            android:layout_height="30dp"
-	            android:layout_width="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true" />
-	
-	        <TextView
-	            android:id="@+id/rrGeoGroup"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:textIsSelectable="true"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentBottom="true"
-	        	android:tag="geo_group_input" />
-	
-	    </RelativeLayout>
-	</LinearLayout>
-</ScrollView>
+		<LinearLayout 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		    android:paddingLeft="10dp"
+		    android:paddingRight="10dp"
+		    android:paddingTop="5dp"
+		    android:orientation="vertical"
+		    android:background="@color/abs__background_holo_light" >
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="type_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/rr_type"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+				<Spinner
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent"
+				    android:entries="@array/record_types"
+				    android:spinnerMode="dropdown"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		            android:tag="type_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="is_wildcard_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/is_wildcard"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <ToggleButton
+		            android:id="@+id/rrIsWildcard"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="is_wildcard_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+	        	android:tag="answer_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/answer"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrAnswerInput"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="textNoSuggestions"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="answer_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="expire_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/expire"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrExpire"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="expire_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="retry_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/retry"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrRetry"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="retry_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="minimum_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/minimum"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrMinimum"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="minimum_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="ttl_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/ttl"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrTtl"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="ttl_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="priority_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/priority"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrPriority"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="priority_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="weight_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/weight"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrWeight"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="weight_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="port_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/port"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrPort"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="number"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="port_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="title_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/title"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrTitle"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="textNoSuggestions"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="title_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="keywords_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/keywords"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrKeywords"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="textNoSuggestions"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="keywords_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="description_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/description"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <EditText
+		            android:id="@+id/rrDescription"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:inputType="textMultiLine"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="description_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="country_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/country"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <TextView
+		            android:id="@+id/rrCountry"
+		            android:layout_width="wrap_content"
+		            android:textIsSelectable="true"
+		            android:layout_height="match_parent"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="country_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="region_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/region"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <TextView
+		            android:id="@+id/rrRegion"
+		            android:layout_width="wrap_content"
+		            android:textIsSelectable="true"
+		            android:layout_height="match_parent"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="region_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="city_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/city"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <TextView
+		            android:id="@+id/rrCity"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:textIsSelectable="true"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="city_input" />
+		
+		    </RelativeLayout>
+		
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:tag="geo_group_layout"
+		        android:visibility="gone" >
+		        <TextView android:text="@string/geo_group"
+		            android:layout_height="40dp"
+		            android:layout_width="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_alignParentBottom="true" />
+		
+		        <TextView
+		            android:id="@+id/rrGeoGroup"
+		            android:layout_width="wrap_content"
+		            android:layout_height="match_parent"
+		            android:textIsSelectable="true"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		        	android:tag="geo_group_input" />
+		
+		    </RelativeLayout>
+		</LinearLayout>
+	</ScrollView>
+
+	<RelativeLayout
+	    android:id="@+id/buttonArea"
+	    android:layout_width="match_parent"
+	    android:layout_height="40dp"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentLeft="true"
+	    android:background="@color/dns_red" >
+
+		<ImageView
+		    android:id="@+id/imageView1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="40dp"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerVertical="true"
+		    android:adjustViewBounds="true"
+		    android:contentDescription="@string/saveChanges"
+		    android:minHeight="40dp"
+		    android:minWidth="40dp"
+		    android:maxHeight="40dp"
+		    android:maxWidth="40dp"
+		    android:scaleType="fitCenter"
+		    android:src="@android:drawable/ic_menu_save" />
+
+	</RelativeLayout>
+
+</RelativeLayout>

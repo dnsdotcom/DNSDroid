@@ -84,7 +84,9 @@ public class RRListFragment extends SherlockFragment {
 	}
 
 	@ItemClick(R.id.rrListView)
-	protected void handleItemClicked(RR record) {
+	protected void handleItemClicked(int position) {
+		RR record = (RR) rrsListView.getAdapter().getItem(position) ;
+		rrsListView.setSelection(position) ;
 		RRDetailFragment_ f = new RRDetailFragment_() ;
 		f.setTargetRR(record) ;
 
