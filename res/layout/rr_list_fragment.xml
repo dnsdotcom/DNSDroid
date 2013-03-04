@@ -13,7 +13,6 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/rrsFragmentLabel"
         android:scrollbarSize="12dip"
-        android:paddingLeft="5dp"
         android:scrollbarStyle="outsideOverlay" >
 
         <requestFocus />
@@ -66,7 +65,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
 		android:textColor="@android:color/white"
-		android:background="@color/dns_red"
+		android:background="@color/pressed_dns"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

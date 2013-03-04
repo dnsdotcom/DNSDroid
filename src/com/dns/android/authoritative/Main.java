@@ -1,6 +1,10 @@
 package com.dns.android.authoritative;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +16,7 @@ import com.dns.android.authoritative.fragments.MenuFragment_;
 import com.dns.android.authoritative.fragments.SplashFragment_;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.SystemService;
 import com.googlecode.androidannotations.annotations.sharedpreferences.Pref;
 import com.mapsaurus.paneslayout.PanesActivity;
 import com.mapsaurus.paneslayout.PanesSizer.PaneSizer;
@@ -30,6 +35,9 @@ public class Main extends PanesActivity {
 
 	@Pref
 	protected DNSPrefs_ prefs ;
+
+	@SystemService
+	protected ConnectivityManager cm ;
 
 	private class FragmentPaneSizer implements PaneSizer {
 
@@ -142,6 +150,22 @@ public class Main extends PanesActivity {
 				splashFragment = new SplashFragment_();
 				setMenuFragment(menuFragment);
 				addFragment(menuFragment, splashFragment);
+			}
+		}
+
+		if (prefs.getWifiWarningState().get()) {
+			NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI) ;
+			if (!mWifi.isConnected()) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+				builder.setTitle(R.string.wifi_alert_dialog_title) ;
+				builder.setMessage(R.string.wifi_alert_dialog_message) ;
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss() ;
+					}
+				}) ;
 			}
 		}
 	}

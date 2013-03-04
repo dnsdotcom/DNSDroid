@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/createDomainLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/pressed_dns"
+        android:maxHeight="48dp"
+        android:minHeight="48dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:text="@string/new_domain"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/newDomainNameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/createDomainLabel"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:text="@string/new_domain_name_label"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/domainNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/newDomainNameLabel"
+        android:ems="10"
+        android:gravity="right"
+        android:hint="@string/domain_name_hint"
+        android:inputType="textNoSuggestions"
+        android:imeActionLabel="@string/add_domain"
+        android:layout_marginLeft="30dp"
+        android:singleLine="true"
+        android:textAlignment="textEnd" />
+
+    <Button
+        android:id="@+id/newDomainSaveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/add_domain" />
+
+</RelativeLayout>

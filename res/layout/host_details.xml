@@ -10,7 +10,7 @@
 	<RelativeLayout
 	    android:id="@+id/nameArea"
 	    android:layout_width="match_parent"
-	    android:layout_height="40dp"
+	    android:layout_height="50dp"
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentTop="true"
 	    android:orientation="horizontal" >
@@ -20,6 +20,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
 		    android:layout_centerInParent="true"
+		    android:textAppearance="@android:style/TextAppearance.Large"
 		    android:text="@string/name" />
 
 		<EditText
@@ -30,6 +31,7 @@
 		    android:layout_alignParentRight="true"
 		    android:layout_centerInParent="true"
 		    android:text="@string/namePlaceHolder"
+		    android:textAppearance="@android:style/TextAppearance.Large"
 		    android:textIsSelectable="true" />
 
 	</RelativeLayout>

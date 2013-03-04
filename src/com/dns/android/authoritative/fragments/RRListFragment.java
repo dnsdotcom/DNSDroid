@@ -276,7 +276,18 @@ public class RRListFragment extends SherlockFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final RelativeLayout row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.rr_row, null) ;
+			final RelativeLayout row ;
+			if (convertView!=null) {
+				if (convertView instanceof RelativeLayout) {
+					row = (RelativeLayout) convertView ;
+				} else {
+					row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.rr_row, null) ;
+				}
+			} else {
+				row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.rr_row, null) ;
+			}
+			row.setPadding(5, 0, 0, 0) ;
+			row.setBackgroundResource(R.drawable.list_view_selector) ;
 			RR record = filteredRRList.get(position) ;
 			String answer = record.getAnswer() ;
 			Log.d(TAG, "Generating view for: "+answer+" - "+record.getType()) ;

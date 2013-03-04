@@ -63,7 +63,7 @@
 		            android:layout_alignParentRight="true"
 		            android:layout_alignParentBottom="true"
 		            android:textOn="@string/yes"
-		            android:textOff="@android:string/no"
+		            android:textOff="@string/no"
 		        	android:tag="is_wildcard_input" />
 		
 		    </RelativeLayout>
@@ -74,6 +74,7 @@
 	        	android:tag="answer_layout"
 		        android:visibility="gone" >
 		        <TextView android:text="@string/answer"
+		            android:id="@+id/answerLabel"
 		            android:layout_height="40dp"
 		            android:layout_width="wrap_content"
 		            android:layout_alignParentLeft="true"
@@ -86,6 +87,8 @@
 		            android:inputType="textNoSuggestions"
 		            android:layout_alignParentRight="true"
 		            android:layout_alignParentBottom="true"
+		            android:layout_toRightOf="@+id/answerLabel"
+		            android:paddingLeft="5dp"
 		        	android:tag="answer_input" />
 		
 		    </RelativeLayout>

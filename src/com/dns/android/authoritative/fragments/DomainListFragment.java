@@ -138,6 +138,18 @@ public class DomainListFragment extends SherlockFragment {
 		baseAdapter.notifyDataSetChanged() ;
 	}
 
+	@Click(R.id.domainAddButton)
+	protected void handleAddDomainClick() {
+		// TODO: Change this to use a newly created "DomainCreateFragment"
+		// create a new fragment
+		DomainCreateFragment_ f = new DomainCreateFragment_();
+
+		// get the activity and add the new fragment after this one!
+		Activity a = getActivity();
+		if (a != null && a instanceof FragmentLauncher)
+			((FragmentLauncher) a).addFragment(this, f) ;
+	}
+
 	@ItemClick(R.id.domainListView)
 	protected void handleDomainClick(int position) {
 		final Domain clickedDomain = (Domain) domainListView.getAdapter().getItem(position) ;
@@ -155,33 +167,7 @@ public class DomainListFragment extends SherlockFragment {
 
 	@ItemLongClick(R.id.domainListView)
 	protected void handleDomainLongClick(final Domain longClickedDomain) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		String message = getActivity()
-				.getResources()
-				.getString(R.string.record_delete_confirmation_message)
-				.replace("[[RECORDNAME]]", longClickedDomain.getName());
-		builder.setMessage(message);
-		builder.setPositiveButton(android.R.string.yes,
-				new DialogInterface.OnClickListener() {
-	
-					@Override
-					public void onClick(
-							DialogInterface dialog,
-							int which) {
-						deleteDomain(longClickedDomain) ;
-					}
-				});
-		builder.setNegativeButton(android.R.string.no,
-				new DialogInterface.OnClickListener() {
-	
-					@Override
-					public void onClick(
-							DialogInterface dialog,
-							int which) {
-						dialog.dismiss() ;
-					}
-				});
-		builder.show();
+		
 	}
 
 	@UiThread
@@ -384,7 +370,18 @@ public class DomainListFragment extends SherlockFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final RelativeLayout row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.domain_row, null) ;
+			final RelativeLayout row ;
+			if (convertView!=null) {
+				if (convertView instanceof RelativeLayout) {
+					row = (RelativeLayout) convertView ;
+				} else {
+					row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.domain_row, null) ;
+				}
+			} else {
+				row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.domain_row, null) ;
+			}
+			row.setPadding(5, 0, 0, 0) ;
+			row.setBackgroundResource(R.drawable.list_view_selector) ;
 			TextView domainLabel = (TextView) row.getChildAt(0) ;
 			domainLabel.setText(filteredDomainList.get(position).getName());
 			return row;

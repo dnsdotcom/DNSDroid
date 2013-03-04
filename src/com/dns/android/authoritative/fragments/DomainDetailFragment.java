@@ -20,6 +20,8 @@ import com.googlecode.androidannotations.annotations.EFragment;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.mapsaurus.paneslayout.FragmentLauncher;
+import com.mapsaurus.paneslayout.PanesActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -89,6 +91,66 @@ public class DomainDetailFragment extends SherlockFragment {
 		} else {
 			dateModified.setText(df.format(parentDomain.getDate_created())) ;
 		}
+	}
+
+	@Click(R.id.domainDeleteButton)
+	protected void handleDomainDeleteButtonClick() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()) ;
+		builder.setTitle(R.string.delete_confirmation_title) ;
+		builder.setMessage(R.string.delete_confirmation_message) ;
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss() ;
+			}
+		}) ;
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				deleteDomain() ;
+			}
+		}) ;
+		builder.show() ;
+	}
+
+	@Background
+	protected void deleteDomain() {
+		try {
+			client.deleteObject("/domains/"+parent.getId()+"/") ;
+			domainDeleteSuccessful() ;
+		} catch (RestClientException rce) {
+			domainDeleteFailed(rce) ;
+		}
+	}
+
+	@UiThread
+	protected void domainDeleteSuccessful() {
+		// get the activity and add the new fragment after this one!
+		Activity a = getActivity();
+		Fragment menuFragment = ((PanesActivity) a).getMenuFragment() ;
+		if (a != null && a instanceof FragmentLauncher)
+			((FragmentLauncher) a).addFragment(menuFragment, new DomainListFragment_()) ;
+	}
+
+	@UiThread
+	protected void domainDeleteFailed(RestClientException rce) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()) ;
+		String title = getActivity().getResources().getString(R.string.record_delete_failed_title).replace("[[RECORDNAME]]", parent.getName()) ;
+		builder.setTitle(title) ;
+		StringBuilder message = new StringBuilder() ;
+		message.append(getActivity().getResources().getString(R.string.record_delete_failed_message_1).replace("[[RECORDTYPE]]", getActivity().getResources().getString(R.string.domain))) ;
+		message.append("\n\n") ;
+		message.append(getActivity().getResources().getString(R.string.record_create_failed_message_2)) ;
+		builder.setMessage(message.toString()) ;
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss() ;
+			}
+		}) ;
+		builder.show() ;
 	}
 
 	@Click(R.id.viewDomainHostsButton)

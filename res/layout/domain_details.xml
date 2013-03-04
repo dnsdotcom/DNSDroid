@@ -10,7 +10,7 @@
 	<RelativeLayout
 	    android:id="@+id/nameArea"
 	    android:layout_width="match_parent"
-	    android:layout_height="30dp"
+	    android:layout_height="50dp"
 	    android:layout_alignParentLeft="true"
 	    android:layout_alignParentTop="true"
 	    android:orientation="horizontal" >
@@ -20,6 +20,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentLeft="true"
 		    android:layout_centerInParent="true"
+		    android:textAppearance="@android:style/TextAppearance.Large"
 		    android:text="@string/name" />
 
 		<TextView
@@ -29,6 +30,7 @@
 		    android:layout_alignParentRight="true"
 		    android:layout_centerInParent="true"
 		    android:text="@string/namePlaceHolder"
+		    android:textAppearance="@android:style/TextAppearance.Large"
 		    android:textIsSelectable="true" />
 
 	</RelativeLayout>
@@ -134,15 +136,6 @@
 
 	</RelativeLayout>
 
-	<Button
-	    android:id="@+id/viewDomainHostsButton"
-	    style="@style/Theme.dns"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:layout_centerHorizontal="true"
-	    android:text="@string/viewHosts" />
-
 	<ProgressBar
 	    android:id="@+id/domainUpdateBusyIndicator"
 	    style="?android:attr/progressBarStyleLarge"
@@ -151,5 +144,23 @@
 	    android:layout_centerHorizontal="true"
 	    android:layout_centerVertical="true"
 	    android:visibility="gone" />
+
+	<Button
+	    android:id="@+id/domainDeleteButton"
+	    style="@style/Theme.dns"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/domain_delete_button_label" />
+
+	<Button
+	    android:id="@+id/viewDomainHostsButton"
+	    style="@style/Theme.dns"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/domainDeleteButton"
+	    android:layout_alignLeft="@+id/modifiedArea"
+	    android:text="@string/viewHosts" />
 
 </RelativeLayout>

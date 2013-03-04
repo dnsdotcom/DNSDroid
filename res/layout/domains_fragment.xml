@@ -11,12 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/filterArea"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/domainsFragmentLabel"
-        android:paddingLeft="5dp"
+        android:layout_below="@+id/domainListHeader"
         android:scrollbarSize="12dip"
-        android:scrollbarStyle="outsideOverlay" >
-
-        <requestFocus />
+        android:scrollbarStyle="outsideOverlay"
+        android:background="@android:color/white" >
     </ListView>
 
     <RelativeLayout
@@ -60,16 +58,31 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <TextView
-        android:id="@+id/domainsFragmentLabel"
-        android:textIsSelectable="false"
+    <RelativeLayout android:id="@+id/domainListHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-		android:textColor="@android:color/white"
-		android:background="@color/dns_red"
-		android:text="@string/domains"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+		android:background="@color/pressed_dns" >
 
+	    <TextView
+	        android:id="@+id/domainsFragmentLabel"
+	        android:textIsSelectable="false"
+        	android:layout_height="wrap_content"
+        	android:layout_width="fill_parent"
+			android:textColor="@android:color/white"
+        	android:layout_toLeftOf="@+id/domainAddButton"
+			android:text="@string/domains"
+			android:paddingLeft="5dp"
+			android:paddingTop="12dp"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <ImageView 
+	        android:id="@+id/domainAddButton"
+	        android:src="@android:drawable/ic_input_add"
+	        android:contentDescription="@string/add_domain"
+        	android:layout_alignParentRight="true"
+        	android:layout_height="48dp"
+        	android:layout_width="48dp" />
+	</RelativeLayout>
 </RelativeLayout>

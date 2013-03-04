@@ -59,7 +59,7 @@ public class RRDetailFragment extends SherlockFragment {
 		fieldMappings.put("MX", StringUtils.tokenizeToStringArray("priority,answer,type,id,geo_group,country,region,city,ttl", ",")) ;
 		fieldMappings.put("URLFrame", StringUtils.tokenizeToStringArray("title,keywords,description,answer,type,id,geo_group,country,region,city,ttl", ",")) ;
 		fieldMappings.put("SRV", StringUtils.tokenizeToStringArray("answer,type,id,geo_group,country,region,city,ttl,weight,port,priority", ",")) ;
-		fieldMappings.put("default", StringUtils.tokenizeToStringArray("answer,type,id,geo_group,country,region,city,ttl", ",")) ;
+		fieldMappings.put("default", StringUtils.tokenizeToStringArray("answer,type,id,geo_group,country,region,city,ttl,is_wildcard", ",")) ;
 	}
 
 	@AfterViews

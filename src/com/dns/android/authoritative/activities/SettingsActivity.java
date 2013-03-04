@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ToggleButton;
+
 import com.actionbarsherlock.app.SherlockActivity;
 import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.rest.RestClient;
@@ -42,6 +44,12 @@ public class SettingsActivity extends SherlockActivity {
 
 	@ViewById(R.id.appUrlInput)
 	protected EditText webAppURL ;
+
+	@ViewById(R.id.enableDebugToggle)
+	protected ToggleButton wifiWarningToggle ;
+
+	@ViewById(R.id.wifiWarningToggle)
+	protected ToggleButton enableDebugToggle ;
 
 	@Bean
 	protected RestClient client ;
@@ -115,6 +123,8 @@ public class SettingsActivity extends SherlockActivity {
 		DNSPrefsEditor_ editor = prefs.edit() ;
 		editor.getAuthToken().put(tokenInput.getText().toString()) ;
 		editor.getBaseAddress().put(webAppURL.getText().toString()) ;
+		editor.getDebugMessagesState().put(enableDebugToggle.isChecked()) ;
+		editor.getWifiWarningState().put(wifiWarningToggle.isChecked()) ;
 		editor.apply() ;
 		Log.d(TAG, "Saved preferences.") ;
 	}

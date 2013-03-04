@@ -338,7 +338,18 @@ public class HostListFragment extends SherlockFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final RelativeLayout row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.host_row, null) ;
+			final RelativeLayout row ;
+			if (convertView!=null) {
+				if (convertView instanceof RelativeLayout) {
+					row = (RelativeLayout) convertView ;
+				} else {
+					row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.host_row, null) ;
+				}
+			} else {
+				row = (RelativeLayout) getActivity().getLayoutInflater().inflate(R.layout.host_row, null) ;
+			}
+			row.setPadding(5, 0, 0, 0) ;
+			row.setBackgroundResource(R.drawable.list_view_selector) ;
 			TextView domainLabel = (TextView) row.getChildAt(0) ;
 			domainLabel.setText(filteredHostList.get(position).getName().trim().length()==0?"(root)":filteredHostList.get(position).getName());
 			return row;

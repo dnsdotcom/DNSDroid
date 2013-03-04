@@ -45,7 +45,7 @@ public class RestClient {
 		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
 		Log.d(TAG, "Using AUTH_TOKEN: "+prefs.getAuthToken().get()) ;
 		hdrs.add("Accept", "application/json") ;
-		HttpEntity<?> requestEntity = new HttpEntity<T>(hdrs) ;
+		HttpEntity<T> requestEntity = new HttpEntity<T>(hdrs) ;
 		StringBuilder queryBuilder = new StringBuilder("?") ;
 		Iterator<String> keyIterator = parameters.keySet().iterator() ;
 		while (keyIterator.hasNext()) {
@@ -81,7 +81,7 @@ public class RestClient {
 		HttpHeaders hdrs = new HttpHeaders() ;
 		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
 		hdrs.add("Accept", "application/json") ;
-		HttpEntity<?> requestEntity = new HttpEntity<T>(value, hdrs) ;
+		HttpEntity<T> requestEntity = new HttpEntity<T>(value, hdrs) ;
 		String url = prefs.getBaseAddress().get()+path ;
 		Log.d(TAG, "POST: "+url) ;
 		try {
@@ -107,7 +107,7 @@ public class RestClient {
 		HttpHeaders hdrs = new HttpHeaders() ;
 		hdrs.add("AUTH_TOKEN", prefs.getAuthToken().get()) ;
 		hdrs.add("Accept", "application/json") ;
-		HttpEntity<?> requestEntity = new HttpEntity<T>(value, hdrs) ;
+		HttpEntity<T> requestEntity = new HttpEntity<T>(value, hdrs) ;
 		String url = prefs.getBaseAddress().get()+path ;
 		Log.d(TAG, "PUT: "+url) ;
 		try {

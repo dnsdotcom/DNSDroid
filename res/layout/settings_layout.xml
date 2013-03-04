@@ -64,4 +64,59 @@
         android:layout_centerVertical="true"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/enableDebugLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tokenInput"
+        android:paddingLeft="5dp"
+        android:paddingTop="25dp"
+        android:text="@string/enable_debug_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ToggleButton
+        android:id="@+id/enableDebugToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/enableDebugLabel"
+        android:contentDescription="@string/enable_debug_label"
+        android:text="@android:string/untitled"
+        android:textOff="@string/no"
+        android:textOn="@string/yes" />
+
+    <TextView
+        android:id="@+id/wifiWarningLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/enableDebugToggle"
+        android:paddingLeft="5dp"
+        android:paddingTop="25dp"
+        android:text="@string/wifi_warning_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/wifiWarningLabel"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="@string/wifi_warning_text" />
+
+    <ToggleButton
+        android:id="@+id/wifiWarningToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1"
+        android:checked="true"
+        android:contentDescription="@string/wifi_warning_label"
+        android:text="@android:string/untitled"
+        android:textOff="@string/no"
+        android:textOn="@string/yes" />
+
 </RelativeLayout>

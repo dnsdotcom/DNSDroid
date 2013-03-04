@@ -1,6 +1,8 @@
 package com.dns.android.authoritative.utils;
 
 import android.content.Context;
+
+import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import com.googlecode.androidannotations.annotations.sharedpreferences.DefaultString;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref;
 import com.googlecode.androidannotations.annotations.sharedpreferences.SharedPref.Scope;
@@ -12,4 +14,10 @@ public interface DNSPrefs {
 	String getBaseAddress() ;
 
 	String getAuthToken() ;
+
+	@DefaultBoolean(false)
+	boolean getDebugMessagesState() ;
+
+	@DefaultBoolean(true)
+	boolean getWifiWarningState() ;
 }
