@@ -33,8 +33,8 @@ public class APISyncService extends IntentService {
 	/**
 	 * @param name
 	 */
-	public APISyncService(String name) {
-		super(name);
+	public APISyncService() {
+		super("DNSComAPISyncService");
 		helper = OpenHelperManager.getHelper(getBaseContext(), DBHelper.class) ;
 		source = new AndroidConnectionSource(helper) ;
 	}
