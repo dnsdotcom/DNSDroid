@@ -59,7 +59,7 @@ public class Main extends PanesActivity {
 				else if (type == LIST_VIEW_PANE_TYPE)
 					return (int) (0.375 * parentWidth);
 				else if (type == SPLASH_PANE_TYPE)
-					return (int) parentWidth ;
+					return (int) 0.75 * parentWidth ;
 				else if (type == DETAILS_VIEW_PANE_TYPE)
 					return (int) (0.625 * parentWidth) ;
 				else throw new IllegalStateException("Pane has unknown type");
@@ -69,7 +69,7 @@ public class Main extends PanesActivity {
 				else if (type == DEFAULT_PANE_TYPE)
 					return (int) (0.6 * parentWidth);
 				else if (type == SPLASH_PANE_TYPE)
-					return (int) parentWidth ;
+					return (int) 0.6 * parentWidth ;
 				else if (type == LIST_VIEW_PANE_TYPE)
 					return (int) (0.6 * parentWidth);
 				else if (type == DETAILS_VIEW_PANE_TYPE)
@@ -154,8 +154,10 @@ public class Main extends PanesActivity {
 		}
 
 		if (prefs.getWifiWarningState().get()) {
+			Log.d(TAG, "We are configured to show WiFi warnings.") ;
 			NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI) ;
 			if (!mWifi.isConnected()) {
+				Log.d(TAG, "WiFi is NOT connected, warning the user.") ;
 				AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
 				builder.setTitle(R.string.wifi_alert_dialog_title) ;
 				builder.setMessage(R.string.wifi_alert_dialog_message) ;
@@ -166,6 +168,7 @@ public class Main extends PanesActivity {
 						dialog.dismiss() ;
 					}
 				}) ;
+				builder.show() ;
 			}
 		}
 	}

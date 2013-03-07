@@ -70,7 +70,6 @@
  	<string name="settings_incomplete_title">Missing Required Settings</string>
  	<string name="settings_incomplete_message">The required setting \'Auth Token\' is not currently set. For this application to work, you must have a value for this field.</string>
  	<string name="add_domain">Add Domain</string>
-<!-- <string name=""></string>  -->
  	<string name="new_domain">New Domain</string>
  	<string name="domain">domain</string>
  	<string name="host">host</string>
@@ -93,4 +92,7 @@
 	<string name="wifi_alert_dialog_message">You are not currently connected to a WiFi network. As such, using this application could incur data usage and/or fees for accessing the Internet. If you do not wish to use data at this time, please exit this application now.</string>
 	<string name="delete_confirmation_title">This Operation Cannot Be Undone!!</string>
 	<string name="delete_confirmation_message">A delete operation cannot be undone. If you select \'OK\', this item will be permanently deleted.</string>
+<!-- 
+	<string name=""></string> 
+-->
 </resources>
