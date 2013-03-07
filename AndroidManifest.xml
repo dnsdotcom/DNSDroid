@@ -26,6 +26,7 @@
 		</activity>
 		<activity android:name=".activities.SettingsActivity_"></activity>
 		<activity android:name=".fragments.GetAuthTokenDialogFragment" android:theme="@style/Sherlock.__Theme.Dialog"></activity>
+		<service android:exported="true" android:enabled="true" android:label="@string/api_sync_service_label" android:description="@string/api_sync_service_description" android:name=".services.APISyncService_"></service>
 	</application>
 
 </manifest>

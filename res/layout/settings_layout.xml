@@ -1,122 +1,157 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:paddingTop="4dp" >
+    android:layout_height="fill_parent">
 
-    <TextView
-        android:id="@+id/appUrlLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/web_address_setting_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="4dp"
+	    android:paddingRight="4dp"
+	    android:paddingTop="4dp" >
 
-    <EditText
-        android:id="@+id/appUrlInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/appUrlLabel"
-        android:ems="10"
-        android:inputType="textNoSuggestions|textUri"
-        android:text="@string/default_web_url" >
+	    <TextView
+	        android:id="@+id/appUrlLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:text="@string/web_address_setting_label"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <requestFocus />
-    </EditText>
+	    <EditText
+	        android:id="@+id/appUrlInput"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/appUrlLabel"
+	        android:ems="10"
+	        android:inputType="textNoSuggestions|textUri"
+	        android:text="@string/default_web_url" />
 
-    <TextView
-        android:id="@+id/authTokenInputLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/appUrlInput"
-        android:layout_marginTop="55dp"
-        android:text="@string/auth_token_input_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    <TextView
+	        android:id="@+id/authTokenInputLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/appUrlInput"
+	        android:layout_marginTop="55dp"
+	        android:text="@string/auth_token_input_label"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/tokenInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/authTokenInputLabel"
-        android:ems="10"
-        android:hint="@string/auth_token_hint"
-        android:textSize="16sp" />
+	    <EditText
+	        android:id="@+id/tokenInput"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/authTokenInputLabel"
+	        android:ems="10"
+	        android:hint="@string/auth_token_hint"
+	        android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/tokenRetrieveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/authTokenInputLabel"
-        android:layout_alignParentRight="true"
-        android:text="@string/token_retrieve_button_label" />
+	    <Button
+	        android:id="@+id/tokenRetrieveButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/authTokenInputLabel"
+	        android:layout_alignParentRight="true"
+	        android:text="@string/token_retrieve_button_label" />
 
-    <ProgressBar
-        android:id="@+id/loadingAuthTokenIndicator"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone" />
+	    <ProgressBar
+	        android:id="@+id/loadingAuthTokenIndicator"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_centerVertical="true"
+	        android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/enableDebugLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tokenInput"
-        android:paddingLeft="5dp"
-        android:paddingTop="25dp"
-        android:text="@string/enable_debug_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    <TextView
+	        android:id="@+id/wifiWarningLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/tokenInput"
+	        android:paddingLeft="5dp"
+	        android:paddingTop="25dp"
+	        android:text="@string/wifi_warning_label"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ToggleButton
-        android:id="@+id/enableDebugToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/enableDebugLabel"
-        android:contentDescription="@string/enable_debug_label"
-        android:text="@android:string/untitled"
-        android:textOff="@string/no"
-        android:textOn="@string/yes" />
+	    <TextView
+	        android:id="@+id/wifiWarningText"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/wifiWarningLabel"
+	        android:paddingLeft="15dp"
+	        android:paddingRight="15dp"
+	        android:text="@string/wifi_warning_text" />
 
-    <TextView
-        android:id="@+id/wifiWarningLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/enableDebugToggle"
-        android:paddingLeft="5dp"
-        android:paddingTop="25dp"
-        android:text="@string/wifi_warning_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    <ToggleButton
+	        android:id="@+id/wifiWarningToggle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@+id/wifiWarningText"
+	        android:checked="true"
+	        android:contentDescription="@string/wifi_warning_label"
+	        android:text="@android:string/untitled"
+	        android:textOff="@string/no"
+	        android:textOn="@string/yes" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/wifiWarningLabel"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:text="@string/wifi_warning_text" />
+	    <TextView
+	        android:id="@+id/backgroundSyncLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/wifiWarningToggle"
+	        android:paddingLeft="5dp"
+	        android:paddingTop="25dp"
+	        android:text="@string/background_sync_label"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ToggleButton
-        android:id="@+id/wifiWarningToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView1"
-        android:checked="true"
-        android:contentDescription="@string/wifi_warning_label"
-        android:text="@android:string/untitled"
-        android:textOff="@string/no"
-        android:textOn="@string/yes" />
+	    <TextView
+	        android:id="@+id/backgroundSyncWarningText"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@+id/backgroundSyncLabel"
+	        android:paddingLeft="15dp"
+	        android:paddingRight="15dp"
+	        android:text="@string/background_sync_text" />
 
-</RelativeLayout>
+	    <ToggleButton
+	        android:id="@+id/backgroundSyncToggle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@+id/backgroundSyncWarningText"
+	        android:checked="true"
+	        android:contentDescription="@string/wifi_warning_label"
+	        android:text="@android:string/untitled"
+	        android:textOff="@string/no"
+	        android:textOn="@string/yes" />
+
+	    <TextView
+	        android:id="@+id/enableDebugLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/backgroundSyncToggle"
+	        android:paddingLeft="5dp"
+	        android:paddingTop="25dp"
+	        android:text="@string/enable_debug_label"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <ToggleButton
+	        android:id="@+id/enableDebugToggle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/enableDebugLabel"
+	        android:layout_alignParentRight="true"
+	        android:contentDescription="@string/enable_debug_label"
+	        android:text="@android:string/untitled"
+	        android:textOff="@string/no"
+	        android:textOn="@string/yes" />
+	</RelativeLayout>
+
+</ScrollView>

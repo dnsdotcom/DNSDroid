@@ -2,6 +2,12 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "regions")
 public class Region implements Serializable {
 
 	/**
@@ -9,29 +15,26 @@ public class Region implements Serializable {
 	 */
 	private static final long serialVersionUID = 8443613043357773492L;
 
-	String[] cities ;
-
-	String country ;
-
-	String code ;
-
+	@DatabaseField(id = true)
 	Integer id ;
 
+	@DatabaseField(foreign = true, columnName = "country_id")
+	Country country ;
+
+	@DatabaseField
+	String code ;
+
+	@DatabaseField(index = true)
 	String name ;
 
-	public String[] getCities() {
-		return cities;
-	}
+	@ForeignCollectionField(eager = false, foreignFieldName = "region")
+	ForeignCollection<City> cities ;
 
-	public void setCities(String[] cities) {
-		this.cities = cities;
-	}
-
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 

@@ -1,0 +1,382 @@
+#
+# generated on 2013/03/07 03:30:31
+#
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.Domain
+tableName=domains
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=domainGroup
+columnName=domainGroup_id
+foreign=true
+indexName=domains_domainGroup_id_idx
+# --field-end--
+# --field-start--
+fieldName=has_ns
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=domains_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=date_last_modified
+indexName=domains_date_last_modified_idx
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=mode
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=domains_name_idx
+# --field-end--
+# --field-start--
+fieldName=hosts
+foreignCollection=true
+foreignCollectionOrderColumnName=date_last_modified
+foreignCollectionForeignFieldName=domain
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.Host
+tableName=hosts
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=hosts_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=date_last_modified
+indexName=hosts_date_last_modified_idx
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=hosts_name_idx
+# --field-end--
+# --field-start--
+fieldName=domainGroup
+columnName=domainGroup_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=is_active
+indexName=hosts_is_active_idx
+# --field-end--
+# --field-start--
+fieldName=is_urlforward
+# --field-end--
+# --field-start--
+fieldName=rrs
+columnName=id
+foreignCollection=true
+foreignCollectionColumnName=id
+foreignCollectionOrderColumnName=date_last_modified
+# --field-end--
+# --field-start--
+fieldName=domain
+columnName=domain_id
+foreign=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.RR
+tableName=rrs
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=answer
+indexName=rrs_answer_idx
+# --field-end--
+# --field-start--
+fieldName=type
+indexName=rrs_type_idx
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=rrs_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=date_last_modified
+indexName=rrs_date_last_modified_idx
+# --field-end--
+# --field-start--
+fieldName=is_wildcard
+# --field-end--
+# --field-start--
+fieldName=expire
+# --field-end--
+# --field-start--
+fieldName=minimum
+# --field-end--
+# --field-start--
+fieldName=retry
+# --field-end--
+# --field-start--
+fieldName=ttl
+# --field-end--
+# --field-start--
+fieldName=priority
+# --field-end--
+# --field-start--
+fieldName=weight
+# --field-end--
+# --field-start--
+fieldName=port
+# --field-end--
+# --field-start--
+fieldName=description
+# --field-end--
+# --field-start--
+fieldName=keywords
+# --field-end--
+# --field-start--
+fieldName=title
+# --field-end--
+# --field-start--
+fieldName=geoGroup
+columnName=geoGroup_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=country
+columnName=country_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=region
+columnName=region_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=city
+columnName=city_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=parent
+canBeNull=false
+foreign=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.City
+tableName=cities
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=cities_name_idx
+# --field-end--
+# --field-start--
+fieldName=region
+columnName=region_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=area_code
+# --field-end--
+# --field-start--
+fieldName=charset
+# --field-end--
+# --field-start--
+fieldName=latitude
+indexName=cities_latitude_idx
+# --field-end--
+# --field-start--
+fieldName=longitude
+indexName=cities_longitude_idx
+# --field-end--
+# --field-start--
+fieldName=postal_code
+indexName=cities_postal_code_idx
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.Region
+tableName=regions
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=country
+columnName=country_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=code
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=regions_name_idx
+# --field-end--
+# --field-start--
+fieldName=cities
+foreignCollection=true
+foreignCollectionForeignFieldName=region
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.Country
+tableName=countries
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=regions
+foreignCollection=true
+foreignCollectionOrderColumnName=name
+foreignCollectionForeignFieldName=country
+# --field-end--
+# --field-start--
+fieldName=continent_code
+# --field-end--
+# --field-start--
+fieldName=iso_code
+# --field-end--
+# --field-start--
+fieldName=iso_num
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=countries_name_idx
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.GeoGroup
+tableName=geo_groups
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=geo_groups_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=geo_groups_name_idx
+# --field-end--
+# --field-start--
+fieldName=matches
+foreignCollection=true
+foreignCollectionOrderColumnName=date_last_modified
+foreignCollectionForeignFieldName=geo_group
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.GeoMatch
+tableName=geo_matches
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=geo_group
+columnName=geoGroup_id
+foreign=true
+indexName=geo_matches_geoGroup_id_idx
+# --field-end--
+# --field-start--
+fieldName=country
+columnName=country_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=region
+columnName=region_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=city
+columnName=city_id
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=geo_matches_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=date_last_modified
+indexName=geo_matches_date_last_modified_idx
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.dns.android.authoritative.domain.DomainGroup
+tableName=domain_groups
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=date_created
+indexName=domain_groups_date_created_idx
+# --field-end--
+# --field-start--
+fieldName=date_last_modified
+indexName=domain_groups_date_last_modified_idx
+# --field-end--
+# --field-start--
+fieldName=is_active
+# --field-end--
+# --field-start--
+fieldName=name
+indexName=domain_groups_name_idx
+# --field-end--
+# --field-start--
+fieldName=allow_zone_token
+# --field-end--
+# --field-start--
+fieldName=has_ns
+# --field-end--
+# --field-start--
+fieldName=hosts
+foreignCollection=true
+foreignCollectionForeignFieldName=domainGroup
+# --field-end--
+# --field-start--
+fieldName=domains
+foreignCollection=true
+foreignCollectionForeignFieldName=domainGroup
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

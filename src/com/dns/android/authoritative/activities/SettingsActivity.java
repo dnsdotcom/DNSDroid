@@ -9,13 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ToggleButton;
-
 import com.actionbarsherlock.app.SherlockActivity;
 import com.dns.android.authoritative.R;
 import com.dns.android.authoritative.rest.RestClient;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.dns.android.authoritative.utils.DNSPrefs_.DNSPrefsEditor_;
-import com.googlecode.androidannotations.annotations.AfterTextChange;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Bean;
@@ -51,6 +49,9 @@ public class SettingsActivity extends SherlockActivity {
 	@ViewById(R.id.wifiWarningToggle)
 	protected ToggleButton enableDebugToggle ;
 
+	@ViewById(R.id.backgroundSyncToggle)
+	protected ToggleButton backgroundSyncToggle ;
+
 	@Bean
 	protected RestClient client ;
 
@@ -72,18 +73,6 @@ public class SettingsActivity extends SherlockActivity {
 			}
 		}) ;
 		tokenDialog.show() ;
-	}
-
-	@AfterTextChange(R.id.appUrlInput)
-	protected void saveChangedAppURL() {
-		prefs.edit().getBaseAddress().put(webAppURL.getText().toString()).apply() ;
-		Log.d(TAG, "Saved URL.") ;
-	}
-
-	@AfterTextChange(R.id.tokenInput)
-	protected void saveChangedAuthToken() {
-		prefs.edit().getAuthToken().put(tokenInput.getText().toString()).apply() ;
-		Log.d(TAG, "Saved token.") ;
 	}
 
 	@AfterViews
@@ -125,6 +114,7 @@ public class SettingsActivity extends SherlockActivity {
 		editor.getBaseAddress().put(webAppURL.getText().toString()) ;
 		editor.getDebugMessagesState().put(enableDebugToggle.isChecked()) ;
 		editor.getWifiWarningState().put(wifiWarningToggle.isChecked()) ;
+		editor.getBackgroundSyncState().put(backgroundSyncToggle.isChecked()) ;
 		editor.apply() ;
 		Log.d(TAG, "Saved preferences.") ;
 	}

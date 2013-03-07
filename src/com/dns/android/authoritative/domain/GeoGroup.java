@@ -3,6 +3,12 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "geo_groups")
 public class GeoGroup implements Serializable {
 
 	/**
@@ -10,13 +16,21 @@ public class GeoGroup implements Serializable {
 	 */
 	private static final long serialVersionUID = -4309585396443686603L;
 
+	@DatabaseField(id = true)
 	Integer id ;
 
-	String[] members ;
-
+	@DatabaseField(index = true)
 	Date date_created ;
 
+	@DatabaseField(index = true)
 	String name ;
+
+	@ForeignCollectionField(eager = false, foreignFieldName = "geo_group", orderColumnName = "date_last_modified")
+	ForeignCollection<GeoMatch> matches ;
+
+	public GeoGroup() {
+		super() ;
+	}
 
 	public Integer getId() {
 		return id;
@@ -24,14 +38,6 @@ public class GeoGroup implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String[] getMembers() {
-		return members;
-	}
-
-	public void setMembers(String[] members) {
-		this.members = members;
 	}
 
 	public Date getDate_created() {

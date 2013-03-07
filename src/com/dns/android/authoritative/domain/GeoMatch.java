@@ -3,6 +3,10 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "geo_matches")
 public class GeoMatch implements Serializable {
 
 	/**
@@ -10,19 +14,30 @@ public class GeoMatch implements Serializable {
 	 */
 	private static final long serialVersionUID = -8677521290180264453L;
 
+	@DatabaseField(id = true)
 	Integer id ;
 
-	String geo_group ;
+	@DatabaseField(foreign = true, columnName = "geoGroup_id", canBeNull = true, index = true)
+	GeoGroup geo_group ;
 
-	String country ;
+	@DatabaseField(foreign = true, columnName = "country_id", canBeNull = true)
+	Country country ;
 
-	String region ;
+	@DatabaseField(foreign = true, columnName = "region_id", canBeNull = true)
+	Region region ;
 
-	String city ;
+	@DatabaseField(foreign = true, columnName = "city_id", canBeNull = true)
+	City city ;
 
+	@DatabaseField(index = true)
 	Date date_created ;
 
+	@DatabaseField(index = true)
 	Date date_last_modified ;
+
+	public GeoMatch() {
+		super() ;
+	}
 
 	public Integer getId() {
 		return id;
@@ -32,35 +47,35 @@ public class GeoMatch implements Serializable {
 		this.id = id;
 	}
 
-	public String getGeo_group() {
+	public GeoGroup getGeoGroup() {
 		return geo_group;
 	}
 
-	public void setGeo_group(String geo_group) {
+	public void setGeoGroup(GeoGroup geo_group) {
 		this.geo_group = geo_group;
 	}
 
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 
-	public String getRegion() {
+	public Region getRegion() {
 		return region;
 	}
 
-	public void setRegion(String region) {
+	public void setRegion(Region region) {
 		this.region = region;
 	}
 
-	public String getCity() {
+	public City getCity() {
 		return city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(City city) {
 		this.city = city;
 	}
 

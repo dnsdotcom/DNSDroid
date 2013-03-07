@@ -95,4 +95,8 @@
 <!-- 
 	<string name=""></string> 
 -->
+	<string name="background_sync_label">Enable background sync without Wifi?</string>
+	<string name="background_sync_text">Enabling this option will allow this application to synchronize all of your account information even when you are only connected via a cellular network. On some accounts this may only be a little bit of data, but on other accounts this could be a large amount of data over a connection which could cost you money. This option is disabled by default and will only sync when connected via a WiFi network.</string>
+	<string name="api_sync_service_label">DNS.com API Sync Services</string>
+	<string name="api_sync_service_description">This is a background service which attempts to cache as much information as possible from the DNS.com API in a local database for use on the device.</string>
 </resources>

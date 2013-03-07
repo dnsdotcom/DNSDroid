@@ -26,5 +26,15 @@
 	<classpathentry kind="lib" path="libs/spring-android-core-1.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/spring-android-rest-template-1.0.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/guava-14.0-rc1.jar"/>
+	<classpathentry kind="lib" path="libs/ormlite-android-4.43.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/dphillips/Development/Java/ormlite-android/4.43/ormlite-android-4.43-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/ormlite-core-4.43.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/dphillips/Development/Java/ormlite-android/4.43/ormlite-core-4.43-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

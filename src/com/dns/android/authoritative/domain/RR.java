@@ -3,6 +3,10 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "rrs")
 public class RR implements Serializable {
 
 	/**
@@ -10,54 +14,79 @@ public class RR implements Serializable {
 	 */
 	private static final long serialVersionUID = -4201607633946878916L;
 
-	String[] hosts ;
-
-	String answer ;
-
-	String type ;
-
-	Date date_created ;
-
-	Date date_last_modified ;
-
+	@DatabaseField(id = true)
 	Integer id ;
 
-	String geo_group ;
+	@DatabaseField(index = true)
+	String answer ;
 
-	String country ;
+	@DatabaseField(index = true)
+	String type ;
 
-	String region ;
+	@DatabaseField(index = true)
+	Date date_created ;
 
-	String city ;
+	@DatabaseField(index = true)
+	Date date_last_modified ;
 
+	@DatabaseField
 	Boolean is_wildcard ;
 
+	@DatabaseField
 	Integer expire ;
 
+	@DatabaseField
 	Integer minimum ;
 
+	@DatabaseField
 	Integer retry ;
 
+	@DatabaseField
 	Integer ttl ;
 
+	@DatabaseField
 	Integer priority ;
 
+	@DatabaseField
 	Integer weight ;
 
+	@DatabaseField
 	Integer port ;
 
+	@DatabaseField
 	String description ;
 
+	@DatabaseField
 	String keywords ;
 
+	@DatabaseField
 	String title ;
 
-	public String[] getHosts() {
-		return hosts;
+	@DatabaseField(foreign = true, canBeNull = true, columnName = "geoGroup_id")
+	GeoGroup geoGroup ;
+
+	@DatabaseField(foreign = true, canBeNull = true, columnName = "country_id")
+	Country country ;
+
+	@DatabaseField(foreign = true, canBeNull = true, columnName = "region_id")
+	Region region ;
+
+	@DatabaseField(foreign = true, canBeNull = true, columnName = "city_id")
+	City city ;
+
+	@DatabaseField(foreign = true, canBeNull = false)
+	private Host parent ;
+
+	public Host getParent() {
+		return parent;
 	}
 
-	public void setHosts(String[] hosts) {
-		this.hosts = hosts;
+	public void setParent(Host parent) {
+		this.parent = parent;
+	}
+
+	public RR() {
+		super() ;
 	}
 
 	public String getAnswer() {
@@ -98,38 +127,6 @@ public class RR implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getGeo_group() {
-		return geo_group;
-	}
-
-	public void setGeo_group(String geo_group) {
-		this.geo_group = geo_group;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
 	}
 
 	public Boolean getIs_wildcard() {
@@ -218,5 +215,37 @@ public class RR implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public GeoGroup getGeoGroup() {
+		return geoGroup;
+	}
+
+	public void setGeoGroup(GeoGroup geoGroup) {
+		this.geoGroup = geoGroup;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
+		this.region = region;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 }

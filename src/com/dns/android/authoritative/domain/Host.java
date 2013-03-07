@@ -3,6 +3,12 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "hosts")
 public class Host implements Serializable {
 
 	/**
@@ -10,23 +16,44 @@ public class Host implements Serializable {
 	 */
 	private static final long serialVersionUID = -10814381008309958L;
 
-	Integer id ;
+	@DatabaseField(id = true)
+	private Integer id ;
 
-	Date date_created ;
+	@DatabaseField(index = true)
+	private Date date_created ;
 
-	Date date_last_modified ;
+	@DatabaseField(index = true)
+	private Date date_last_modified ;
 
-	String name ;
+	@DatabaseField(index = true)
+	private String name ;
 
-	String domain ;
+	@DatabaseField(foreign = true, canBeNull = true, columnName = "domainGroup_id")
+	private DomainGroup domainGroup ;
 
-	String domainGroup ;
+	@DatabaseField(index = true)
+	private Boolean is_active ;
 
-	Boolean is_active ;
+	@DatabaseField
+	private Boolean is_urlforward ;
 
-	Boolean is_urlforward ;
+	@ForeignCollectionField(eager = false, columnName = "id", orderColumnName = "date_last_modified")
+	private ForeignCollection<RR> rrs ;
 
-	String[] rrs ;
+	@DatabaseField(foreign = true, columnName = "domain_id", canBeNull = true)
+	private Domain domain ;
+
+	public Host() {
+		super() ;
+	}
+
+	public void addRR(RR record) {
+		rrs.add(record) ;
+	}
+
+	public ForeignCollection<RR> getRecords() {
+		return rrs ;
+	}
 
 	public Integer getId() {
 		return id;
@@ -60,19 +87,19 @@ public class Host implements Serializable {
 		this.name = name;
 	}
 
-	public String getDomain() {
+	public Domain getDomain() {
 		return domain;
 	}
 
-	public void setDomain(String domain) {
+	public void setDomain(Domain domain) {
 		this.domain = domain;
 	}
 
-	public String getDomainGroup() {
+	public DomainGroup getDomainGroup() {
 		return domainGroup;
 	}
 
-	public void setDomainGroup(String domainGroup) {
+	public void setDomainGroup(DomainGroup domainGroup) {
 		this.domainGroup = domainGroup;
 	}
 
@@ -90,13 +117,5 @@ public class Host implements Serializable {
 
 	public void setIs_urlforward(Boolean is_urlforward) {
 		this.is_urlforward = is_urlforward;
-	}
-
-	public String[] getRrs() {
-		return rrs;
-	}
-
-	public void setRrs(String[] rrs) {
-		this.rrs = rrs;
 	}
 }

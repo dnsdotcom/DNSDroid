@@ -3,6 +3,12 @@ package com.dns.android.authoritative.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "domains")
 public class Domain implements Serializable {
 
 	/**
@@ -10,23 +16,44 @@ public class Domain implements Serializable {
 	 */
 	private static final long serialVersionUID = 6169626002872712239L;
 
+	@DatabaseField(id = true)
 	Integer id ;
 
-	String[] hosts ;
+	@DatabaseField(foreign = true, columnName = "domainGroup_id", canBeNull = true, index = true)
+	DomainGroup domainGroup ;
 
-	String domainGroup ;
-
+	@DatabaseField
 	Boolean has_ns ;
 
+	@DatabaseField(index = true)
 	Date date_created ;
 
+	@DatabaseField(index = true)
 	Date date_last_modified ;
 
+	@DatabaseField
 	Boolean is_active ;
 
+	@DatabaseField
 	String mode ;
 
+	@DatabaseField(index = true)
 	String name ;
+
+	@ForeignCollectionField(foreignFieldName = "domain", eager=false, orderColumnName = "date_last_modified")
+	ForeignCollection<Host> hosts ;
+
+	public Domain() {
+		super() ;
+	}
+
+	public void addHost(Host host) {
+		hosts.add(host) ;
+	}
+
+	public ForeignCollection<Host> getHosts() {
+		return hosts ;
+	}
 
 	public Integer getId() {
 		return id;
@@ -36,19 +63,11 @@ public class Domain implements Serializable {
 		this.id = id;
 	}
 
-	public String[] getHosts() {
-		return hosts;
-	}
-
-	public void setHosts(String[] hosts) {
-		this.hosts = hosts;
-	}
-
-	public String getDomainGroup() {
+	public DomainGroup getDomainGroup() {
 		return domainGroup;
 	}
 
-	public void setDomainGroup(String domainGroup) {
+	public void setDomainGroup(DomainGroup domainGroup) {
 		this.domainGroup = domainGroup;
 	}
 

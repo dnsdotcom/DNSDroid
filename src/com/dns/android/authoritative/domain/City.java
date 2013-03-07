@@ -2,6 +2,10 @@ package com.dns.android.authoritative.domain;
 
 import java.io.Serializable;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "cities")
 public class City implements Serializable {
 
 	/**
@@ -9,21 +13,33 @@ public class City implements Serializable {
 	 */
 	private static final long serialVersionUID = -4522000425053219287L;
 
+	@DatabaseField(id = true)
 	Integer id ;
 
+	@DatabaseField(index = true)
 	String name ;
 
-	String region ;
+	@DatabaseField(foreign = true, columnName = "region_id")
+	Region region ;
 
+	@DatabaseField
 	String area_code ;
 
+	@DatabaseField
 	String charset ;
 
+	@DatabaseField(index = true)
 	Float latitude ;
 
+	@DatabaseField(index = true)
 	Float longitude ;
 
+	@DatabaseField(index = true)
 	String postal_code ;
+
+	public City() {
+		super() ;
+	}
 
 	public Integer getId() {
 		return id;
@@ -41,11 +57,11 @@ public class City implements Serializable {
 		this.name = name;
 	}
 
-	public String getRegion() {
+	public Region getRegion() {
 		return region;
 	}
 
-	public void setRegion(String region) {
+	public void setRegion(Region region) {
 		this.region = region;
 	}
 
