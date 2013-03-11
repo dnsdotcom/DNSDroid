@@ -14,6 +14,9 @@ public interface DNSPrefs {
 	@DefaultString("http://home.zanclus.com:7080/rest/v2")
 	String getBaseAddress() ;
 
+	@DefaultBoolean(true)
+	boolean getIsFirstRun() ;
+
 	String getAuthToken() ;
 
 	@DefaultBoolean(false)
@@ -30,4 +33,7 @@ public interface DNSPrefs {
 
 	@DefaultLong(0L)
 	long getLastApiSync() ;
+
+	@DefaultBoolean(false)
+	boolean getLocationSyncStatus() ;
 }

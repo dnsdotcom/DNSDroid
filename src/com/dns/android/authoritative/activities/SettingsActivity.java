@@ -115,6 +115,7 @@ public class SettingsActivity extends SherlockActivity {
 		editor.getDebugMessagesState().put(enableDebugToggle.isChecked()) ;
 		editor.getWifiWarningState().put(wifiWarningToggle.isChecked()) ;
 		editor.getBackgroundSyncState().put(backgroundSyncToggle.isChecked()) ;
+		editor.getIsFirstRun().put(false) ;
 		editor.apply() ;
 		Log.d(TAG, "Saved preferences.") ;
 	}

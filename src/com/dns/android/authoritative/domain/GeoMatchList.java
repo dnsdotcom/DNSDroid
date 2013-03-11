@@ -9,15 +9,15 @@ public class GeoMatchList implements Serializable {
 	 */
 	private static final long serialVersionUID = -4043154436705213589L;
 
-	GeoMatch matches ;
+	GeoMatch[] matches ;
 
 	Meta meta ;
 
-	public GeoMatch getMatches() {
+	public GeoMatch[] getMatches() {
 		return matches;
 	}
 
-	public void setMatches(GeoMatch matches) {
+	public void setMatches(GeoMatch[] matches) {
 		this.matches = matches;
 	}
 

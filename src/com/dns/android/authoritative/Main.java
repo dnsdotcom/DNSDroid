@@ -1,8 +1,11 @@
 package com.dns.android.authoritative;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dns.android.authoritative.activities.SettingsActivity_;
 import com.dns.android.authoritative.fragments.MenuFragment_;
 import com.dns.android.authoritative.fragments.SplashFragment_;
+import com.dns.android.authoritative.services.APISyncService;
 import com.dns.android.authoritative.utils.DNSPrefs_;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.SystemService;
@@ -137,6 +141,27 @@ public class Main extends PanesActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_dns) ;
 
+		if (prefs.getIsFirstRun().get()) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+			builder.setTitle(R.string.first_run_dialog_title) ;
+			builder.setMessage(R.string.first_run_dialog_message) ;
+			builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss() ;
+				}
+			}) ;
+			builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Main.this.finish() ;
+				}
+			}) ;
+			builder.show() ;
+		}
+
 		if (prefs.getAuthToken().get()==null) {
 			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity_.class) ;
 			startActivity(settingsIntent) ;
@@ -168,9 +193,52 @@ public class Main extends PanesActivity {
 						dialog.dismiss() ;
 					}
 				}) ;
+				builder.setNeutralButton(R.string.settings, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity_.class) ;
+						startActivity(settingsIntent) ;
+					}
+				}) ;
+				builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Main.this.finish() ;
+					}
+				}) ;
 				builder.show() ;
 			}
 		}
+
+		BroadcastReceiver syncStatusReceiver = new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// TODO: Add code here to manipulate the sync status dialog being displayed.
+				int syncStatus = intent.getExtras().getInt("sync_status") ;
+				switch (syncStatus) {
+					case APISyncService.SYNC_STARTING: {
+						
+						}
+					case APISyncService.SYNC_RUNNING:  {
+						
+						}
+					case APISyncService.SYNC_FINISHED:  {
+						
+						}
+					case APISyncService.SYNC_FAILED:  {
+						
+						}
+					case APISyncService.SYNC_ERROR:  {
+					
+						}
+				}
+			}
+		};
+		IntentFilter filter = new IntentFilter("com.dns.authoritative.api.SYNC_STATUS") ;
+		registerReceiver(syncStatusReceiver, filter) ;
 	}
 
 	/* (non-Javadoc)

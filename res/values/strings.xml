@@ -17,16 +17,16 @@
 	<string name="token_retrieve_button_label">Get Token</string>
 	<string name="token_dialog_username">Username</string>
 	<string name="token_dialog_password">Password</string>
-	<string name="token_retrieve_message_content">Enter your username and password below and they will be used to retrieve your token. Your username and password will not be stored, intead the token will be used to authenticate this device to the DNS.com web site. If you should ever need to disable this device\'s access to your account, simple change your token from the DNS.com web site.</string>
+	<string name="token_retrieve_message_content">Enter your username and password below and they will be used to retrieve your token. Your username and password will not be stored, intead the token will be used to authenticate this device to the DNS.com web site. If you should ever need to disable this device\&quot;s access to your account, simple change your token from the DNS.com web site.</string>
 	<string name="reset">Reset</string>
 	<string name="apply">Apply</string>
-	<string name="record_delete_confirmation_message">Deleting \'[[RECORDNAME]]\' cannot be undone, are you sure you wish to permanently delete it?</string>
+	<string name="record_delete_confirmation_message">Deleting \&quot;[[RECORDNAME]]\&quot; cannot be undone, are you sure you wish to permanently delete it?</string>
 	<string name="loading">Loading</string>
 	<string name="edit">Edit</string>
 	<string name="data_changed_title">Data Changed On The Server</string>
 	<string name="data_changed_message">The list of domains on the server has changed in size. Would you like to reload the displayed data from the server?</string>
-	<string name="record_delete_failed_title">Failed to delete \'[[RECORDNAME]]\'</string>
-	<string name="record_delete_failed_message">Unable to delete \'[[RECORDNAME]]\'. Please try again later or contact support for additional assistance.</string>
+	<string name="record_delete_failed_title">Failed to delete \&quot;[[RECORDNAME]]\&quot;</string>
+	<string name="record_delete_failed_message">Unable to delete \&quot;[[RECORDNAME]]\&quot;. Please try again later or contact support for additional assistance.</string>
 	<string name="filter">Filter</string>
 	<string name="auth_token_failure_title">Token Retrieval Failed</string>
 	<string name="auth_token_failure_message">Failed to retrieve the auth token for the given username and password. Please check your credentials and contact support if you think you have reached this message in error.</string>
@@ -68,7 +68,7 @@
  	<string name="keywords">Keywords</string>
  	<string name="title">Title</string>
  	<string name="settings_incomplete_title">Missing Required Settings</string>
- 	<string name="settings_incomplete_message">The required setting \'Auth Token\' is not currently set. For this application to work, you must have a value for this field.</string>
+ 	<string name="settings_incomplete_message">The required setting &quot;Auth Token&quot; is not currently set. For this application to work, you must have a value for this field.</string>
  	<string name="add_domain">Add Domain</string>
  	<string name="new_domain">New Domain</string>
  	<string name="domain">domain</string>
@@ -79,19 +79,19 @@
  	<string name="domain_group_select_label">Assign to domain group:</string>
  	<string name="domain_group_selector_prompt">Choose a domain group to assign this domain to:</string>
  	<string name="record_create_failed_title">Failed to create new [[RECORDTYPE]]</string>
- 	<string name="record_create_failed_message_1">An error occurred while attempting to create the new [[RECORDTYPE]] \'[[RECORDNAME]]\'</string>
+ 	<string name="record_create_failed_message_1">An error occurred while attempting to create the new [[RECORDTYPE]] &quot;[[RECORDNAME]]&quot;</string>
  	<string name="record_create_failed_message_2">Please try again later or contact support if this error continues to happen.</string>
  	<string name="domain_delete_button_label">Delete Domain</string>
  	<string name="record_delete_failed_title">Failed to delete [[RECORDNAME]]</string>
- 	<string name="record_delete_failed_message_1">An error occurred while attempting to delete the [[RECORDTYPE]] \'[[RECORDNAME]]\'</string>
+ 	<string name="record_delete_failed_message_1">An error occurred while attempting to delete the [[RECORDTYPE]] &quot;[[RECORDNAME]]&quot;</string>
  	<string name="record_delete_failed_message_2">Please try again later or contact support if this error continues to happen.</string>
  	<string name="enable_debug_label">Enabled debugging messages?</string>
  	<string name="wifi_warning_label">Warn when not using WiFi?</string>
  	<string name="wifi_warning_text">This application can upload and download large amounts of data from the Internet. This can incur data fees depending on your data plan. If you wish to be warned when you open the application and attempt to use it without being connected to WiFi, please ensure the box below is ticked.</string>
 	<string name="wifi_alert_dialog_title">Using This Service May Cost You Money!!!</string>
-	<string name="wifi_alert_dialog_message">You are not currently connected to a WiFi network. As such, using this application could incur data usage and/or fees for accessing the Internet. If you do not wish to use data at this time, please exit this application now.</string>
+	<string name="wifi_alert_dialog_message">You are not currently connected to a WiFi network. As such, using this application could incur data usage and/or fees for accessing the Internet. If you do not wish to use data at this time, please exit this application using the button below. If you do not wish to see this message again, click the &quot;Settings&quot; button below.</string>
 	<string name="delete_confirmation_title">This Operation Cannot Be Undone!!</string>
-	<string name="delete_confirmation_message">A delete operation cannot be undone. If you select \'OK\', this item will be permanently deleted.</string>
+	<string name="delete_confirmation_message">A delete operation cannot be undone. If you select &quot;OK&quot;, this item will be permanently deleted.</string>
 <!-- 
 	<string name=""></string> 
 -->
@@ -99,4 +99,17 @@
 	<string name="background_sync_text">Enabling this option will allow this application to synchronize all of your account information even when you are only connected via a cellular network. On some accounts this may only be a little bit of data, but on other accounts this could be a large amount of data over a connection which could cost you money. This option is disabled by default and will only sync when connected via a WiFi network.</string>
 	<string name="api_sync_service_label">DNS.com API Sync Services</string>
 	<string name="api_sync_service_description">This is a background service which attempts to cache as much information as possible from the DNS.com API in a local database for use on the device.</string>
+	<string name="loading_domains">Loading Domain records</string> 
+	<string name="loading_hosts">Loading Host records</string> 
+	<string name="loading_records">Loading Resource records</string> 
+	<string name="loading_domain_groups">Loading Domain Group records</string> 
+	<string name="loading_geo_groups">Loading GeoGroup records</string> 
+	<string name="loading_geo_matches">Loading GeoMatch records</string> 
+	<string name="loading_countries">Loading Country listings</string> 
+	<string name="loading_regions">Loading Region listings</string> 
+	<string name="loading_cities">Loading City listings</string>
+	<string name="exit">Exit</string>
+	<string name="settings">Settings</string>
+	<string name="first_run_dialog_title">Welcome!</string>
+	<string name="first_run_dialog_message">Welcome to the DNS.com authoritative DNS mobile app. This app can use a lot of data the first time that it starts up, so it is recommended that you be connected to WiFi the first time you run this so that you will not only save money, but also get your data stored quicker. If you are not currently on WiFi, you can still use this app, but you may be charged for data usage depending on your cellular plan.\n\nAre you sure you wish to continue right now?</string>
 </resources>
